@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:mvc="http://www.springframework.org/schema/mvc"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:util="http://www.springframework.org/schema/util"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+						http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
+                        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
+                        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.2.xsd">
+
+	<!-- <import resource="classpath:datasource-tx-jpa.xml" /> -->
+
+	<!-- <mvc:annotation-driven /> -->
+	<context:annotation-config  />
+	<context:component-scan base-package="com.pb.tel"/>
+
+	<!-- <beans:bean class="org.springframework.context.support.ReloadableResourceBundleMessageSource" id="messageSource" p:basenames="WEB-INF/i18n/messages,WEB-INF/i18n/application" p:fallbackToSystemLocale="false"/> -->
+
+	<bean id="propertyPlaceholder" class="com.pb.util.zvv.PropertiesUtil" xmlns="http://www.springframework.org/schema/beans">  <!-- com.pb.uniwin.wu.h2h.utils.PropertiesUtil -->
+		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
+		<property name="ignoreUnresolvablePlaceholders" value="true"/>
+		<property name="ignoreResourceNotFound" value="true"/>
+		<property name="fileEncoding" value="UTF-8"/>
+		<property name="locations">
+			<list>
+				<value>/WEB-INF/classes/com/pb/tel/config/app.properties</value>
+				<value>/com/pb/tel/config/app.properties</value>
+				<!-- <value>file:${configurationService.Location}/app.properties</value> -->
+			</list>
+		</property>
+	</bean>
+
+	<import resource="app-context.xml"/>
+
+</beans>

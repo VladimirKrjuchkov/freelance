@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    	 xsi:noNamespaceSchemaLocation="ehcache.xsd" 
+    	 updateCheck="false"
+    	 monitoring="autodetect"
+    	 dynamicConfig="true"     	 
+    	 overflowToOffHeap="false"    	 
+    	 >
+ <!-- maxBytesLocalOffHeap="2G" 
+ 	maxBytesLocalHeap="500M" 
+ 	name="EntytiesForJournal" -->
+ 
+    <!-- <diskStore path="java.io.tmpdir/ehcache"/> -->
+ 
+    <defaultCache     	
+    	eternal="false"
+    	overflowToOffHeap="false"    
+        timeToIdleSeconds="120" 
+        timeToLiveSeconds="120"       
+        maxEntriesLocalHeap="1000"  
+        memoryStoreEvictionPolicy="LRU" 
+        statistics="true">
+        <!-- <persistence strategy="localTempSwap" /> -->
+    </defaultCache>
+    <!-- 	maxEntriesLocalHeap="1000"  -->
+    <!--maxEntriesLocalHeap="5000" 
+     	diskSpoolBufferSizeMB="30"
+        maxEntriesLocalDisk="10000000" 
+        diskExpiryThreadIntervalSeconds="120" -->
+ 
+    <cache name="com.pb.bi.data.idCard.LockUnlock.forSelect"    	  
+    	   eternal="false"    	   
+           timeToIdleSeconds="3"
+           timeToLiveSeconds="3"
+           overflowToDisk="false"          
+           maxEntriesLocalHeap="100" 
+           memoryStoreEvictionPolicy="LRU">
+           <searchable/>
+        <!-- <persistence strategy="localTempSwap" /> -->
+    </cache>
+    <!-- maxEntriesLocalHeap="100" -->
+    
+     <cache name="com.pb.bi.data.idCard.LockIdCardHistory.forSelect"    	  
+    	   eternal="false"    	   
+           timeToIdleSeconds="3"
+           timeToLiveSeconds="3"
+           overflowToDisk="false"   
+           maxEntriesLocalHeap="500"        
+           memoryStoreEvictionPolicy="LRU">        
+    </cache>
+    
+    
+    <cache name="com.pb.bi.service.auth.AdminDetailsService"    	  
+    	   eternal="false"    	   
+           timeToIdleSeconds="900"
+           timeToLiveSeconds="1800"
+           overflowToDisk="false"          
+           maxEntriesLocalHeap="300" 
+           memoryStoreEvictionPolicy="LRU">                   
+    </cache>    
+    
+</ehcache>
