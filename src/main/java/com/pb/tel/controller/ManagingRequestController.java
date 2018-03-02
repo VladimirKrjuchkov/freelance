@@ -2,6 +2,7 @@ package com.pb.tel.controller;
 
 import com.pb.tel.data.Mes;
 import com.pb.tel.data.telegram.Message;
+import com.pb.tel.data.telegram.Update;
 import com.pb.tel.service.TelegramConnector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,8 +28,9 @@ public class ManagingRequestController {
 
     @RequestMapping(value = "/webhook")
     @ResponseBody
-    public void webhook(@RequestBody Message request) {
-
+    public void webhook(@RequestBody Update update) {
+        log.log(Level.INFO, "*** *** *** update = " + update);
+        log.log(Level.INFO, update.getMessage().getFrom().getFirst_name() + ", чим можу бути корисним сьогодні?\uD83D\uDE0F");
     }
 
     @ExceptionHandler(Exception.class)

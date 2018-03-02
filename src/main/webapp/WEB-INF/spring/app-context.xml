@@ -61,6 +61,7 @@
 		<property name="contextPaths">
 			<list>
 				<value>com.pb.tel.data</value>
+				<value>com.pb.tel.data.telegram</value>
 			</list>
 		</property>
 		<property name="marshallerProperties">

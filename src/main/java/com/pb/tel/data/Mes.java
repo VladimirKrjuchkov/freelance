@@ -21,11 +21,11 @@ public class Mes {
         this.description = description;
     }
 
-    String state;
+    private String state;
 
-    String code;
+    private String code;
 
-    String description;
+    private String description;
 
     public String getState() {
         return state;
