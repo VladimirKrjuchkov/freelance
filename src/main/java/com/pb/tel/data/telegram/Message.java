@@ -1,7 +1,4 @@
-package com.pb.tel.data;
-
-import com.fasterxml.jackson.annotation.JsonFilter;
-import com.fasterxml.jackson.annotation.JsonInclude;
+package com.pb.tel.data.telegram;
 
 /**
  * Created by vladimir on 02.03.18.

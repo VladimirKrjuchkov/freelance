@@ -1,4 +1,4 @@
-package com.pb.tel.data;
+package com.pb.tel.data.telegram;
 
 /**
  * Created by vladimir on 02.03.18.

@@ -1,12 +1,11 @@
 package com.pb.tel.controller;
 
 import com.pb.tel.data.Mes;
-import com.pb.tel.data.Message;
+import com.pb.tel.data.telegram.Message;
 import com.pb.tel.service.TelegramConnector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
