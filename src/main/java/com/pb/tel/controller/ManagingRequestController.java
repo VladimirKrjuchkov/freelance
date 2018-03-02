@@ -1,5 +1,6 @@
 package com.pb.tel.controller;
 
+import com.pb.tel.data.Mes;
 import com.pb.tel.data.Message;
 import com.pb.tel.service.TelegramConnector;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,15 +28,15 @@ public class ManagingRequestController {
 
     @RequestMapping(value = "/webhook")
     @ResponseBody
-    public void webhook() {
+    public void webhook(@RequestBody Message request) {
 
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseBody
-    public Message exceptionHandler(Exception e){
+    public Mes exceptionHandler(Exception e){
         log.log(Level.SEVERE, "ManagingRequestController :: exceptionHandler", e);
-        Message message = new Message("error", e.getMessage());
+        Mes message = new Mes("error", e.getMessage());
         return message;
     }
 
