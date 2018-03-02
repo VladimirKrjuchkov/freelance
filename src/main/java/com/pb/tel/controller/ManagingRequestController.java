@@ -19,7 +19,7 @@ public class ManagingRequestController {
 
     private final Logger log = Logger.getLogger(ManagingRequestController.class.getCanonicalName());
 
-    @RequestMapping(value = "/start", method=RequestMethod.GET)
+    @RequestMapping(value = "/setWebhook", method=RequestMethod.GET)
     @ResponseBody
     public void start() throws Exception {
         telegramConnector.setWebHook();

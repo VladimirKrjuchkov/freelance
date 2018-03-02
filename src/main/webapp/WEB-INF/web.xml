@@ -42,7 +42,7 @@
     <filter-mapping>
         <filter-name>LoggingRequestResponseFilter</filter-name>
         <!-- <url-pattern>/*</url-pattern> -->
-        <url-pattern>/start</url-pattern>
+        <url-pattern>/setWebhook</url-pattern>
         <url-pattern>/webhook/*</url-pattern>
     </filter-mapping>
     <filter>
