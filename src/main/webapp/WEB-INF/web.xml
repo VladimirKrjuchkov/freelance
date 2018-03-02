@@ -45,6 +45,14 @@
         <url-pattern>/start</url-pattern>
         <url-pattern>/webhook/*</url-pattern>
     </filter-mapping>
+    <filter>
+        <filter-name>RequestFilter</filter-name>
+        <filter-class>com.pb.tel.filter.RequestFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>RequestFilter</filter-name>
+        <url-pattern>/webhook</url-pattern>
+    </filter-mapping>
 
 
     <!-- Creates the Spring Container shared by all Servlets and Filters -->

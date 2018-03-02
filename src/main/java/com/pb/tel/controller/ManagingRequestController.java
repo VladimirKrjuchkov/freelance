@@ -25,9 +25,9 @@ public class ManagingRequestController {
         telegramConnector.setWebHook();
     }
 
-    @RequestMapping(value = "/webhook/{telegram_bot_token}")
+    @RequestMapping(value = "/webhook")
     @ResponseBody
-    public void webhook(@PathVariable(value="telegram_bot_token") String telegramBotToken) {
+    public void webhook() {
 
     }
 

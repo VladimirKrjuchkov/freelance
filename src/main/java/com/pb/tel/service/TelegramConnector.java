@@ -33,7 +33,7 @@ public class TelegramConnector {
 
     public void setWebHook() throws Exception {
             RequestHTTPS requestHTTP = new RequestHTTPS(Integer.parseInt(PropertiesUtil.getProperty("connectTimeout")), Integer.parseInt(PropertiesUtil.getProperty("readTimeout")));
-            String url = PropertiesUtil.getProperty("telegram_bot_url") + PropertiesUtil.getProperty("telegram_bot_token") + "/setWebhook" + "?url=" + PropertiesUtil.getProperty("webhook_url") + PropertiesUtil.getProperty("telegram_bot_token");
+            String url = PropertiesUtil.getProperty("telegram_bot_url") + PropertiesUtil.getProperty("telegram_bot_token") + "/setWebhook" + "?url=" + PropertiesUtil.getProperty("webhook_url") + "?token=" + PropertiesUtil.getProperty("telegram_bot_token");
             log.log(Level.INFO, "URL OF REQUEST : " + url);
             URL urlAddr = new URL(url);
             HttpURLConnection connection = (HttpURLConnection) urlAddr.openConnection();//
