@@ -9,29 +9,35 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 public class Mes {
     public Mes(){}
 
-    public Mes(String state, String description){
+    public Mes(MesState state, String description){
         this.state = state;
         this.code = code;
         this.description = description;
     }
 
-    public Mes(String state, String code, String description){
+    public Mes(MesState state, String code, String description){
         this.state = state;
         this.code = code;
         this.description = description;
     }
 
-    private String state;
+    public static enum MesState{
+        ok,
+        err,
+        processing;
+    }
+
+    private MesState state;
 
     private String code;
 
     private String description;
 
-    public String getState() {
+    public MesState getState() {
         return state;
     }
 
-    public void setState(String state) {
+    public void setState(MesState state) {
         this.state = state;
     }
 
@@ -58,23 +64,23 @@ public class Mes {
 
         Mes mes = (Mes) o;
 
-        if (!state.equals(mes.state)) return false;
-        if (!code.equals(mes.code)) return false;
-        return description.equals(mes.description);
+        if (state != mes.state) return false;
+        if (code != null ? !code.equals(mes.code) : mes.code != null) return false;
+        return description != null ? description.equals(mes.description) : mes.description == null;
     }
 
     @Override
     public int hashCode() {
-        int result = state.hashCode();
-        result = 31 * result + code.hashCode();
-        result = 31 * result + description.hashCode();
+        int result = state != null ? state.hashCode() : 0;
+        result = 31 * result + (code != null ? code.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
         return "Mes{" +
-                "state='" + state + '\'' +
+                "state=" + state +
                 ", code='" + code + '\'' +
                 ", description='" + description + '\'' +
                 '}';

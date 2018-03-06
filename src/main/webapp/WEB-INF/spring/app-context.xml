@@ -184,5 +184,23 @@
 		<constructor-arg name="dataSource" ref="dataSource"/>
 	</bean>
 
+	<bean id="redisStorage" class="com.pb.tel.service.RedisStorage" xmlns="http://www.springframework.org/schema/beans">
+		<constructor-arg name="jedisPool" ref="jedisPool"/>
+	</bean>
+
+	<bean id="jedisPool" class="redis.clients.jedis.JedisPool" xmlns="http://www.springframework.org/schema/beans">
+		<constructor-arg name="poolConfig" ref="jedisPoolConfig"/>
+		<constructor-arg name="host" value="${redisHost}"/>
+		<constructor-arg name="port" value="${redisPort}"/>
+		<constructor-arg name="timeout" value="${redisTimeout}"/>
+		<constructor-arg name="password" value="${redisPassword}"/>
+	</bean>
+
+	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig" lazy-init="false" xmlns="http://www.springframework.org/schema/beans">
+		<property name="maxTotal" value="${redisMaxTotal}"/>	<!--${redisMaxTotal}  -->
+		<property name="maxIdle" value="${redisMaxIdle}"/>
+		<property name="maxWaitMillis" value="${redisMaxWaitMillis}"/>
+		<property name="testOnBorrow" value="${redisTestOnBorrow}"/>
+	</bean>
 
 </beans>

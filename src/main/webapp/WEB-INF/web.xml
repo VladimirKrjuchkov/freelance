@@ -42,8 +42,8 @@
     <filter-mapping>
         <filter-name>LoggingRequestResponseFilter</filter-name>
         <!-- <url-pattern>/*</url-pattern> -->
-        <url-pattern>/setWebhook</url-pattern>
         <url-pattern>/webhook/*</url-pattern>
+        <url-pattern>/update</url-pattern>
     </filter-mapping>
     <filter>
         <filter-name>RequestFilter</filter-name>
@@ -51,7 +51,7 @@
     </filter>
     <filter-mapping>
         <filter-name>RequestFilter</filter-name>
-        <url-pattern>/webhook</url-pattern>
+        <url-pattern>/update</url-pattern>
     </filter-mapping>
 
 
