@@ -2,12 +2,14 @@ package com.pb.tel.data.telegram;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.util.LinkedHashMap;
+
 /**
  * Created by vladimir on 02.03.18.
  */
 
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class Message {
+public class Message{
 
     public Message(){}
 

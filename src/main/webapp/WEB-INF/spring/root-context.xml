@@ -26,6 +26,8 @@
 			<list>
 				<value>/WEB-INF/classes/com/pb/tel/config/app.properties</value>
 				<value>/com/pb/tel/config/app.properties</value>
+				<value>/WEB-INF/classes/com/pb/tel/config/buttons.txt</value>
+				<value>/com/pb/tel/config/buttons.txt</value>
 				<!-- <value>file:${configurationService.Location}/app.properties</value> -->
 			</list>
 		</property>

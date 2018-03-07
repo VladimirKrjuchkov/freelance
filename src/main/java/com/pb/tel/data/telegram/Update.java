@@ -15,6 +15,8 @@ public class Update {
 
     Message message;
 
+    CallbackQuery callback_query;
+
     public Integer getUpdate_id() {
         return update_id;
     }
@@ -31,6 +33,14 @@ public class Update {
         this.message = message;
     }
 
+    public CallbackQuery getCallback_query() {
+        return callback_query;
+    }
+
+    public void setCallback_query(CallbackQuery callback_query) {
+        this.callback_query = callback_query;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -39,13 +49,15 @@ public class Update {
         Update update = (Update) o;
 
         if (update_id != null ? !update_id.equals(update.update_id) : update.update_id != null) return false;
-        return message != null ? message.equals(update.message) : update.message == null;
+        if (message != null ? !message.equals(update.message) : update.message != null) return false;
+        return callback_query != null ? callback_query.equals(update.callback_query) : update.callback_query == null;
     }
 
     @Override
     public int hashCode() {
         int result = update_id != null ? update_id.hashCode() : 0;
         result = 31 * result + (message != null ? message.hashCode() : 0);
+        result = 31 * result + (callback_query != null ? callback_query.hashCode() : 0);
         return result;
     }
 
@@ -54,6 +66,7 @@ public class Update {
         return "Update{" +
                 "update_id=" + update_id +
                 ", message=" + message +
+                ", callback_query=" + callback_query +
                 '}';
     }
 }

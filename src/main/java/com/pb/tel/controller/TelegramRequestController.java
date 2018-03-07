@@ -6,6 +6,8 @@ import com.pb.tel.data.telegram.TelegramResponse;
 import com.pb.tel.data.telegram.Update;
 import com.pb.tel.service.TelegramConnector;
 import com.pb.tel.service.TelegramUpdateHandler;
+import com.pb.tel.service.exception.TelegramException;
+import com.pb.tel.service.exception.UnresponsibleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -34,10 +36,22 @@ public class TelegramRequestController {
     @RequestMapping(value = "/update")
     @ResponseBody
     public void update(@RequestBody Update update) throws Exception {
-        String message = telegramUpdateHandler.getResponseMessage(update);
-        TelegramRequest telegramRequest = telegramUpdateHandler.getTelegramRequest(message, update.getMessage().getFrom().getId());
-        TelegramResponse response = telegramConnector.sendRequest(telegramRequest);
+        TelegramResponse response = telegramConnector.sendRequest(telegramUpdateHandler.getTelegramRequest(update));
         telegramUpdateHandler.analyseResponse(response);
+    }
+
+    @ExceptionHandler(UnresponsibleException.class)
+    @ResponseBody
+    public void telegramExceptionHandler(UnresponsibleException e){
+        log.log(Level.SEVERE, e.getDescription(), e);
+    }
+
+    @ExceptionHandler(TelegramException.class)
+    @ResponseBody
+    public TelegramRequest telegramExceptionHandler(TelegramException e){
+        log.log(Level.SEVERE, "ManagingRequestController :: telegramExceptionHandler", e);
+        TelegramRequest message = new TelegramRequest(e.getUserId(), e.getDescription());
+        return message;
     }
 
     @ExceptionHandler(Exception.class)

@@ -13,6 +13,11 @@ public class TelegramRequest {
 
     public TelegramRequest(){};
 
+    public TelegramRequest(Integer chat_id, String text){
+        this.chat_id = chat_id;
+        this.text = text;
+    };
+
     Integer chat_id;
 
     String text;

@@ -5,7 +5,8 @@ package com.pb.tel.data.enums;
  */
 public enum UserState {
     NEW("NEW", "начал беседу"),
-    WAITING_PRESS_BUTTON("WAITING_PRESS_BUTTON", "бот ждет нажатия на кнопку");
+    WAITING_PRESS_BUTTON("WAITING_PRESS_BUTTON", "бот ждет нажатия на кнопку"),
+    WAITING_TTN("WAITING_TTN", "бот ждет ТТН");
 
     String code;
     String descr;

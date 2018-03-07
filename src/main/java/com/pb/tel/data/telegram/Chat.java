@@ -7,25 +7,15 @@ import com.pb.tel.data.enums.ChatType;
  * Created by vladimir on 02.03.18.
  */
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class Chat {
+public class Chat extends TelegramUser{
 
     public Chat(){};
-
-    private Integer id;
 
     private String first_name;
 
     private String last_name;
 
     private String type;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getFirst_name() {
         return first_name;
@@ -52,13 +42,17 @@ public class Chat {
     }
 
     @Override
+    public String getCall_back_data() {
+        return null;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
         Chat chat = (Chat) o;
 
-        if (id != null ? !id.equals(chat.id) : chat.id != null) return false;
         if (first_name != null ? !first_name.equals(chat.first_name) : chat.first_name != null) return false;
         if (last_name != null ? !last_name.equals(chat.last_name) : chat.last_name != null) return false;
         return type != null ? type.equals(chat.type) : chat.type == null;
@@ -66,8 +60,7 @@ public class Chat {
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (first_name != null ? first_name.hashCode() : 0);
+        int result = first_name != null ? first_name.hashCode() : 0;
         result = 31 * result + (last_name != null ? last_name.hashCode() : 0);
         result = 31 * result + (type != null ? type.hashCode() : 0);
         return result;
@@ -76,8 +69,7 @@ public class Chat {
     @Override
     public String toString() {
         return "Chat{" +
-                "id=" + id +
-                ", first_name='" + first_name + '\'' +
+                "first_name='" + first_name + '\'' +
                 ", last_name='" + last_name + '\'' +
                 ", type='" + type + '\'' +
                 '}';

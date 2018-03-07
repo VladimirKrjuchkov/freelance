@@ -2,6 +2,7 @@ package com.pb.tel.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pb.tel.data.Mes;
+import com.pb.tel.data.telegram.SimpleTelegramResponse;
 import com.pb.tel.data.telegram.TelegramRequest;
 import com.pb.tel.data.telegram.TelegramResponse;
 import com.pb.tel.data.telegram.User;
@@ -83,7 +84,7 @@ public class TelegramConnector {
             entity.writeTo(out);
             out.close();
             String answer = requestHTTP.getResponse(connection, "");
-            TelegramResponse telegramResponse = jacksonObjectMapper.readValue(answer, TelegramResponse.class);
+            TelegramResponse telegramResponse = jacksonObjectMapper.readValue(answer, SimpleTelegramResponse.class);
             return telegramResponse;
     }
 

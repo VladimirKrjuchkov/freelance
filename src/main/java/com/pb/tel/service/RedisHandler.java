@@ -35,7 +35,6 @@ public class RedisHandler {
         }else {
             userStateCode = new String(userStateFromRedis);
         }
-        log.log(Level.INFO, "userStateCode = " + userStateCode);
         UserState userState = UserState.getByCode(userStateCode);
         return userState;
     }

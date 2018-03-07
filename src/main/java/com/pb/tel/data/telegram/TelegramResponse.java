@@ -1,7 +1,7 @@
 package com.pb.tel.data.telegram;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 /**
  * Created by vladimir on 06.03.18.
@@ -54,6 +54,16 @@ public class TelegramResponse {
     }
 
     @Override
+    public String toString() {
+        return "TelegramResponse{" +
+                "ok=" + ok +
+                ", result=" + result +
+                ", description='" + description + '\'' +
+                ", error_code='" + error_code + '\'' +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -73,15 +83,5 @@ public class TelegramResponse {
         result1 = 31 * result1 + (description != null ? description.hashCode() : 0);
         result1 = 31 * result1 + (error_code != null ? error_code.hashCode() : 0);
         return result1;
-    }
-
-    @Override
-    public String toString() {
-        return "TelegramResponse{" +
-                "ok=" + ok +
-                ", result=" + result +
-                ", description='" + description + '\'' +
-                ", error_code='" + error_code + '\'' +
-                '}';
     }
 }
