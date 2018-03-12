@@ -40,6 +40,6 @@ public class RedisHandler {
     }
 
     public void setUserState(UserState userState, Integer userId){
-        redisStorage.putValue(String.valueOf(userId), UserState.WAITING_PRESS_BUTTON.getCode().getBytes(), Utils.getDateAfterSeconds(secondsTtl));
+        redisStorage.putValue(String.valueOf(userId), userState.getCode().getBytes(), Utils.getDateAfterSeconds(secondsTtl));
     }
 }

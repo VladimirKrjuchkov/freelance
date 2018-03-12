@@ -12,6 +12,8 @@ public class User extends TelegramUser{
 
     public User(){};
 
+    private Integer id;
+
     private Boolean is_bot;
 
     private String first_name;
@@ -22,6 +24,14 @@ public class User extends TelegramUser{
 
     @JsonIgnore
     private String call_back_data;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public Boolean getIs_bot() {
         return is_bot;
@@ -67,9 +77,11 @@ public class User extends TelegramUser{
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
 
         User user = (User) o;
 
+        if (id != null ? !id.equals(user.id) : user.id != null) return false;
         if (is_bot != null ? !is_bot.equals(user.is_bot) : user.is_bot != null) return false;
         if (first_name != null ? !first_name.equals(user.first_name) : user.first_name != null) return false;
         if (last_name != null ? !last_name.equals(user.last_name) : user.last_name != null) return false;
@@ -80,7 +92,9 @@ public class User extends TelegramUser{
 
     @Override
     public int hashCode() {
-        int result = is_bot != null ? is_bot.hashCode() : 0;
+        int result = super.hashCode();
+        result = 31 * result + (id != null ? id.hashCode() : 0);
+        result = 31 * result + (is_bot != null ? is_bot.hashCode() : 0);
         result = 31 * result + (first_name != null ? first_name.hashCode() : 0);
         result = 31 * result + (last_name != null ? last_name.hashCode() : 0);
         result = 31 * result + (language_code != null ? language_code.hashCode() : 0);
@@ -91,7 +105,8 @@ public class User extends TelegramUser{
     @Override
     public String toString() {
         return "User{" +
-                "is_bot=" + is_bot +
+                "id=" + id +
+                ", is_bot=" + is_bot +
                 ", first_name='" + first_name + '\'' +
                 ", last_name='" + last_name + '\'' +
                 ", language_code='" + language_code + '\'' +

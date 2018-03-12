@@ -56,9 +56,9 @@ public class TelegramUpdateHandler {
         return telegramRequest;
     }
 
-    public void analyseResponse(TelegramResponse telegramResponse){
+    public void analyseResponse(TelegramResponse telegramResponse, Update update){
         if(telegramResponse.getOk()) {
-            updateUserState(telegramResponse.getResult().getChat());
+            updateUserState(getUserFromUpdate(update));
         }
     }
 
@@ -73,7 +73,7 @@ public class TelegramUpdateHandler {
         return message;
     }
 
-    private void updateUserState(TelegramUser user){
+    private void updateUserState(User user){
         UserState userState = redisHandler.getUserState(user.getId());
         if(userState == UserState.NEW){
             redisHandler.setUserState(UserState.WAITING_PRESS_BUTTON, user.getId());

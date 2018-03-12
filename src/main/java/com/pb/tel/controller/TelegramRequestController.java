@@ -37,7 +37,7 @@ public class TelegramRequestController {
     @ResponseBody
     public void update(@RequestBody Update update) throws Exception {
         TelegramResponse response = telegramConnector.sendRequest(telegramUpdateHandler.getTelegramRequest(update));
-        telegramUpdateHandler.analyseResponse(response);
+        telegramUpdateHandler.analyseResponse(response, update);
     }
 
     @ExceptionHandler(UnresponsibleException.class)
