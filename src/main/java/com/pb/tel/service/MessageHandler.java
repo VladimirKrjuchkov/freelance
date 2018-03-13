@@ -4,6 +4,7 @@ import com.pb.tel.data.enums.UserState;
 import com.pb.tel.data.novaposhta.NovaPoshtaResponse;
 import com.pb.tel.data.telegram.User;
 import com.pb.tel.service.exception.TelegramException;
+import com.pb.util.zvv.PropertiesUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,11 +28,11 @@ public class MessageHandler {
     /*Костыльный метод который будет замене походом на БД*/
     private String getRowMessageByUserState(UserState userState, User user, String userText) throws Exception{
         if(userState == UserState.NEW) {
-            return "{user_first_name}, чим можу бути корисним сьогодні?\uD83D\uDE0F";
+            return PropertiesUtil.getProperty("user_start_new_chat");
         }
         if(userState == UserState.WAITING_PRESS_BUTTON){
             if("tracking".equals(user.getCall_back_data())) {
-                return "Вкажіть, будь ласка, номер вашого відправлення";
+                return PropertiesUtil.getProperty("user_choose_tracking");
             }
         }
         if(userState == UserState.WAITING_TTN){
@@ -39,18 +40,18 @@ public class MessageHandler {
             String message = "";
             if(response.getSuccess()) {
                 if (!userText.equals(response.getData().get(0).getNumber())) {
-                    throw new TelegramException("Вибачте але трекінг недоступний, спробуйте ще раз", user.getId());
+                    throw new TelegramException("tracking_error", user.getId());
                 }
-                message = "{user_first_name}, статус вашого вiдправлення " + response.getData().get(0).getNumber() + ": " + response.getData().get(0).getStatus();
+                message = PropertiesUtil.getProperty("tracking_response_from_novaposhta") + response.getData().get(0).getNumber() + ": " + response.getData().get(0).getStatus();
             }else{
-                if("20001401442".equals(response.getErrorCodes().get(0))){
-                    throw new TelegramException("Номер відправлення вказано невірно, спробуйте ще раз", user.getId());
+                if(PropertiesUtil.getProperty("bad_ttn").equals(response.getErrorCodes().get(0))){
+                    throw new TelegramException(PropertiesUtil.getProperty("bad_ttn"), user.getId());
                 }
             }
             return message;
         }
         if(userState == UserState.WRONG_ANSWER) {
-            return "{user_first_name}, нажаль я не зрозумiв вашу вiдповiдь\uD83D\uDE14";
+            return PropertiesUtil.getProperty("wrong_answer");
         }
         return null;
     }

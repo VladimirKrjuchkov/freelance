@@ -1,5 +1,6 @@
 package com.pb.tel.service;
 
+import com.pb.tel.data.enums.TelegramButtons;
 import com.pb.tel.data.enums.UserState;
 import com.pb.tel.data.telegram.*;
 import com.pb.tel.service.exception.TelegramException;
@@ -40,9 +41,9 @@ public class TelegramUpdateHandler {
                 InlineKeyboardMarkup reply_markup = new InlineKeyboardMarkup();
                 List<List<InlineKeyboardButton>> InlineKeyboardButtons = new ArrayList<List<InlineKeyboardButton>>();
 
-                InlineKeyboardButton tracking = new InlineKeyboardButton(PropertiesUtil.getProperty("tracking"), "tracking");
-                InlineKeyboardButton myPost = new InlineKeyboardButton(PropertiesUtil.getProperty("myPost"), "myPost");
-                InlineKeyboardButton adviceButton = new InlineKeyboardButton(PropertiesUtil.getProperty("adviceButton"), "adviceButton");
+                InlineKeyboardButton tracking = new InlineKeyboardButton(TelegramButtons.tracking.getCode(), TelegramButtons.tracking.getButton());
+                InlineKeyboardButton myPost = new InlineKeyboardButton(TelegramButtons.myPost.getCode(), TelegramButtons.myPost.getButton());
+                InlineKeyboardButton adviceButton = new InlineKeyboardButton(TelegramButtons.adviceButton.getCode(), TelegramButtons.adviceButton.getButton());
 
                 List<InlineKeyboardButton> trackings = new ArrayList<InlineKeyboardButton>();
                 trackings.add(tracking);
@@ -52,8 +53,8 @@ public class TelegramUpdateHandler {
                 adviceButtons.add(adviceButton);
 
                 InlineKeyboardButtons.add(trackings);
-                InlineKeyboardButtons.add(myPosts);
-                InlineKeyboardButtons.add(adviceButtons);
+//                InlineKeyboardButtons.add(myPosts);
+//                InlineKeyboardButtons.add(adviceButtons);
                 reply_markup.setInline_keyboard(InlineKeyboardButtons);
                 telegramRequest.setReply_markup(reply_markup);
             }
@@ -100,7 +101,7 @@ public class TelegramUpdateHandler {
             redisHandler.setUserState(UserState.WAITING_PRESS_BUTTON, user.getId());
 
         }else if(userState == UserState.WAITING_PRESS_BUTTON){
-            if("tracking".equals(user.getCall_back_data())) {
+            if(TelegramButtons.tracking.getCode().equals(user.getCall_back_data())) {
                 redisHandler.setUserState(UserState.WAITING_TTN, user.getId());
             }
         }else if(userState == UserState.WAITING_TTN){

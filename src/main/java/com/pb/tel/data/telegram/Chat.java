@@ -1,7 +1,6 @@
 package com.pb.tel.data.telegram;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.pb.tel.data.enums.ChatType;
 
 /**
  * Created by vladimir on 02.03.18.

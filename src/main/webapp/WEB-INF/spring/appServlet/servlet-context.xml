@@ -29,6 +29,12 @@
 				<value>/com/pb/tel/config/app.properties</value>
 				<value>/WEB-INF/classes/com/pb/tel/config/buttons.txt</value>
 				<value>/com/pb/tel/config/buttons.txt</value>
+				<value>/WEB-INF/classes/com/pb/tel/config/exceptions.txt</value>
+				<value>/com/pb/tel/config/exceptions.txt</value>
+				<value>/WEB-INF/classes/com/pb/tel/config/novaposhta.txt</value>
+				<value>/com/pb/tel/config/novaposhta.txt</value>
+				<value>/WEB-INF/classes/com/pb/tel/config/messages.txt</value>
+				<value>/com/pb/tel/config/messages.txt</value>
 				<!-- <value>file:${configurationService.Location}/app.properties</value> -->
 			</list>
 		</property>
