@@ -22,7 +22,7 @@ public class MessageHandler {
     private NovaPoshtaAPIHandler novaPoshtaAPIHandler;
 
     public String getMessage(User user, UserState userState, String userText) throws Exception{
-        return fillInMessage(getRowMessageByUserState(userState, user, userText), user);
+        return fillInMessageByUserData(getRowMessageByUserState(userState, user, userText), user);
     }
 
     /*Костыльный метод который будет замене походом на БД*/
@@ -36,19 +36,8 @@ public class MessageHandler {
             }
         }
         if(userState == UserState.WAITING_TTN){
-            NovaPoshtaResponse response = novaPoshtaAPIHandler.getTrackingByTTN(userText);
-            String message = "";
-            if(response.getSuccess()) {
-                if (!userText.equals(response.getData().get(0).getNumber())) {
-                    throw new TelegramException("tracking_error", user.getId());
-                }
-                message = PropertiesUtil.getProperty("tracking_response_from_novaposhta") + response.getData().get(0).getNumber() + ": " + response.getData().get(0).getStatus();
-            }else{
-                if(PropertiesUtil.getProperty("bad_ttn").equals(response.getErrorCodes().get(0))){
-                    throw new TelegramException(PropertiesUtil.getProperty("bad_ttn"), user.getId());
-                }
-            }
-            return message;
+            String message = novaPoshtaAPIHandler.getTrackingByTTN(userText, user);
+            return PropertiesUtil.getProperty("tracking_response_from_novaposhta") + userText + ": " + message;
         }
         if(userState == UserState.WRONG_ANSWER) {
             return PropertiesUtil.getProperty("wrong_answer");
@@ -56,7 +45,7 @@ public class MessageHandler {
         return null;
     }
 
-    private String fillInMessage(String rowMessage, User user){
+    private String fillInMessageByUserData(String rowMessage, User user){
         if(user.getFirst_name() != null) {
             rowMessage = rowMessage.replace("{user_first_name}", user.getFirst_name());
         }else if(user.getUsername() != null){

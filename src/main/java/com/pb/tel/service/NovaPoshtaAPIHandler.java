@@ -4,6 +4,9 @@ import com.pb.tel.data.novaposhta.Document;
 import com.pb.tel.data.novaposhta.MethodPropertie;
 import com.pb.tel.data.novaposhta.NovaPoshtaRequest;
 import com.pb.tel.data.novaposhta.NovaPoshtaResponse;
+import com.pb.tel.data.telegram.User;
+import com.pb.tel.service.exception.TelegramException;
+import com.pb.util.zvv.PropertiesUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +26,7 @@ public class NovaPoshtaAPIHandler {
     @Autowired
     private NovaPoshtaConnector novaPoshtaConnector;
 
-    public NovaPoshtaResponse getTrackingByTTN(String ttn) throws Exception {
+    public String getTrackingByTTN(String ttn, User user) throws Exception {
         NovaPoshtaRequest request = new NovaPoshtaRequest();
         request.setModelName("TrackingDocument");
         request.setCalledMethod("getStatusDocuments");
@@ -36,6 +39,15 @@ public class NovaPoshtaAPIHandler {
         methodPropertie.setDocuments(documents);
         request.setMethodProperties(methodPropertie);
         NovaPoshtaResponse response = novaPoshtaConnector.sendRequest(request);
-        return response;
+        String message = null;
+        if(response.getSuccess() && ttn.equals(response.getData().get(0).getNumber())){
+            message = response.getData().get(0).getStatus();
+        }else{
+            if(PropertiesUtil.getProperty("bad_ttn").equals(response.getErrorCodes().get(0))){
+                throw new TelegramException(PropertiesUtil.getProperty("bad_ttn"), user.getId());
+            }
+            throw new TelegramException("tracking_error", user.getId());
+        }
+        return message;
     }
 }
