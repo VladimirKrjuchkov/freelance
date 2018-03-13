@@ -44,9 +44,9 @@ public class NovaPoshtaAPIHandler {
             message = response.getData().get(0).getStatus();
         }else{
             if(PropertiesUtil.getProperty("bad_ttn").equals(response.getErrorCodes().get(0))){
-                throw new TelegramException(PropertiesUtil.getProperty("bad_ttn"), user.getId());
+                throw new TelegramException(PropertiesUtil.getProperty("bad_ttn_error"), user.getId());
             }
-            throw new TelegramException("tracking_error", user.getId());
+            throw new TelegramException(PropertiesUtil.getProperty("tracking_error"), user.getId());
         }
         return message;
     }

@@ -41,9 +41,9 @@ public class TelegramUpdateHandler {
                 InlineKeyboardMarkup reply_markup = new InlineKeyboardMarkup();
                 List<List<InlineKeyboardButton>> InlineKeyboardButtons = new ArrayList<List<InlineKeyboardButton>>();
 
-                InlineKeyboardButton tracking = new InlineKeyboardButton(TelegramButtons.tracking.getCode(), TelegramButtons.tracking.getButton());
-                InlineKeyboardButton myPost = new InlineKeyboardButton(TelegramButtons.myPost.getCode(), TelegramButtons.myPost.getButton());
-                InlineKeyboardButton adviceButton = new InlineKeyboardButton(TelegramButtons.adviceButton.getCode(), TelegramButtons.adviceButton.getButton());
+                InlineKeyboardButton tracking = new InlineKeyboardButton(TelegramButtons.tracking.getButton(), TelegramButtons.tracking.getCode());
+                InlineKeyboardButton myPost = new InlineKeyboardButton(TelegramButtons.myPost.getButton(), TelegramButtons.myPost.getCode());
+                InlineKeyboardButton adviceButton = new InlineKeyboardButton(TelegramButtons.adviceButton.getButton(), TelegramButtons.adviceButton.getCode());
 
                 List<InlineKeyboardButton> trackings = new ArrayList<InlineKeyboardButton>();
                 trackings.add(tracking);
