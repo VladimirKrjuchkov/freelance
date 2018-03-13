@@ -39,7 +39,7 @@ public class MessageHandler {
         }
         if(userState == UserState.WAITING_TTN){
             String message = novaPoshtaAPIHandler.getTrackingByTTN(userText, user);
-            return PropertiesUtil.getProperty("tracking_response_from_novaposhta") + userText + ": " + message;
+            return PropertiesUtil.getProperty("tracking_response_from_novaposhta") + " " + userText + ": " + message;
         }
         if(userState == UserState.WRONG_ANSWER) {
             return PropertiesUtil.getProperty("wrong_answer");
