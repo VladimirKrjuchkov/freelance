@@ -1,7 +1,9 @@
 package com.pb.tel.service;
 
+import com.pb.tel.data.enums.TelegramButtons;
 import com.pb.tel.data.enums.UserState;
 import com.pb.tel.data.novaposhta.NovaPoshtaResponse;
+import com.pb.tel.data.telegram.CallbackQuery;
 import com.pb.tel.data.telegram.User;
 import com.pb.tel.service.exception.TelegramException;
 import com.pb.util.zvv.PropertiesUtil;
@@ -31,7 +33,7 @@ public class MessageHandler {
             return PropertiesUtil.getProperty("user_start_new_chat");
         }
         if(userState == UserState.WAITING_PRESS_BUTTON){
-            if("tracking".equals(user.getCall_back_data())) {
+            if(TelegramButtons.tracking.getCode().equals(user.getCall_back_data())) {
                 return PropertiesUtil.getProperty("user_choose_tracking");
             }
         }
