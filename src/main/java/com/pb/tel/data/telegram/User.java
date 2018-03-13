@@ -22,6 +22,8 @@ public class User extends TelegramUser{
 
     private String language_code;
 
+    private String username;
+
     @JsonIgnore
     private String call_back_data;
 
@@ -65,6 +67,14 @@ public class User extends TelegramUser{
         this.language_code = language_code;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public String getCall_back_data() {
         return call_back_data;
     }
@@ -77,7 +87,6 @@ public class User extends TelegramUser{
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
 
         User user = (User) o;
 
@@ -87,17 +96,18 @@ public class User extends TelegramUser{
         if (last_name != null ? !last_name.equals(user.last_name) : user.last_name != null) return false;
         if (language_code != null ? !language_code.equals(user.language_code) : user.language_code != null)
             return false;
+        if (username != null ? !username.equals(user.username) : user.username != null) return false;
         return call_back_data != null ? call_back_data.equals(user.call_back_data) : user.call_back_data == null;
     }
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (id != null ? id.hashCode() : 0);
+        int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (is_bot != null ? is_bot.hashCode() : 0);
         result = 31 * result + (first_name != null ? first_name.hashCode() : 0);
         result = 31 * result + (last_name != null ? last_name.hashCode() : 0);
         result = 31 * result + (language_code != null ? language_code.hashCode() : 0);
+        result = 31 * result + (username != null ? username.hashCode() : 0);
         result = 31 * result + (call_back_data != null ? call_back_data.hashCode() : 0);
         return result;
     }
@@ -110,6 +120,7 @@ public class User extends TelegramUser{
                 ", first_name='" + first_name + '\'' +
                 ", last_name='" + last_name + '\'' +
                 ", language_code='" + language_code + '\'' +
+                ", username='" + username + '\'' +
                 ", call_back_data='" + call_back_data + '\'' +
                 '}';
     }

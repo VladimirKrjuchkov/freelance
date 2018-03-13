@@ -35,31 +35,30 @@ public class TelegramRequestController {
 
     @RequestMapping(value = "/update")
     @ResponseBody
-    public void update(@RequestBody Update update) throws Exception {
+    public void update(@RequestBody Update update) throws Exception{
         TelegramResponse response = telegramConnector.sendRequest(telegramUpdateHandler.getTelegramRequest(update));
         telegramUpdateHandler.analyseResponse(response, update);
     }
 
     @ExceptionHandler(UnresponsibleException.class)
     @ResponseBody
-    public void telegramExceptionHandler(UnresponsibleException e){
+    public void unresponsibleException(UnresponsibleException e){
+        telegramUpdateHandler.flushUserState(e.getId());
         log.log(Level.SEVERE, e.getDescription(), e);
     }
 
     @ExceptionHandler(TelegramException.class)
     @ResponseBody
-    public TelegramRequest telegramExceptionHandler(TelegramException e){
+    public void telegramExceptionHandler(TelegramException e) throws Exception {
         log.log(Level.SEVERE, "ManagingRequestController :: telegramExceptionHandler", e);
         TelegramRequest message = new TelegramRequest(e.getUserId(), e.getDescription());
-        return message;
+        telegramConnector.sendRequest(message);
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseBody
-    public Mes exceptionHandler(Exception e){
+    public void exceptionHandler(Exception e){
         log.log(Level.SEVERE, "ManagingRequestController :: exceptionHandler", e);
-        Mes message = new Mes(Mes.MesState.err, e.getMessage());
-        return message;
     }
 
 }
