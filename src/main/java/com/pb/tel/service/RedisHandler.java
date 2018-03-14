@@ -28,7 +28,10 @@ public class RedisHandler {
     }
 
     public UserState getUserState(Integer userId){
+
+        long start = System.currentTimeMillis();
         byte[] userStateFromRedis = redisStorage.getValue(userId.toString());
+        long stop = System.currentTimeMillis();
         String userStateCode = null;
         if(userStateFromRedis == null || "nil".equals(new String(userStateFromRedis))){
             userStateCode = UserState.NEW.getCode();

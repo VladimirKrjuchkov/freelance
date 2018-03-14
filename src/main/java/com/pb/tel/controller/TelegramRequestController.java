@@ -50,7 +50,6 @@ public class TelegramRequestController {
     @ExceptionHandler(TelegramException.class)
     @ResponseBody
     public void telegramExceptionHandler(TelegramException e) throws Exception {
-        log.log(Level.SEVERE, "ManagingRequestController :: telegramExceptionHandler", e);
         TelegramRequest message = new TelegramRequest(e.getUserId(), e.getDescription());
         telegramConnector.sendRequest(message);
     }

@@ -33,11 +33,11 @@ public class TelegramUpdateHandler {
         TelegramRequest telegramRequest = new TelegramRequest();
         User user = getUserFromUpdate(update);
         try {
-            checkUpdate(update, redisHandler.getUserState(user.getId()));
-
+            UserState userState = redisHandler.getUserState(user.getId());
+            checkUpdate(update, userState);
             telegramRequest.setChat_id(user.getId());
-            telegramRequest.setText(getResponseMessage(update));
-            if (redisHandler.getUserState(user.getId()) == UserState.NEW) {
+            telegramRequest.setText(getResponseMessage(update, userState));
+            if (userState == UserState.NEW) {
                 InlineKeyboardMarkup reply_markup = new InlineKeyboardMarkup();
                 List<List<InlineKeyboardButton>> InlineKeyboardButtons = new ArrayList<List<InlineKeyboardButton>>();
 
@@ -83,15 +83,13 @@ public class TelegramUpdateHandler {
         }
     };
 
-    private String getResponseMessage(Update update) throws Exception{
+    private String getResponseMessage(Update update, UserState userState) throws Exception{
         User user = getUserFromUpdate(update);
         if(user == null){
             throw new UnresponsibleException("USER01", PropertiesUtil.getProperty("USER01"));
         }
-        UserState userState = redisHandler.getUserState(user.getId());
         log.log(Level.INFO, "User " + user.getId() + " state : " + userState + " (" + userState.getDescr() + ")");
         String message = messageHandler.getMessage(user, userState, (update.getMessage() != null) ? update.getMessage().getText() : null);
-        log.log(Level.INFO, "User " + user.getId() + " message : " + message);
         return message;
     }
 

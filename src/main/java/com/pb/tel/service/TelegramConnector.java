@@ -91,7 +91,6 @@ public class TelegramConnector {
     public TelegramResponse sendRequest(TelegramRequest request) throws Exception {
             RequestHTTPS requestHTTP = new RequestHTTPS(Integer.parseInt(PropertiesUtil.getProperty("connectTimeout")), Integer.parseInt(PropertiesUtil.getProperty("readTimeout")));
             String url = PropertiesUtil.getProperty("telegram_bot_url") + PropertiesUtil.getProperty("telegram_bot_token") + "/sendMessage";
-            log.log(Level.INFO, "URL OF REQUEST : " + url);
             Map<String, String> requestProperties = new HashMap<String, String>();
             requestProperties.put("Content-Type", MediaType.APPLICATION_JSON_VALUE);
             requestProperties.put("Accept", MediaType.APPLICATION_JSON_VALUE);
