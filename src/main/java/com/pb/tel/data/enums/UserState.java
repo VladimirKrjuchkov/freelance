@@ -7,6 +7,7 @@ public enum UserState {
     NEW("NEW", "начал беседу"),
     WAITING_PRESS_BUTTON("WAITING_PRESS_BUTTON", "бот ждет нажатия на кнопку"),
     WAITING_TTN("WAITING_TTN", "бот ждет ТТН"),
+    WAITING_OPER("WAITING_OPER", "клиент ждет соеденения с оператором"),
     WRONG_ANSWER("WRONG_ANSWER", "неправильный ответ пользователя");
 
     String code;

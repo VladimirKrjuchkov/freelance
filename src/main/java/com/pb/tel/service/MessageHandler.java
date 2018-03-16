@@ -37,6 +37,10 @@ public class MessageHandler {
             if(TelegramButtons.tracking.getCode().equals(userAccount.getCallBackData())) {
                 return PropertiesUtil.getProperty("user_choose_tracking");
             }
+            if(TelegramButtons.callOper.getCode().equals(userAccount.getCallBackData())) {
+
+                return PropertiesUtil.getProperty("user_call_oper");
+            }
         }
         if(userAccount.getUserState() == UserState.WAITING_TTN){
             String message = novaPoshtaAPIHandler.getTrackingByTTN(userAccount);

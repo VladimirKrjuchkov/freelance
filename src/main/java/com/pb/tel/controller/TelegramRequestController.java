@@ -48,7 +48,6 @@ public class TelegramRequestController {
         UserAccount userAccount = userAccountStore.getValue(user.getId());
         if(userAccount == null) {
             userAccount = new UserAccount(user.getId());
-            userAccountStore.putValue(user.getId(), userAccount, Utils.getDateAfterSeconds(180));
         }
         userAccount.setFirstName(user.getFirst_name());
         userAccount.setLastName(user.getLast_name());

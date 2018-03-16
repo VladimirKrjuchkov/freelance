@@ -115,8 +115,9 @@ public class TelegramUpdateHandler {
             if(TelegramButtons.tracking.getCode().equals(userAccount.getCallBackData())) {
                 userAccount.setUserState(UserState.WAITING_TTN);
             }else if(TelegramButtons.callOper.getCode().equals(userAccount.getCallBackData())){
-
+                userAccount.setUserState(UserState.WAITING_OPER);
             }
+
         }else if(userAccount.getUserState() == UserState.WAITING_TTN){
             userAccount.setUserState(UserState.NEW);
 
