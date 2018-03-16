@@ -1,5 +1,6 @@
 package com.pb.tel.service;
 
+import com.pb.tel.data.UserAccount;
 import com.pb.tel.data.novaposhta.Document;
 import com.pb.tel.data.novaposhta.MethodPropertie;
 import com.pb.tel.data.novaposhta.NovaPoshtaRequest;
@@ -26,27 +27,27 @@ public class NovaPoshtaAPIHandler {
     @Autowired
     private NovaPoshtaConnector novaPoshtaConnector;
 
-    public String getTrackingByTTN(String ttn, User user) throws Exception {
+    public String getTrackingByTTN(UserAccount userAccount) throws Exception {
         NovaPoshtaRequest request = new NovaPoshtaRequest();
         request.setModelName("TrackingDocument");
         request.setCalledMethod("getStatusDocuments");
         request.setLanguage("ua");
         MethodPropertie methodPropertie = new MethodPropertie();
         Document document = new Document();
-        document.setDocumentNumber(ttn);
+        document.setDocumentNumber(userAccount.getUserText());
         List<Document> documents = new ArrayList<Document>();
         documents.add(document);
         methodPropertie.setDocuments(documents);
         request.setMethodProperties(methodPropertie);
         NovaPoshtaResponse response = novaPoshtaConnector.sendRequest(request);
         String message = null;
-        if(response.getSuccess() && ttn.equals(response.getData().get(0).getNumber())){
+        if(response.getSuccess() && userAccount.getUserText().equals(response.getData().get(0).getNumber())){
             message = response.getData().get(0).getStatus();
         }else{
             if(PropertiesUtil.getProperty("bad_ttn").equals(response.getErrorCodes().get(0))){
-                throw new TelegramException(PropertiesUtil.getProperty("bad_ttn_error"), user.getId());
+                throw new TelegramException(PropertiesUtil.getProperty("bad_ttn_error"), userAccount.getId());
             }
-            throw new TelegramException(PropertiesUtil.getProperty("tracking_error"), user.getId());
+            throw new TelegramException(PropertiesUtil.getProperty("tracking_error"), userAccount.getId());
         }
         return message;
     }

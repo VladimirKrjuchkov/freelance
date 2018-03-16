@@ -1,5 +1,6 @@
 package com.pb.tel.service;
 
+import com.pb.tel.data.UserAccount;
 import com.pb.tel.data.enums.TelegramButtons;
 import com.pb.tel.data.enums.UserState;
 import com.pb.tel.data.novaposhta.NovaPoshtaResponse;
@@ -23,41 +24,41 @@ public class MessageHandler {
     @Autowired
     private NovaPoshtaAPIHandler novaPoshtaAPIHandler;
 
-    public String getMessage(User user, UserState userState, String userText) throws Exception{
-        return fillInMessageByUserData(getRowMessageByUserState(userState, user, userText), user);
+    public String getMessage(UserAccount userAccount) throws Exception{
+        return fillInMessageByUserData(getRowMessageByUserState(userAccount), userAccount);
     }
 
     /*Костыльный метод который будет замене походом на БД*/
-    private String getRowMessageByUserState(UserState userState, User user, String userText) throws Exception{
-        if(userState == UserState.NEW) {
+    private String getRowMessageByUserState(UserAccount userAccount) throws Exception{
+        if(userAccount.getUserState() == UserState.NEW) {
             return PropertiesUtil.getProperty("user_start_new_chat");
         }
-        if(userState == UserState.WAITING_PRESS_BUTTON){
-            if(TelegramButtons.tracking.getCode().equals(user.getCall_back_data())) {
+        if(userAccount.getUserState() == UserState.WAITING_PRESS_BUTTON){
+            if(TelegramButtons.tracking.getCode().equals(userAccount.getCallBackData())) {
                 return PropertiesUtil.getProperty("user_choose_tracking");
             }
         }
-        if(userState == UserState.WAITING_TTN){
-            String message = novaPoshtaAPIHandler.getTrackingByTTN(userText, user);
-            return PropertiesUtil.getProperty("tracking_response_from_novaposhta") + " " + userText + ": " + message;
+        if(userAccount.getUserState() == UserState.WAITING_TTN){
+            String message = novaPoshtaAPIHandler.getTrackingByTTN(userAccount);
+            return PropertiesUtil.getProperty("tracking_response_from_novaposhta") + " " + userAccount.getUserText() + ": " + message;
         }
-        if(userState == UserState.WRONG_ANSWER) {
+        if(userAccount.getUserState() == UserState.WRONG_ANSWER) {
             return PropertiesUtil.getProperty("wrong_answer");
         }
         return null;
     }
 
-    private String fillInMessageByUserData(String rowMessage, User user){
-        if(user.getFirst_name() != null) {
-            rowMessage = rowMessage.replace("{user_first_name}", user.getFirst_name());
-        }else if(user.getUsername() != null){
-            rowMessage = rowMessage.replace("{user_first_name}", user.getUsername());
+    private String fillInMessageByUserData(String rowMessage, UserAccount userAccount){
+        if(userAccount.getFirstName() != null) {
+            rowMessage = rowMessage.replace("{user_first_name}", userAccount.getFirstName());
+        }else if(userAccount.getUserName() != null){
+            rowMessage = rowMessage.replace("{user_first_name}", userAccount.getUserName());
         }else{
             rowMessage = rowMessage.replace("{user_first_name}", "Шановний користувач");
         }
 
-        if(user.getLast_name() != null) {
-            rowMessage = rowMessage.replace("{user_last_name}", user.getLast_name());
+        if(userAccount.getLastName() != null) {
+            rowMessage = rowMessage.replace("{user_last_name}", userAccount.getLastName());
         }
         return rowMessage;
     }

@@ -39,6 +39,10 @@
 		</property>
 	</bean>
 
+	<bean id="userAccountStore" class="com.pb.util.zvv.storage.StorageExpiry">
+		<property name="flushInterval" value="${userAccountStoreFlushInterval}"/>
+	</bean>
+
 	<import resource="app-context.xml"/>
 
 </beans>
