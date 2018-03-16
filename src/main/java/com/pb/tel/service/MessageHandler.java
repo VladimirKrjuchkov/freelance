@@ -38,8 +38,9 @@ public class MessageHandler {
                 return PropertiesUtil.getProperty("user_choose_tracking");
             }
             if(TelegramButtons.callOper.getCode().equals(userAccount.getCallBackData())) {
+//                return PropertiesUtil.getProperty("user_call_oper");
+                return PropertiesUtil.getProperty("user_call_oper") + ", ваш JWT токен : " + Utils.createJWT(userAccount);
 
-                return PropertiesUtil.getProperty("user_call_oper");
             }
         }
         if(userAccount.getUserState() == UserState.WAITING_TTN){
