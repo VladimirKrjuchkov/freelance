@@ -34,9 +34,7 @@ public class TelegramUpdateHandler {
     public TelegramRequest getTelegramRequest(Integer id) throws Exception{
         UserAccount userAccount = userAccountStore.getValue(id);
         TelegramRequest telegramRequest = new TelegramRequest();
-        if(userAccount.getUserState() == UserState.WAITING_PRESS_BUTTON && userAccount.getCallBackData() == null){
-            userAccount.setUserState(UserState.WRONG_ANSWER);
-        }
+        checkUserAnswer(userAccount);
         try {
             telegramRequest.setChat_id(id);
             telegramRequest.setText(getResponseMessage(userAccount));
@@ -95,6 +93,12 @@ public class TelegramUpdateHandler {
             user.setText(update.getCallback_query().getMessage().getText());
         }
         return user;
+    }
+
+    private void checkUserAnswer(UserAccount userAccount){
+        if(userAccount.getUserState() == UserState.WAITING_PRESS_BUTTON && userAccount.getCallBackData() == null){
+            userAccount.setUserState(UserState.WRONG_ANSWER);
+        }
     }
 
     private String getResponseMessage(UserAccount userAccount) throws Exception {
