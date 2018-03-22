@@ -1,19 +1,30 @@
 package com.pb.tel.service;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.pb.tel.controller.TelegramRequestController;
 import com.pb.tel.data.UserAccount;
 import com.pb.util.zvv.PropertiesUtil;
 import io.jsonwebtoken.SignatureAlgorithm;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 import java.security.Key;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import io.jsonwebtoken.*;
+import org.apache.commons.codec.binary.Base64;
 
 /**
  * Created by vladimir on 06.03.18.
  */
 public class Utils {
+
+    private static final Logger log = Logger.getLogger(Utils.class.getCanonicalName());
 
     public static final String encode = "UTF-8";
 
@@ -28,18 +39,31 @@ public class Utils {
         return new Date(System.currentTimeMillis() + afterSeconds*1000);
     }
 
-    public static String createJWT(UserAccount userAccount) {
+    public static String createJWT(UserAccount userAccount) throws UnsupportedEncodingException {
         String key = PropertiesUtil.getProperty("channels_api_key");
         String secret = PropertiesUtil.getProperty("channels_api_secret");
-        SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
-        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(secret);
-        Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
+        Algorithm algorithm = Algorithm.HMAC256(secret);
+        HashMap<String, Object> headers = new HashMap<String, Object>();
+        headers.put("typ", "JWT");
+        String token = JWT.create()
+                .withIssuer(key)
+                .withHeader(headers)
+                .withExpiresAt(getDateAfterSeconds(180))
+                .withClaim("login", Integer.toString(userAccount.getId()))
+                .sign(algorithm);
+        return token;
 
-        JwtBuilder builder = Jwts.builder().setIssuer(key)
-                .setExpiration(getDateAfterSeconds(180))
-                .claim("login", userAccount.getUserName())
-                .signWith(signatureAlgorithm, signingKey);
 
-        return builder.compact();
+//        SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
+//        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(secret);
+//        Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
+//
+//        JwtBuilder builder = Jwts.builder().setIssuer(key)
+//                .setHeaderParam("typ", "JWT")
+//                .setExpiration(getDateAfterSeconds(180))
+//                .claim("login", userAccount.getId())
+//                .signWith(signatureAlgorithm, signingKey);
+//
+//        return builder.compact();
     }
 }

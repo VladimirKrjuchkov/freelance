@@ -6,6 +6,7 @@ import com.pb.tel.data.telegram.TelegramRequest;
 import com.pb.tel.data.telegram.TelegramResponse;
 import com.pb.tel.data.telegram.Update;
 import com.pb.tel.data.telegram.User;
+import com.pb.tel.service.MessageHandler;
 import com.pb.tel.service.TelegramConnector;
 import com.pb.tel.service.TelegramUpdateHandler;
 import com.pb.tel.service.Utils;
@@ -54,6 +55,9 @@ public class TelegramRequestController {
         userAccount.setUserName(user.getUsername());
         userAccount.setCallBackData(user.getCall_back_data());
         userAccount.setUserText(user.getText());
+        userAccount.setUdid(user.getBot_id());
+        userAccount.setReqId(update.getUpdate_id());
+
         userAccountStore.putValue(user.getId(), userAccount, Utils.getDateAfterSeconds(180));
         TelegramResponse response = telegramConnector.sendRequest(telegramUpdateHandler.getTelegramRequest(user.getId()));
         telegramUpdateHandler.analyseResponse(response, userAccount);

@@ -24,6 +24,9 @@ public class MessageHandler {
     @Autowired
     private NovaPoshtaAPIHandler novaPoshtaAPIHandler;
 
+    @Autowired
+    private ChannelsAPIHandler channelsAPIHandler;
+
     public String getMessage(UserAccount userAccount) throws Exception{
         return fillInMessageByUserData(getRowMessageByUserState(userAccount), userAccount);
     }
@@ -38,9 +41,8 @@ public class MessageHandler {
                 return PropertiesUtil.getProperty("user_choose_tracking");
             }
             if(TelegramButtons.callOper.getCode().equals(userAccount.getCallBackData())) {
-//                return PropertiesUtil.getProperty("user_call_oper");
-                return PropertiesUtil.getProperty("user_call_oper") + ", ваш JWT токен : " + Utils.createJWT(userAccount);
-
+                channelsAPIHandler.createChannel(userAccount);
+                return PropertiesUtil.getProperty("user_call_oper");
             }
         }
         if(userAccount.getUserState() == UserState.WAITING_TTN){
@@ -53,7 +55,7 @@ public class MessageHandler {
         return null;
     }
 
-    private String fillInMessageByUserData(String rowMessage, UserAccount userAccount){
+    public String fillInMessageByUserData(String rowMessage, UserAccount userAccount){
         if(userAccount.getFirstName() != null) {
             rowMessage = rowMessage.replace("{user_first_name}", userAccount.getFirstName());
         }else if(userAccount.getUserName() != null){

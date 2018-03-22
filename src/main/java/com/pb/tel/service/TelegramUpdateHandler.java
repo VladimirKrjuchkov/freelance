@@ -79,7 +79,7 @@ public class TelegramUpdateHandler {
     }
 
     public void flushUserState(Integer userId){
-        userAccountStore.flushValue(userId);
+        userAccountStore.removeValue(userId);
     }
 
     public User getUserFromUpdate(Update update){
@@ -91,6 +91,7 @@ public class TelegramUpdateHandler {
             user = update.getCallback_query().getFrom();
             user.setCall_back_data(update.getCallback_query().getData());
             user.setText(update.getCallback_query().getMessage().getText());
+            user.setBot_id(update.getCallback_query().getMessage().getFrom().getId());
         }
         return user;
     }

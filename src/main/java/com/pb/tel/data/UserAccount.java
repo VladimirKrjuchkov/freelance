@@ -23,6 +23,10 @@ public class UserAccount {
 
     private String callBackData;
 
+    private Integer udid;
+
+    private Integer reqId;
+
     private String userText;
 
     private UserState userState = UserState.NEW;
@@ -30,7 +34,6 @@ public class UserAccount {
     public UserAccount(Integer id){
         this.id = id;
     };
-
 
     public Integer getId() {
         return id;
@@ -88,6 +91,22 @@ public class UserAccount {
         this.callBackData = callBackData;
     }
 
+    public Integer getUdid() {
+        return udid;
+    }
+
+    public void setUdid(Integer udid) {
+        this.udid = udid;
+    }
+
+    public Integer getReqId() {
+        return reqId;
+    }
+
+    public void setReqId(Integer reqId) {
+        this.reqId = reqId;
+    }
+
     public String getUserText() {
         return userText;
     }
@@ -118,6 +137,8 @@ public class UserAccount {
         if (lastName != null ? !lastName.equals(that.lastName) : that.lastName != null) return false;
         if (userName != null ? !userName.equals(that.userName) : that.userName != null) return false;
         if (callBackData != null ? !callBackData.equals(that.callBackData) : that.callBackData != null) return false;
+        if (udid != null ? !udid.equals(that.udid) : that.udid != null) return false;
+        if (reqId != null ? !reqId.equals(that.reqId) : that.reqId != null) return false;
         if (userText != null ? !userText.equals(that.userText) : that.userText != null) return false;
         return userState == that.userState;
     }
@@ -131,6 +152,8 @@ public class UserAccount {
         result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
         result = 31 * result + (userName != null ? userName.hashCode() : 0);
         result = 31 * result + (callBackData != null ? callBackData.hashCode() : 0);
+        result = 31 * result + (udid != null ? udid.hashCode() : 0);
+        result = 31 * result + (reqId != null ? reqId.hashCode() : 0);
         result = 31 * result + (userText != null ? userText.hashCode() : 0);
         result = 31 * result + (userState != null ? userState.hashCode() : 0);
         return result;
@@ -146,6 +169,8 @@ public class UserAccount {
                 ", lastName='" + lastName + '\'' +
                 ", userName='" + userName + '\'' +
                 ", callBackData='" + callBackData + '\'' +
+                ", udid=" + udid +
+                ", reqId=" + reqId +
                 ", userText='" + userText + '\'' +
                 ", userState=" + userState +
                 '}';

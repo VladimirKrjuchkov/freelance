@@ -30,6 +30,9 @@ public class User extends TelegramUser{
     @JsonIgnore
     private String text;
 
+    @JsonIgnore
+    private Integer bot_id;
+
     public Integer getId() {
         return id;
     }
@@ -94,6 +97,14 @@ public class User extends TelegramUser{
         this.text = text;
     }
 
+    public Integer getBot_id() {
+        return bot_id;
+    }
+
+    public void setBot_id(Integer bot_id) {
+        this.bot_id = bot_id;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -110,7 +121,8 @@ public class User extends TelegramUser{
         if (username != null ? !username.equals(user.username) : user.username != null) return false;
         if (call_back_data != null ? !call_back_data.equals(user.call_back_data) : user.call_back_data != null)
             return false;
-        return text != null ? text.equals(user.text) : user.text == null;
+        if (text != null ? !text.equals(user.text) : user.text != null) return false;
+        return bot_id != null ? bot_id.equals(user.bot_id) : user.bot_id == null;
     }
 
     @Override
@@ -123,6 +135,7 @@ public class User extends TelegramUser{
         result = 31 * result + (username != null ? username.hashCode() : 0);
         result = 31 * result + (call_back_data != null ? call_back_data.hashCode() : 0);
         result = 31 * result + (text != null ? text.hashCode() : 0);
+        result = 31 * result + (bot_id != null ? bot_id.hashCode() : 0);
         return result;
     }
 
@@ -137,6 +150,7 @@ public class User extends TelegramUser{
                 ", username='" + username + '\'' +
                 ", call_back_data='" + call_back_data + '\'' +
                 ", text='" + text + '\'' +
+                ", bot_id=" + bot_id +
                 '}';
     }
 }

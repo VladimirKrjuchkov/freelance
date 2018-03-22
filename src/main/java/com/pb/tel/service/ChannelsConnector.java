@@ -1,8 +1,18 @@
 package com.pb.tel.service;
 
-import com.pb.tel.data.channels.ChannelsAPIHandler;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pb.tel.data.channels.ChannelsRequest;
+import com.pb.tel.data.channels.ChannelsResponse;
+import com.pb.tel.data.novaposhta.NovaPoshtaResponse;
+import com.pb.uniwin.atm.host.DetailedAnswer;
+import com.pb.uniwin.atm.host.RequestHTTPS;
+import com.pb.util.zvv.PropertiesUtil;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -14,5 +24,15 @@ public class ChannelsConnector {
 
     private final Logger log = Logger.getLogger(ChannelsConnector.class.getCanonicalName());
 
+    private static ObjectMapper jacksonObjectMapper = new ObjectMapper();
 
+    public ChannelsResponse doRequest(ChannelsRequest channelsRequest, String url) throws Exception {
+        RequestHTTPS requestHTTP = new RequestHTTPS(Integer.parseInt(PropertiesUtil.getProperty("connectTimeout")), Integer.parseInt(PropertiesUtil.getProperty("readTimeout")));
+        Map<String, String> requestProperties = new HashMap<String, String>();
+        requestProperties.put("Content-Type", MediaType.APPLICATION_JSON_VALUE);
+        requestProperties.put("Accept", MediaType.APPLICATION_JSON_VALUE);
+        requestHTTP.setRequestProperties(requestProperties);
+        DetailedAnswer answer = requestHTTP.performQueryDetailedResponse(jacksonObjectMapper.writeValueAsString(channelsRequest), url);
+        return jacksonObjectMapper.readValue(answer.getBody().getBytes(), ChannelsResponse.class);
+    }
 }
