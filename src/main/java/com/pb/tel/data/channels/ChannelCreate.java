@@ -15,7 +15,7 @@ public class ChannelCreate implements Create{
 
     private String companyId;
 
-    private String type="help";
+    private String type;
 
     public String getCompanyId() {
         return companyId;

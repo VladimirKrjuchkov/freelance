@@ -14,11 +14,21 @@ public class ChannelsRequest {
 
     public ChannelsRequest(){};
 
+    private String token;
+
     private String action;
 
     private String reqId;
 
     private Create data;
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 
     public String getAction() {
         return action;
@@ -51,6 +61,7 @@ public class ChannelsRequest {
 
         ChannelsRequest that = (ChannelsRequest) o;
 
+        if (token != null ? !token.equals(that.token) : that.token != null) return false;
         if (action != null ? !action.equals(that.action) : that.action != null) return false;
         if (reqId != null ? !reqId.equals(that.reqId) : that.reqId != null) return false;
         return data != null ? data.equals(that.data) : that.data == null;
@@ -58,7 +69,8 @@ public class ChannelsRequest {
 
     @Override
     public int hashCode() {
-        int result = action != null ? action.hashCode() : 0;
+        int result = token != null ? token.hashCode() : 0;
+        result = 31 * result + (action != null ? action.hashCode() : 0);
         result = 31 * result + (reqId != null ? reqId.hashCode() : 0);
         result = 31 * result + (data != null ? data.hashCode() : 0);
         return result;
@@ -67,7 +79,8 @@ public class ChannelsRequest {
     @Override
     public String toString() {
         return "ChannelsRequest{" +
-                "action='" + action + '\'' +
+                "token='" + token + '\'' +
+                ", action='" + action + '\'' +
                 ", reqId='" + reqId + '\'' +
                 ", data=" + data +
                 '}';

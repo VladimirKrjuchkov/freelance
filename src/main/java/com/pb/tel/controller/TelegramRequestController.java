@@ -60,6 +60,12 @@ public class TelegramRequestController {
         telegramUpdateHandler.analyseResponse(response, userAccount);
     }
 
+    @RequestMapping(value = "/channels/update")
+    @ResponseBody
+    public void channelsUpdate(@RequestBody Update update) throws Exception{
+
+    }
+
     @ExceptionHandler(UnresponsibleException.class)
     @ResponseBody
     public void unresponsibleException(UnresponsibleException e){

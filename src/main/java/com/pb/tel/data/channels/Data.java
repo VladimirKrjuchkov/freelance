@@ -3,6 +3,8 @@ package com.pb.tel.data.channels;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import java.util.List;
+
 /**
  * Created by vladimir on 22.03.18.
  */
@@ -18,6 +20,8 @@ public class Data {
     private String token;
 
     private Long time;
+
+    private List<Operator> operators;
 
     public User getUser() {
         return user;
@@ -43,6 +47,14 @@ public class Data {
         this.time = time;
     }
 
+    public List<Operator> getOperators() {
+        return operators;
+    }
+
+    public void setOperators(List<Operator> operators) {
+        this.operators = operators;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -52,7 +64,8 @@ public class Data {
 
         if (user != null ? !user.equals(data.user) : data.user != null) return false;
         if (token != null ? !token.equals(data.token) : data.token != null) return false;
-        return time != null ? time.equals(data.time) : data.time == null;
+        if (time != null ? !time.equals(data.time) : data.time != null) return false;
+        return operators != null ? operators.equals(data.operators) : data.operators == null;
     }
 
     @Override
@@ -60,6 +73,7 @@ public class Data {
         int result = user != null ? user.hashCode() : 0;
         result = 31 * result + (token != null ? token.hashCode() : 0);
         result = 31 * result + (time != null ? time.hashCode() : 0);
+        result = 31 * result + (operators != null ? operators.hashCode() : 0);
         return result;
     }
 
@@ -69,6 +83,7 @@ public class Data {
                 "user=" + user +
                 ", token='" + token + '\'' +
                 ", time=" + time +
+                ", operators=" + operators +
                 '}';
     }
 }

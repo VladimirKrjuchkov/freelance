@@ -31,9 +31,7 @@ public class UserAccount {
 
     private UserState userState = UserState.NEW;
 
-    public UserAccount(Integer id){
-        this.id = id;
-    };
+    private String operId;
 
     public Integer getId() {
         return id;
@@ -123,6 +121,14 @@ public class UserAccount {
         this.userState = userState;
     }
 
+    public String getOperId() {
+        return operId;
+    }
+
+    public void setOperId(String operId) {
+        this.operId = operId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -140,7 +146,8 @@ public class UserAccount {
         if (udid != null ? !udid.equals(that.udid) : that.udid != null) return false;
         if (reqId != null ? !reqId.equals(that.reqId) : that.reqId != null) return false;
         if (userText != null ? !userText.equals(that.userText) : that.userText != null) return false;
-        return userState == that.userState;
+        if (userState != that.userState) return false;
+        return operId != null ? operId.equals(that.operId) : that.operId == null;
     }
 
     @Override
@@ -156,6 +163,7 @@ public class UserAccount {
         result = 31 * result + (reqId != null ? reqId.hashCode() : 0);
         result = 31 * result + (userText != null ? userText.hashCode() : 0);
         result = 31 * result + (userState != null ? userState.hashCode() : 0);
+        result = 31 * result + (operId != null ? operId.hashCode() : 0);
         return result;
     }
 
@@ -173,6 +181,7 @@ public class UserAccount {
                 ", reqId=" + reqId +
                 ", userText='" + userText + '\'' +
                 ", userState=" + userState +
+                ", operId='" + operId + '\'' +
                 '}';
     }
 }

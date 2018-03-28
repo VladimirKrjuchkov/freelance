@@ -41,13 +41,13 @@ public class MessageHandler {
                 return PropertiesUtil.getProperty("user_choose_tracking");
             }
             if(TelegramButtons.callOper.getButton().equals(userAccount.getCallBackData())) {
-                channelsAPIHandler.createChannel(userAccount);
+                channelsAPIHandler.getFreeOper(userAccount);
                 return PropertiesUtil.getProperty("user_call_oper");
             }
         }
         if(userAccount.getUserState() == UserState.WAITING_TTN){
             if(TelegramButtons.callOper.getButton().equals(userAccount.getCallBackData())) {
-                channelsAPIHandler.createChannel(userAccount);
+                channelsAPIHandler.getFreeOper(userAccount);
                 return PropertiesUtil.getProperty("user_call_oper");
             }else {
                 String message = novaPoshtaAPIHandler.getTrackingByTTN(userAccount);
