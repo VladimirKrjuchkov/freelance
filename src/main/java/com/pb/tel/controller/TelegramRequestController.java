@@ -2,10 +2,7 @@ package com.pb.tel.controller;
 
 import com.pb.tel.data.Mes;
 import com.pb.tel.data.UserAccount;
-import com.pb.tel.data.telegram.TelegramRequest;
-import com.pb.tel.data.telegram.TelegramResponse;
-import com.pb.tel.data.telegram.Update;
-import com.pb.tel.data.telegram.User;
+import com.pb.tel.data.telegram.*;
 import com.pb.tel.service.MessageHandler;
 import com.pb.tel.service.TelegramConnector;
 import com.pb.tel.service.TelegramUpdateHandler;
@@ -53,7 +50,7 @@ public class TelegramRequestController {
         userAccount.setFirstName(user.getFirst_name());
         userAccount.setLastName(user.getLast_name());
         userAccount.setUserName(user.getUsername());
-        userAccount.setCallBackData(user.getCall_back_data());
+        userAccount.setCallBackData(user.getText());
         userAccount.setUserText(user.getText());
         userAccount.setUdid(user.getBot_id());
         userAccount.setReqId(update.getUpdate_id());
@@ -74,13 +71,14 @@ public class TelegramRequestController {
     @ResponseBody
     public void telegramExceptionHandler(TelegramException e) throws Exception {
         TelegramRequest message = new TelegramRequest(e.getUserId(), e.getDescription());
+        message.setReply_markup(e.getInlineKeyboardMarkup());
         telegramConnector.sendRequest(message);
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseBody
     public void exceptionHandler(Exception e){
-        log.log(Level.SEVERE, "ManagingRequestController :: exceptionHandler", e);
+        log.log(Level.SEVERE, "TelegramRequestController :: exceptionHandler", e);
     }
 
 }

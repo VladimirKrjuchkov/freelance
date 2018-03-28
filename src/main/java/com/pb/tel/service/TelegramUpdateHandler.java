@@ -40,28 +40,24 @@ public class TelegramUpdateHandler {
             telegramRequest.setText(getResponseMessage(userAccount));
             if (userAccount.getUserState() == UserState.NEW) {
                 InlineKeyboardMarkup reply_markup = new InlineKeyboardMarkup();
-                List<List<InlineKeyboardButton>> InlineKeyboardButtons = new ArrayList<List<InlineKeyboardButton>>();
+                List<List<KeyboardButton>> keyboardButtons = new ArrayList<List<KeyboardButton>>();
 
-                InlineKeyboardButton tracking = new InlineKeyboardButton(TelegramButtons.tracking.getButton(), TelegramButtons.tracking.getCode());
-                InlineKeyboardButton myPost = new InlineKeyboardButton(TelegramButtons.myPost.getButton(), TelegramButtons.myPost.getCode());
-                InlineKeyboardButton adviceButton = new InlineKeyboardButton(TelegramButtons.adviceButton.getButton(), TelegramButtons.adviceButton.getCode());
-                InlineKeyboardButton callOper = new InlineKeyboardButton(TelegramButtons.callOper.getButton(), TelegramButtons.callOper.getCode());
+                KeyboardButton tracking = new KeyboardButton(TelegramButtons.tracking.getButton());
+                KeyboardButton callOper = new KeyboardButton(TelegramButtons.callOper.getButton());
 
-                List<InlineKeyboardButton> trackings = new ArrayList<InlineKeyboardButton>();
+                List<KeyboardButton> trackings = new ArrayList<KeyboardButton>();
                 trackings.add(tracking);
-                List<InlineKeyboardButton> myPosts = new ArrayList<InlineKeyboardButton>();
-                myPosts.add(myPost);
-                List<InlineKeyboardButton> adviceButtons = new ArrayList<InlineKeyboardButton>();
-                adviceButtons.add(adviceButton);
-                List<InlineKeyboardButton> callOpers = new ArrayList<InlineKeyboardButton>();
+                List<KeyboardButton> callOpers = new ArrayList<KeyboardButton>();
                 callOpers.add(callOper);
 
-                InlineKeyboardButtons.add(trackings);
-//                InlineKeyboardButtons.add(myPosts);
-//                InlineKeyboardButtons.add(adviceButtons);
-                InlineKeyboardButtons.add(callOpers);
-                reply_markup.setInline_keyboard(InlineKeyboardButtons);
+                keyboardButtons.add(trackings);
+                keyboardButtons.add(callOpers);
+
+                reply_markup.setKeyboard(keyboardButtons);
                 telegramRequest.setReply_markup(reply_markup);
+            }
+            if(userAccount.getUserState() == UserState.WAITING_TTN){
+                telegramRequest.setReply_markup(new ReplyKeyboardHide());
             }
         }catch (TelegramException e){
             throw e;
@@ -87,6 +83,7 @@ public class TelegramUpdateHandler {
         if(update.getMessage() != null) {
             user = update.getMessage().getFrom();
             user.setText(update.getMessage().getText());
+            user.setBot_id(update.getMessage().getFrom().getId());
         }else if(update.getCallback_query() != null){
             user = update.getCallback_query().getFrom();
             user.setCall_back_data(update.getCallback_query().getData());
@@ -97,7 +94,15 @@ public class TelegramUpdateHandler {
     }
 
     private void checkUserAnswer(UserAccount userAccount){
-        if(userAccount.getUserState() == UserState.WAITING_PRESS_BUTTON && userAccount.getCallBackData() == null){
+        if(userAccount.getUserState() == UserState.WAITING_PRESS_BUTTON){
+            if(userAccount.getCallBackData() == null) {
+                userAccount.setUserState(UserState.WRONG_ANSWER);
+            }
+            for(TelegramButtons telegramButton : TelegramButtons.values()){
+                if(telegramButton.getButton().equals(userAccount.getCallBackData())){
+                    return;
+                }
+            }
             userAccount.setUserState(UserState.WRONG_ANSWER);
         }
     }
@@ -113,9 +118,9 @@ public class TelegramUpdateHandler {
             userAccount.setUserState(UserState.WAITING_PRESS_BUTTON);
 
         }else if(userAccount.getUserState() == UserState.WAITING_PRESS_BUTTON){
-            if(TelegramButtons.tracking.getCode().equals(userAccount.getCallBackData())) {
+            if(TelegramButtons.tracking.getButton().equals(userAccount.getCallBackData())) {
                 userAccount.setUserState(UserState.WAITING_TTN);
-            }else if(TelegramButtons.callOper.getCode().equals(userAccount.getCallBackData())){
+            }else if(TelegramButtons.callOper.getButton().equals(userAccount.getCallBackData())){
                 userAccount.setUserState(UserState.WAITING_OPER);
             }
 

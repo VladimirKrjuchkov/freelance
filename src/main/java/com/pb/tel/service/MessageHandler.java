@@ -37,17 +37,22 @@ public class MessageHandler {
             return PropertiesUtil.getProperty("user_start_new_chat");
         }
         if(userAccount.getUserState() == UserState.WAITING_PRESS_BUTTON){
-            if(TelegramButtons.tracking.getCode().equals(userAccount.getCallBackData())) {
+            if(TelegramButtons.tracking.getButton().equals(userAccount.getCallBackData())) {
                 return PropertiesUtil.getProperty("user_choose_tracking");
             }
-            if(TelegramButtons.callOper.getCode().equals(userAccount.getCallBackData())) {
+            if(TelegramButtons.callOper.getButton().equals(userAccount.getCallBackData())) {
                 channelsAPIHandler.createChannel(userAccount);
                 return PropertiesUtil.getProperty("user_call_oper");
             }
         }
         if(userAccount.getUserState() == UserState.WAITING_TTN){
-            String message = novaPoshtaAPIHandler.getTrackingByTTN(userAccount);
-            return PropertiesUtil.getProperty("tracking_response_from_novaposhta") + " " + userAccount.getUserText() + ": " + message;
+            if(TelegramButtons.callOper.getButton().equals(userAccount.getCallBackData())) {
+                channelsAPIHandler.createChannel(userAccount);
+                return PropertiesUtil.getProperty("user_call_oper");
+            }else {
+                String message = novaPoshtaAPIHandler.getTrackingByTTN(userAccount);
+                return PropertiesUtil.getProperty("tracking_response_from_novaposhta") + " " + userAccount.getUserText() + ": " + message;
+            }
         }
         if(userAccount.getUserState() == UserState.WRONG_ANSWER) {
             return PropertiesUtil.getProperty("wrong_answer");

@@ -22,7 +22,7 @@ public class TelegramRequest {
 
     String text;
 
-    InlineKeyboardMarkup reply_markup;
+    KeyboardMarkup reply_markup;
 
     public Integer getChat_id() {
         return chat_id;
@@ -40,11 +40,11 @@ public class TelegramRequest {
         this.text = text;
     }
 
-    public InlineKeyboardMarkup getReply_markup() {
+    public KeyboardMarkup getReply_markup() {
         return reply_markup;
     }
 
-    public void setReply_markup(InlineKeyboardMarkup reply_markup) {
+    public void setReply_markup(KeyboardMarkup reply_markup) {
         this.reply_markup = reply_markup;
     }
 
