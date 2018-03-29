@@ -1,1 +1,3 @@
 USER01=Null user
+USER02=Empty channelIdByUserIdStore
+USER03=Empty userAccountStore

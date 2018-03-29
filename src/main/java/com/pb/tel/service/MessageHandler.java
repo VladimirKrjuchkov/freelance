@@ -42,13 +42,13 @@ public class MessageHandler {
             }
             if(TelegramButtons.callOper.getButton().equals(userAccount.getCallBackData())) {
                 channelsAPIHandler.callOper(userAccount);
-                return PropertiesUtil.getProperty("user_waiting_for_oper");
+                return PropertiesUtil.getProperty("user_call_oper");
             }
         }
         if(userAccount.getUserState() == UserState.WAITING_TTN){
             if(TelegramButtons.callOper.getButton().equals(userAccount.getCallBackData())) {
                 channelsAPIHandler.callOper(userAccount);
-                return PropertiesUtil.getProperty("user_waiting_for_oper");
+                return PropertiesUtil.getProperty("user_call_oper");
             }else {
                 String message = novaPoshtaAPIHandler.getTrackingByTTN(userAccount);
                 return PropertiesUtil.getProperty("tracking_response_from_novaposhta") + " " + userAccount.getUserText() + ": " + message;

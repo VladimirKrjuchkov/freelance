@@ -4,9 +4,11 @@ import com.pb.tel.data.UserAccount;
 import com.pb.tel.data.channels.*;
 import com.pb.tel.service.exception.TelegramException;
 import com.pb.util.zvv.PropertiesUtil;
+import com.pb.util.zvv.storage.Storage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,16 +31,20 @@ public class ChannelsAPIHandler {
     @Autowired
     private MessageHandler messageHandler;
 
+    @Resource(name="channelIdByUserIdStore")
+    private Storage<String, Integer> channelIdByUserIdStore;
+
     public void callOper(UserAccount userAccount) throws Exception {
         userAccount.setChannelId(createChannel(userAccount));
         userAccount.setOperName(addOperToChannel(userAccount));
+        channelIdByUserIdStore.putValue(userAccount.getChannelId(), userAccount.getId(), Utils.getDateAfterSeconds(3600));
     }
 
     private String addOperToChannel(UserAccount userAccount) throws Exception {
         ChannelsRequest channelsRequest = new ChannelsRequest();
         channelsRequest.setAction("channelInvite");
         channelsRequest.setReqId(Integer.toString(userAccount.getReqId()));
-        ChannelCreate channelCreate = new ChannelCreate();
+        Data channelCreate = new Data();
         channelCreate.setCompanyId(PropertiesUtil.getProperty("channels_company_id"));
         channelCreate.setChannelId(userAccount.getChannelId());
         List<String> invites = new ArrayList<String>();
@@ -60,7 +66,7 @@ public class ChannelsAPIHandler {
         ChannelsRequest channelsRequest = new ChannelsRequest();
         channelsRequest.setAction("channelCreate");
         channelsRequest.setReqId(Integer.toString(userAccount.getReqId()));
-        ChannelCreate channelCreate = new ChannelCreate();
+        Data channelCreate = new Data();
         channelCreate.setType("help");
         channelCreate.setCompanyId(PropertiesUtil.getProperty("channels_company_id"));
         channelsRequest.setData(channelCreate);
@@ -76,7 +82,7 @@ public class ChannelsAPIHandler {
     private String getFreeOper(UserAccount userAccount) throws Exception {
         ChannelsRequest channelsRequest = new ChannelsRequest();
         channelsRequest.setToken(PropertiesUtil.getProperty("bot_static_token"));
-        ChannelCreate channelCreate = new ChannelCreate();
+        Data channelCreate = new Data();
         channelCreate.setCompanyId(PropertiesUtil.getProperty("channels_company_id"));
         channelsRequest.setData(channelCreate);
         channelsRequest.setAction("botOperatorsGet");
@@ -94,7 +100,7 @@ public class ChannelsAPIHandler {
         ChannelsRequest channelsRequest = new ChannelsRequest();
         channelsRequest.setAction("tokenCreate");
         channelsRequest.setReqId(Integer.toString(userAccount.getReqId()));
-        TokenCreate tokenCreate = new TokenCreate();
+        Data tokenCreate = new Data();
         tokenCreate.setUdid(Integer.toString(userAccount.getUdid()));
         tokenCreate.setSsoToken(Utils.createJWT(userAccount));
         DeviceInfo deviceInfo = new DeviceInfo();

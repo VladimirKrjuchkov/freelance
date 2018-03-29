@@ -11,7 +11,7 @@ import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class Data {
+public class Data{
 
     public Data(){};
 
@@ -26,6 +26,20 @@ public class Data {
     private String channelId;
 
     private List<User> users;
+
+    private String companyId;
+
+    private String text;
+
+    private String type;
+
+    private List<String> invites;
+
+    private String udid;
+
+    private String ssoToken;
+
+    private DeviceInfo deviceInfo;
 
     public User getUser() {
         return user;
@@ -75,6 +89,62 @@ public class Data {
         this.users = users;
     }
 
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public List<String> getInvites() {
+        return invites;
+    }
+
+    public void setInvites(List<String> invites) {
+        this.invites = invites;
+    }
+
+    public String getUdid() {
+        return udid;
+    }
+
+    public void setUdid(String udid) {
+        this.udid = udid;
+    }
+
+    public String getSsoToken() {
+        return ssoToken;
+    }
+
+    public void setSsoToken(String ssoToken) {
+        this.ssoToken = ssoToken;
+    }
+
+    public DeviceInfo getDeviceInfo() {
+        return deviceInfo;
+    }
+
+    public void setDeviceInfo(DeviceInfo deviceInfo) {
+        this.deviceInfo = deviceInfo;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -87,7 +157,14 @@ public class Data {
         if (time != null ? !time.equals(data.time) : data.time != null) return false;
         if (operators != null ? !operators.equals(data.operators) : data.operators != null) return false;
         if (channelId != null ? !channelId.equals(data.channelId) : data.channelId != null) return false;
-        return users != null ? users.equals(data.users) : data.users == null;
+        if (users != null ? !users.equals(data.users) : data.users != null) return false;
+        if (companyId != null ? !companyId.equals(data.companyId) : data.companyId != null) return false;
+        if (text != null ? !text.equals(data.text) : data.text != null) return false;
+        if (type != null ? !type.equals(data.type) : data.type != null) return false;
+        if (invites != null ? !invites.equals(data.invites) : data.invites != null) return false;
+        if (udid != null ? !udid.equals(data.udid) : data.udid != null) return false;
+        if (ssoToken != null ? !ssoToken.equals(data.ssoToken) : data.ssoToken != null) return false;
+        return deviceInfo != null ? deviceInfo.equals(data.deviceInfo) : data.deviceInfo == null;
     }
 
     @Override
@@ -98,6 +175,13 @@ public class Data {
         result = 31 * result + (operators != null ? operators.hashCode() : 0);
         result = 31 * result + (channelId != null ? channelId.hashCode() : 0);
         result = 31 * result + (users != null ? users.hashCode() : 0);
+        result = 31 * result + (companyId != null ? companyId.hashCode() : 0);
+        result = 31 * result + (text != null ? text.hashCode() : 0);
+        result = 31 * result + (type != null ? type.hashCode() : 0);
+        result = 31 * result + (invites != null ? invites.hashCode() : 0);
+        result = 31 * result + (udid != null ? udid.hashCode() : 0);
+        result = 31 * result + (ssoToken != null ? ssoToken.hashCode() : 0);
+        result = 31 * result + (deviceInfo != null ? deviceInfo.hashCode() : 0);
         return result;
     }
 
@@ -110,6 +194,13 @@ public class Data {
                 ", operators=" + operators +
                 ", channelId='" + channelId + '\'' +
                 ", users=" + users +
+                ", companyId='" + companyId + '\'' +
+                ", text='" + text + '\'' +
+                ", type='" + type + '\'' +
+                ", invites=" + invites +
+                ", udid='" + udid + '\'' +
+                ", ssoToken='" + ssoToken + '\'' +
+                ", deviceInfo=" + deviceInfo +
                 '}';
     }
 }

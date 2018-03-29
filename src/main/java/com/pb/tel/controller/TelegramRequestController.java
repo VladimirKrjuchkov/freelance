@@ -2,13 +2,15 @@ package com.pb.tel.controller;
 
 import com.pb.tel.data.Mes;
 import com.pb.tel.data.UserAccount;
+import com.pb.tel.data.channels.ChannelsRequest;
+import com.pb.tel.data.channels.Data;
+import com.pb.tel.data.enums.UserState;
 import com.pb.tel.data.telegram.*;
-import com.pb.tel.service.MessageHandler;
-import com.pb.tel.service.TelegramConnector;
-import com.pb.tel.service.TelegramUpdateHandler;
-import com.pb.tel.service.Utils;
+import com.pb.tel.service.*;
+import com.pb.tel.service.exception.ChannelsException;
 import com.pb.tel.service.exception.TelegramException;
 import com.pb.tel.service.exception.UnresponsibleException;
+import com.pb.util.zvv.PropertiesUtil;
 import com.pb.util.zvv.storage.Storage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -37,7 +39,13 @@ public class TelegramRequestController {
     private TelegramUpdateHandler telegramUpdateHandler;
 
     @Autowired
+    private ChannelsUpdateHandler channelsUpdateHandler;
+
+    @Autowired
     private TelegramConnector telegramConnector;
+
+    @Autowired
+    private ChannelsConnector channelsConnector;
 
     @RequestMapping(value = "/update")
     @ResponseBody
@@ -56,14 +64,20 @@ public class TelegramRequestController {
         userAccount.setReqId(update.getUpdate_id());
 
         userAccountStore.putValue(user.getId(), userAccount, Utils.getDateAfterSeconds(180));
-        TelegramResponse response = telegramConnector.sendRequest(telegramUpdateHandler.getTelegramRequest(user.getId()));
-        telegramUpdateHandler.analyseResponse(response, userAccount);
+        if(userAccount.getUserState() == UserState.JOIN_TO_DIALOG){
+            channelsConnector.doRequest(telegramUpdateHandler.deligateMessageToChannels(userAccount), PropertiesUtil.getProperty("channels_api_request_url") + userAccount.getToken());
+        }else {
+            TelegramResponse response = telegramConnector.sendRequest(telegramUpdateHandler.getTelegramRequest(user.getId()));
+            telegramUpdateHandler.analyseResponse(response, userAccount);
+        }
     }
 
     @RequestMapping(value = "/channels/update")
     @ResponseBody
-    public void channelsUpdate(@RequestBody Update update) throws Exception{
-
+    public void channelsUpdate(@RequestBody ChannelsRequest channelsRequest) throws Exception{
+        if("msg".equals(channelsRequest.getAction())) {
+            telegramConnector.sendRequest(channelsUpdateHandler.deligateMessageToTelegram(channelsRequest));
+        }
     }
 
     @ExceptionHandler(UnresponsibleException.class)
@@ -79,6 +93,20 @@ public class TelegramRequestController {
         TelegramRequest message = new TelegramRequest(e.getUserId(), e.getDescription());
         message.setReply_markup(e.getInlineKeyboardMarkup());
         telegramConnector.sendRequest(message);
+    }
+
+    @ExceptionHandler(ChannelsException.class)
+    @ResponseBody
+    public void channelsExceptionHandler(ChannelsException e) throws Exception {
+        ChannelsRequest channelsRequest = new ChannelsRequest();
+        channelsRequest.setAction("msg");
+        channelsRequest.setReqId(e.getReqId());
+        Data data = new Data();
+        data.setCompanyId(PropertiesUtil.getProperty("channels_company_id"));
+        data.setChannelId(e.getChannelId());
+        data.setText(e.getDescription());
+        channelsRequest.setData(data);
+        channelsConnector.doRequest(channelsRequest, PropertiesUtil.getProperty("channels_api_request_url") + e.getToken());
     }
 
     @ExceptionHandler(Exception.class)

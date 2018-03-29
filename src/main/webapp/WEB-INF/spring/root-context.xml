@@ -43,6 +43,10 @@
 		<property name="flushInterval" value="${userAccountStoreFlushInterval}"/>
 	</bean>
 
+	<bean id="channelIdByUserIdStore" class="com.pb.util.zvv.storage.StorageExpiry">
+		<property name="flushInterval" value="${channelIdByUserIdStoreFlushInterval}"/>
+	</bean>
+
 	<import resource="app-context.xml"/>
 
 </beans>

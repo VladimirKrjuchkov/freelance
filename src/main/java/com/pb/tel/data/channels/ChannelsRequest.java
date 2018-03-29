@@ -20,7 +20,7 @@ public class ChannelsRequest {
 
     private String reqId;
 
-    private Create data;
+    private Data data;
 
     public String getToken() {
         return token;
@@ -46,11 +46,11 @@ public class ChannelsRequest {
         this.reqId = reqId;
     }
 
-    public Create getData() {
+    public Data getData() {
         return data;
     }
 
-    public void setData(Create data) {
+    public void setData(Data data) {
         this.data = data;
     }
 

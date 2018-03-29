@@ -1,11 +1,14 @@
 package com.pb.tel.service;
 
 import com.pb.tel.data.UserAccount;
+import com.pb.tel.data.channels.ChannelsRequest;
+import com.pb.tel.data.channels.Data;
 import com.pb.tel.data.enums.TelegramButtons;
 import com.pb.tel.data.enums.UserState;
 import com.pb.tel.data.telegram.*;
 import com.pb.tel.service.exception.TelegramException;
 import com.pb.tel.service.exception.UnresponsibleException;
+import com.pb.util.zvv.PropertiesUtil;
 import com.pb.util.zvv.storage.Storage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -74,6 +77,18 @@ public class TelegramUpdateHandler {
         }
     }
 
+    public ChannelsRequest deligateMessageToChannels(UserAccount userAccount){
+        ChannelsRequest channelsRequest = new ChannelsRequest();
+        channelsRequest.setAction("msg");
+        channelsRequest.setReqId(Integer.toString(userAccount.getReqId()));
+        Data data = new Data();
+        data.setCompanyId(PropertiesUtil.getProperty("channels_company_id"));
+        data.setChannelId(userAccount.getChannelId());
+        data.setText(userAccount.getUserText());
+        channelsRequest.setData(data);
+        return channelsRequest;
+    }
+
     public void flushUserState(Integer userId){
         userAccountStore.removeValue(userId);
     }
@@ -121,12 +136,14 @@ public class TelegramUpdateHandler {
             if(TelegramButtons.tracking.getButton().equals(userAccount.getCallBackData())) {
                 userAccount.setUserState(UserState.WAITING_TTN);
             }else if(TelegramButtons.callOper.getButton().equals(userAccount.getCallBackData())){
-                userAccount.setUserState(UserState.WAITING_OPER);
+                userAccount.setUserState(UserState.JOIN_TO_DIALOG);
+                userAccountStore.putValue(userAccount.getId(), userAccount, Utils.getDateAfterSeconds(3600));
             }
 
         }else if(userAccount.getUserState() == UserState.WAITING_TTN){
             if(TelegramButtons.callOper.getButton().equals(userAccount.getCallBackData())) {
-                userAccount.setUserState(UserState.WAITING_OPER);
+                userAccount.setUserState(UserState.JOIN_TO_DIALOG);
+                userAccountStore.putValue(userAccount.getId(), userAccount, Utils.getDateAfterSeconds(3600));
             }else {
                 userAccount.setUserState(UserState.NEW);
             }
