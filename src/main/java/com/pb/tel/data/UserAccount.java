@@ -9,6 +9,12 @@ import java.util.logging.Logger;
  */
 public class UserAccount {
 
+    public UserAccount(){}
+
+    public UserAccount(Integer id){
+        this.id = id;
+    }
+
     private Integer id;
 
     private String token;
@@ -32,6 +38,10 @@ public class UserAccount {
     private UserState userState = UserState.NEW;
 
     private String operId;
+
+    private String operName;
+
+    private String channelId;
 
     public Integer getId() {
         return id;
@@ -129,6 +139,22 @@ public class UserAccount {
         this.operId = operId;
     }
 
+    public String getOperName() {
+        return operName;
+    }
+
+    public void setOperName(String operName) {
+        this.operName = operName;
+    }
+
+    public String getChannelId() {
+        return channelId;
+    }
+
+    public void setChannelId(String channelId) {
+        this.channelId = channelId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -147,7 +173,9 @@ public class UserAccount {
         if (reqId != null ? !reqId.equals(that.reqId) : that.reqId != null) return false;
         if (userText != null ? !userText.equals(that.userText) : that.userText != null) return false;
         if (userState != that.userState) return false;
-        return operId != null ? operId.equals(that.operId) : that.operId == null;
+        if (operId != null ? !operId.equals(that.operId) : that.operId != null) return false;
+        if (operName != null ? !operName.equals(that.operName) : that.operName != null) return false;
+        return channelId != null ? channelId.equals(that.channelId) : that.channelId == null;
     }
 
     @Override
@@ -164,6 +192,8 @@ public class UserAccount {
         result = 31 * result + (userText != null ? userText.hashCode() : 0);
         result = 31 * result + (userState != null ? userState.hashCode() : 0);
         result = 31 * result + (operId != null ? operId.hashCode() : 0);
+        result = 31 * result + (operName != null ? operName.hashCode() : 0);
+        result = 31 * result + (channelId != null ? channelId.hashCode() : 0);
         return result;
     }
 
@@ -182,6 +212,8 @@ public class UserAccount {
                 ", userText='" + userText + '\'' +
                 ", userState=" + userState +
                 ", operId='" + operId + '\'' +
+                ", operName='" + operName + '\'' +
+                ", channelId='" + channelId + '\'' +
                 '}';
     }
 }

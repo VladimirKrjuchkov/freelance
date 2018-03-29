@@ -41,14 +41,14 @@ public class MessageHandler {
                 return PropertiesUtil.getProperty("user_choose_tracking");
             }
             if(TelegramButtons.callOper.getButton().equals(userAccount.getCallBackData())) {
-                channelsAPIHandler.getFreeOper(userAccount);
-                return PropertiesUtil.getProperty("user_call_oper");
+                channelsAPIHandler.callOper(userAccount);
+                return PropertiesUtil.getProperty("user_waiting_for_oper");
             }
         }
         if(userAccount.getUserState() == UserState.WAITING_TTN){
             if(TelegramButtons.callOper.getButton().equals(userAccount.getCallBackData())) {
-                channelsAPIHandler.getFreeOper(userAccount);
-                return PropertiesUtil.getProperty("user_call_oper");
+                channelsAPIHandler.callOper(userAccount);
+                return PropertiesUtil.getProperty("user_waiting_for_oper");
             }else {
                 String message = novaPoshtaAPIHandler.getTrackingByTTN(userAccount);
                 return PropertiesUtil.getProperty("tracking_response_from_novaposhta") + " " + userAccount.getUserText() + ": " + message;
@@ -71,6 +71,10 @@ public class MessageHandler {
 
         if(userAccount.getLastName() != null) {
             rowMessage = rowMessage.replace("{user_last_name}", userAccount.getLastName());
+        }
+
+        if(userAccount.getOperName() != null) {
+            rowMessage = rowMessage.replace("{oper_name}", userAccount.getOperName());
         }
         return rowMessage;
     }

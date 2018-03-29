@@ -44,6 +44,7 @@
         <!-- <url-pattern>/*</url-pattern> -->
         <url-pattern>/webhook/*</url-pattern>
         <url-pattern>/update</url-pattern>
+        <url-pattern>/channels/*</url-pattern>
     </filter-mapping>
     <filter>
         <filter-name>RequestFilter</filter-name>

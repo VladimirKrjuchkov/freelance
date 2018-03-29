@@ -125,7 +125,11 @@ public class TelegramUpdateHandler {
             }
 
         }else if(userAccount.getUserState() == UserState.WAITING_TTN){
-            userAccount.setUserState(UserState.NEW);
+            if(TelegramButtons.callOper.getButton().equals(userAccount.getCallBackData())) {
+                userAccount.setUserState(UserState.WAITING_OPER);
+            }else {
+                userAccount.setUserState(UserState.NEW);
+            }
 
         }else if(userAccount.getUserState() == UserState.WRONG_ANSWER){
             userAccount.setUserState(UserState.NEW);

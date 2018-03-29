@@ -23,6 +23,10 @@ public class Data {
 
     private List<Operator> operators;
 
+    private String channelId;
+
+    private List<User> users;
+
     public User getUser() {
         return user;
     }
@@ -55,6 +59,22 @@ public class Data {
         this.operators = operators;
     }
 
+    public String getChannelId() {
+        return channelId;
+    }
+
+    public void setChannelId(String channelId) {
+        this.channelId = channelId;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -65,7 +85,9 @@ public class Data {
         if (user != null ? !user.equals(data.user) : data.user != null) return false;
         if (token != null ? !token.equals(data.token) : data.token != null) return false;
         if (time != null ? !time.equals(data.time) : data.time != null) return false;
-        return operators != null ? operators.equals(data.operators) : data.operators == null;
+        if (operators != null ? !operators.equals(data.operators) : data.operators != null) return false;
+        if (channelId != null ? !channelId.equals(data.channelId) : data.channelId != null) return false;
+        return users != null ? users.equals(data.users) : data.users == null;
     }
 
     @Override
@@ -74,6 +96,8 @@ public class Data {
         result = 31 * result + (token != null ? token.hashCode() : 0);
         result = 31 * result + (time != null ? time.hashCode() : 0);
         result = 31 * result + (operators != null ? operators.hashCode() : 0);
+        result = 31 * result + (channelId != null ? channelId.hashCode() : 0);
+        result = 31 * result + (users != null ? users.hashCode() : 0);
         return result;
     }
 
@@ -84,6 +108,8 @@ public class Data {
                 ", token='" + token + '\'' +
                 ", time=" + time +
                 ", operators=" + operators +
+                ", channelId='" + channelId + '\'' +
+                ", users=" + users +
                 '}';
     }
 }

@@ -40,7 +40,7 @@ public class Utils {
     }
 
     public static String createJWT(UserAccount userAccount) throws UnsupportedEncodingException {
-        String key = PropertiesUtil.getProperty("channels_api_key");
+        String key = PropertiesUtil.getProperty("channels_company_id");
         String secret = PropertiesUtil.getProperty("channels_api_secret");
         Algorithm algorithm = Algorithm.HMAC256(secret);
         HashMap<String, Object> headers = new HashMap<String, Object>();
