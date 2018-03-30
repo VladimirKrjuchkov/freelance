@@ -75,8 +75,13 @@ public class TelegramRequestController {
     @RequestMapping(value = "/channels/update")
     @ResponseBody
     public void channelsUpdate(@RequestBody ChannelsRequest channelsRequest) throws Exception{
-        if("msg".equals(channelsRequest.getAction())) {
+        if("msg".equals(channelsRequest.getAction()) && "o".equals(channelsRequest.getData().getUser().getType())) {
             telegramConnector.sendRequest(channelsUpdateHandler.deligateMessageToTelegram(channelsRequest));
+        }else if("channelLeave".equals(channelsRequest.getAction()) && "o".equals(channelsRequest.getData().getUser().getType())){
+            TelegramResponse telegramResponse = telegramConnector.sendRequest(channelsUpdateHandler.leaveDialog(channelsRequest));
+            if(telegramResponse.getOk()) {
+                telegramUpdateHandler.flushUserState(telegramResponse.getResult().getChat().getId());
+            }
         }
     }
 

@@ -29,7 +29,21 @@ public class ChannelsUpdateHandler {
     private Storage<Integer, UserAccount> userAccountStore;
 
     public TelegramRequest deligateMessageToTelegram(ChannelsRequest channelsRequest) throws UnresponsibleException {
-        Integer userId = channelIdByUserIdStore.getValue(((Data)channelsRequest.getData()).getChannelId());
+        UserAccount userAccount = getUserAccountByChannelId(((Data)channelsRequest.getData()).getChannelId());
+        TelegramRequest message = new TelegramRequest(userAccount.getId(), ((Data) channelsRequest.getData()).getText());
+        message.setReply_markup(new ReplyKeyboardHide());
+        return message;
+    }
+
+    public TelegramRequest leaveDialog(ChannelsRequest channelsRequest) throws UnresponsibleException {
+        UserAccount userAccount = getUserAccountByChannelId(((Data)channelsRequest.getData()).getChannelId());
+        TelegramRequest message = new TelegramRequest(userAccount.getId(), PropertiesUtil.getProperty("oper_leave_dialog"));
+        message.setReply_markup(new ReplyKeyboardHide());
+        return message;
+    }
+
+    private UserAccount getUserAccountByChannelId(String channelId ) throws UnresponsibleException {
+        Integer userId = channelIdByUserIdStore.getValue(channelId);
         if(userId == null){
             throw  new UnresponsibleException("USER02", PropertiesUtil.getProperty("USER02"));
         }
@@ -37,9 +51,6 @@ public class ChannelsUpdateHandler {
         if(userAccount == null){
             throw  new UnresponsibleException("USER03", PropertiesUtil.getProperty("USER03"));
         }
-        TelegramRequest message = new TelegramRequest(userAccount.getId(), ((Data) channelsRequest.getData()).getText());
-        message.setReply_markup(new ReplyKeyboardHide());
-        return message;
+        return userAccount;
     }
-
 }
