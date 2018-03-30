@@ -19,12 +19,22 @@ public class KeyboardButton {
 
     String text;
 
+    Boolean request_contact;
+
     public String getText() {
         return text;
     }
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public Boolean getRequest_contact() {
+        return request_contact;
+    }
+
+    public void setRequest_contact(Boolean request_contact) {
+        this.request_contact = request_contact;
     }
 
     @Override
@@ -34,18 +44,22 @@ public class KeyboardButton {
 
         KeyboardButton that = (KeyboardButton) o;
 
-        return text != null ? text.equals(that.text) : that.text == null;
+        if (text != null ? !text.equals(that.text) : that.text != null) return false;
+        return request_contact != null ? request_contact.equals(that.request_contact) : that.request_contact == null;
     }
 
     @Override
     public int hashCode() {
-        return text != null ? text.hashCode() : 0;
+        int result = text != null ? text.hashCode() : 0;
+        result = 31 * result + (request_contact != null ? request_contact.hashCode() : 0);
+        return result;
     }
 
     @Override
     public String toString() {
         return "KeyboardButton{" +
                 "text='" + text + '\'' +
+                ", request_contact=" + request_contact +
                 '}';
     }
 }
