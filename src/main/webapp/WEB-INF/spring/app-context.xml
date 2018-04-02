@@ -110,7 +110,7 @@
 		</property>
 		<property name="packagesToScan" >
 			<list>
-				<value>com.pb.tel.data</value>
+				<value>com.pb.tel.data.privatmarket</value>
 			</list>
 		</property>
 		<!-- <property name="jpaDialect">
@@ -123,8 +123,8 @@
 				<prop key="hibernate.max_fetch_depth">3</prop>
 				<prop key="hibernate.jdbc.fetch_size">50</prop>
 				<prop key="hibernate.jdbc.batch_size">20</prop>
-				<!-- <prop key="hibernate.show_sql">true</prop>
-				<prop key="hibernate.format_sql">true</prop> -->
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.format_sql">true</prop>
 				<prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory</prop>
 				<!-- <prop key="hibernate.cache.provider_class">net/sf/ehcache/hibernate/SingletonEhCacheRegionFactory</prop> -->
 				<!-- <prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</prop> -->

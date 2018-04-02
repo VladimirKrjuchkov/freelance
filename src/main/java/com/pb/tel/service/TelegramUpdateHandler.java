@@ -1,5 +1,7 @@
 package com.pb.tel.service;
 
+import com.pb.tel.dao.CustomerDao;
+import com.pb.tel.dao.CustomerDaoImpl;
 import com.pb.tel.data.UserAccount;
 import com.pb.tel.data.channels.ChannelsRequest;
 import com.pb.tel.data.channels.Data;
@@ -34,7 +36,13 @@ public class TelegramUpdateHandler {
     @Resource(name="userAccountStore")
     private Storage<Integer, UserAccount> userAccountStore;
 
+    @Resource(name="customerDaoImpl")
+    private CustomerDao customerDaoImpl;
+
     public TelegramRequest getTelegramRequest(Integer id) throws Exception{
+
+        log.log(Level.INFO, "*** *** *** PrivateMarketCustomers.findAll : " + customerDaoImpl.getAll().size());
+
         UserAccount userAccount = userAccountStore.getValue(id);
         TelegramRequest telegramRequest = new TelegramRequest();
         checkUserAnswer(userAccount);

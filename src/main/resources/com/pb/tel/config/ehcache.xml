@@ -28,7 +28,7 @@
         maxEntriesLocalDisk="10000000" 
         diskExpiryThreadIntervalSeconds="120" -->
  
-    <cache name="com.pb.bi.data.idCard.LockUnlock.forSelect"    	  
+    <cache name="com.pb.tel.data.privatmarket.Customer.forSelect"
     	   eternal="false"    	   
            timeToIdleSeconds="3"
            timeToLiveSeconds="3"
@@ -39,24 +39,5 @@
         <!-- <persistence strategy="localTempSwap" /> -->
     </cache>
     <!-- maxEntriesLocalHeap="100" -->
-    
-     <cache name="com.pb.bi.data.idCard.LockIdCardHistory.forSelect"    	  
-    	   eternal="false"    	   
-           timeToIdleSeconds="3"
-           timeToLiveSeconds="3"
-           overflowToDisk="false"   
-           maxEntriesLocalHeap="500"        
-           memoryStoreEvictionPolicy="LRU">        
-    </cache>
-    
-    
-    <cache name="com.pb.bi.service.auth.AdminDetailsService"    	  
-    	   eternal="false"    	   
-           timeToIdleSeconds="900"
-           timeToLiveSeconds="1800"
-           overflowToDisk="false"          
-           maxEntriesLocalHeap="300" 
-           memoryStoreEvictionPolicy="LRU">                   
-    </cache>    
     
 </ehcache>
