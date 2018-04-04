@@ -2,7 +2,7 @@ package com.pb.tel.data.channels;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.pb.tel.data.Request;
 
 /**
  * Created by vladimir on 20.03.18.
@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class ChannelsRequest {
+public class ChannelsRequest implements Request {
 
     public ChannelsRequest(){};
 

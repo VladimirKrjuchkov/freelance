@@ -1,6 +1,7 @@
 package com.pb.tel.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pb.tel.data.Request;
 import com.pb.tel.data.channels.ChannelsRequest;
 import com.pb.tel.data.channels.ChannelsResponse;
 import com.pb.tel.data.novaposhta.NovaPoshtaResponse;
@@ -26,7 +27,7 @@ public class ChannelsConnector {
 
     private static ObjectMapper jacksonObjectMapper = new ObjectMapper();
 
-    public ChannelsResponse doRequest(ChannelsRequest channelsRequest, String url) throws Exception {
+    public ChannelsResponse doRequest(Request channelsRequest, String url) throws Exception {
         RequestHTTPS requestHTTP = new RequestHTTPS(Integer.parseInt(PropertiesUtil.getProperty("connectTimeout")), Integer.parseInt(PropertiesUtil.getProperty("readTimeout")));
         Map<String, String> requestProperties = new HashMap<String, String>();
         requestProperties.put("Content-Type", MediaType.APPLICATION_JSON_VALUE);

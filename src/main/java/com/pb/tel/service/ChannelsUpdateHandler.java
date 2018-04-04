@@ -1,10 +1,9 @@
 package com.pb.tel.service;
 
+import com.pb.tel.data.Request;
 import com.pb.tel.data.UserAccount;
 import com.pb.tel.data.channels.ChannelsRequest;
 import com.pb.tel.data.channels.Data;
-import com.pb.tel.data.telegram.ReplyKeyboardHide;
-import com.pb.tel.data.telegram.TelegramRequest;
 import com.pb.tel.service.exception.UnresponsibleException;
 import com.pb.util.zvv.PropertiesUtil;
 import com.pb.util.zvv.storage.Storage;
@@ -18,39 +17,21 @@ import java.util.logging.Logger;
  */
 
 @Service("channelsUpdateHandler")
-public class ChannelsUpdateHandler {
+public class ChannelsUpdateHandler extends AbstractUpdateHandler {
 
     private final Logger log = Logger.getLogger(ChannelsUpdateHandler.class.getCanonicalName());
 
-    @Resource(name="channelIdByUserIdStore")
-    private Storage<String, Integer> channelIdByUserIdStore;
-
-    @Resource(name="userAccountStore")
-    private Storage<Integer, UserAccount> userAccountStore;
-
-    public TelegramRequest deligateMessageToTelegram(ChannelsRequest channelsRequest) throws UnresponsibleException {
-        UserAccount userAccount = getUserAccountByChannelId(((Data)channelsRequest.getData()).getChannelId());
-        TelegramRequest message = new TelegramRequest(userAccount.getId(), ((Data) channelsRequest.getData()).getText());
-        message.setReply_markup(new ReplyKeyboardHide());
-        return message;
+    @Override
+    public Request deligateMessage(UserAccount userAccount){
+        ChannelsRequest channelsRequest = new ChannelsRequest();
+        channelsRequest.setAction("msg");
+        channelsRequest.setReqId(Integer.toString(userAccount.getReqId()));
+        Data data = new Data();
+        data.setCompanyId(PropertiesUtil.getProperty("channels_company_id"));
+        data.setChannelId(userAccount.getChannelId());
+        data.setText(userAccount.getUserText());
+        channelsRequest.setData(data);
+        return channelsRequest;
     }
 
-    public TelegramRequest leaveDialog(ChannelsRequest channelsRequest) throws UnresponsibleException {
-        UserAccount userAccount = getUserAccountByChannelId(((Data)channelsRequest.getData()).getChannelId());
-        TelegramRequest message = new TelegramRequest(userAccount.getId(), PropertiesUtil.getProperty("oper_leave_dialog"));
-        message.setReply_markup(new ReplyKeyboardHide());
-        return message;
-    }
-
-    private UserAccount getUserAccountByChannelId(String channelId ) throws UnresponsibleException {
-        Integer userId = channelIdByUserIdStore.getValue(channelId);
-        if(userId == null){
-            throw  new UnresponsibleException("USER02", PropertiesUtil.getProperty("USER02"));
-        }
-        UserAccount userAccount = userAccountStore.getValue(userId);
-        if(userAccount == null){
-            throw  new UnresponsibleException("USER03", PropertiesUtil.getProperty("USER03"));
-        }
-        return userAccount;
-    }
 }

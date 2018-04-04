@@ -33,6 +33,12 @@ public class User extends TelegramUser{
     @JsonIgnore
     private Integer bot_id;
 
+    @JsonIgnore
+    private String phone;
+
+    @JsonIgnore
+    private String messenger;
+
     public Integer getId() {
         return id;
     }
@@ -105,6 +111,22 @@ public class User extends TelegramUser{
         this.bot_id = bot_id;
     }
 
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getMessenger() {
+        return messenger;
+    }
+
+    public void setMessenger(String messenger) {
+        this.messenger = messenger;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -122,7 +144,9 @@ public class User extends TelegramUser{
         if (call_back_data != null ? !call_back_data.equals(user.call_back_data) : user.call_back_data != null)
             return false;
         if (text != null ? !text.equals(user.text) : user.text != null) return false;
-        return bot_id != null ? bot_id.equals(user.bot_id) : user.bot_id == null;
+        if (bot_id != null ? !bot_id.equals(user.bot_id) : user.bot_id != null) return false;
+        if (phone != null ? !phone.equals(user.phone) : user.phone != null) return false;
+        return messenger != null ? messenger.equals(user.messenger) : user.messenger == null;
     }
 
     @Override
@@ -136,6 +160,8 @@ public class User extends TelegramUser{
         result = 31 * result + (call_back_data != null ? call_back_data.hashCode() : 0);
         result = 31 * result + (text != null ? text.hashCode() : 0);
         result = 31 * result + (bot_id != null ? bot_id.hashCode() : 0);
+        result = 31 * result + (phone != null ? phone.hashCode() : 0);
+        result = 31 * result + (messenger != null ? messenger.hashCode() : 0);
         return result;
     }
 
@@ -151,6 +177,8 @@ public class User extends TelegramUser{
                 ", call_back_data='" + call_back_data + '\'' +
                 ", text='" + text + '\'' +
                 ", bot_id=" + bot_id +
+                ", phone='" + phone + '\'' +
+                ", messenger='" + messenger + '\'' +
                 '}';
     }
 }

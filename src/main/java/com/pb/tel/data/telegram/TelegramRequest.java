@@ -2,6 +2,7 @@ package com.pb.tel.data.telegram;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.pb.tel.data.Request;
 
 /**
  * Created by vladimir on 06.03.18.
@@ -9,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class TelegramRequest {
+public class TelegramRequest implements Request {
 
     public TelegramRequest(){};
 

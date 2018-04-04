@@ -43,6 +43,14 @@ public class UserAccount {
 
     private String channelId;
 
+    private Boolean registered = false;
+
+    private String phone;
+
+    private String idEkb;
+
+    private String messenger;
+
     public Integer getId() {
         return id;
     }
@@ -155,6 +163,38 @@ public class UserAccount {
         this.channelId = channelId;
     }
 
+    public Boolean getRegistered() {
+        return registered;
+    }
+
+    public void setRegistered(Boolean registered) {
+        this.registered = registered;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getIdEkb() {
+        return idEkb;
+    }
+
+    public void setIdEkb(String idEkb) {
+        this.idEkb = idEkb;
+    }
+
+    public String getMessenger() {
+        return messenger;
+    }
+
+    public void setMessenger(String messenger) {
+        this.messenger = messenger;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -175,7 +215,11 @@ public class UserAccount {
         if (userState != that.userState) return false;
         if (operId != null ? !operId.equals(that.operId) : that.operId != null) return false;
         if (operName != null ? !operName.equals(that.operName) : that.operName != null) return false;
-        return channelId != null ? channelId.equals(that.channelId) : that.channelId == null;
+        if (channelId != null ? !channelId.equals(that.channelId) : that.channelId != null) return false;
+        if (registered != null ? !registered.equals(that.registered) : that.registered != null) return false;
+        if (phone != null ? !phone.equals(that.phone) : that.phone != null) return false;
+        if (idEkb != null ? !idEkb.equals(that.idEkb) : that.idEkb != null) return false;
+        return messenger != null ? messenger.equals(that.messenger) : that.messenger == null;
     }
 
     @Override
@@ -194,6 +238,10 @@ public class UserAccount {
         result = 31 * result + (operId != null ? operId.hashCode() : 0);
         result = 31 * result + (operName != null ? operName.hashCode() : 0);
         result = 31 * result + (channelId != null ? channelId.hashCode() : 0);
+        result = 31 * result + (registered != null ? registered.hashCode() : 0);
+        result = 31 * result + (phone != null ? phone.hashCode() : 0);
+        result = 31 * result + (idEkb != null ? idEkb.hashCode() : 0);
+        result = 31 * result + (messenger != null ? messenger.hashCode() : 0);
         return result;
     }
 
@@ -214,6 +262,10 @@ public class UserAccount {
                 ", operId='" + operId + '\'' +
                 ", operName='" + operName + '\'' +
                 ", channelId='" + channelId + '\'' +
+                ", registered=" + registered +
+                ", phone='" + phone + '\'' +
+                ", idEkb='" + idEkb + '\'' +
+                ", messenger='" + messenger + '\'' +
                 '}';
     }
 }

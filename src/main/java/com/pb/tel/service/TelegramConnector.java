@@ -2,6 +2,7 @@ package com.pb.tel.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pb.tel.data.Mes;
+import com.pb.tel.data.Request;
 import com.pb.tel.data.telegram.SimpleTelegramResponse;
 import com.pb.tel.data.telegram.TelegramRequest;
 import com.pb.tel.data.telegram.TelegramResponse;
@@ -88,7 +89,7 @@ public class TelegramConnector {
             return telegramResponse;
     }
 
-    public TelegramResponse sendRequest(TelegramRequest request) throws Exception {
+    public TelegramResponse sendRequest(Request request) throws Exception {
             RequestHTTPS requestHTTP = new RequestHTTPS(Integer.parseInt(PropertiesUtil.getProperty("connectTimeout")), Integer.parseInt(PropertiesUtil.getProperty("readTimeout")));
             String url = PropertiesUtil.getProperty("telegram_bot_url") + PropertiesUtil.getProperty("telegram_bot_token") + "/sendMessage";
             Map<String, String> requestProperties = new HashMap<String, String>();

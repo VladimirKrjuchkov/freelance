@@ -13,6 +13,7 @@ import com.pb.tel.service.exception.UnresponsibleException;
 import com.pb.util.zvv.PropertiesUtil;
 import com.pb.util.zvv.storage.Storage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,10 +36,10 @@ public class TelegramRequestController {
     @Resource(name="userAccountStore")
     private Storage<Integer, UserAccount> userAccountStore;
 
-    @Autowired
+    @Resource
     private TelegramUpdateHandler telegramUpdateHandler;
 
-    @Autowired
+    @Resource
     private ChannelsUpdateHandler channelsUpdateHandler;
 
     @Autowired
@@ -62,25 +63,30 @@ public class TelegramRequestController {
         userAccount.setUserText(user.getText());
         userAccount.setUdid(user.getBot_id());
         userAccount.setReqId(update.getUpdate_id());
-
+        userAccount.setPhone(user.getPhone());
+        userAccount.setMessenger(user.getMessenger());
+        telegramUpdateHandler.registateUser(userAccount);
         userAccountStore.putValue(user.getId(), userAccount, Utils.getDateAfterSeconds(180));
+
         if(userAccount.getUserState() == UserState.JOIN_TO_DIALOG){
-            channelsConnector.doRequest(telegramUpdateHandler.deligateMessageToChannels(userAccount), PropertiesUtil.getProperty("channels_api_request_url") + userAccount.getToken());
+            channelsConnector.doRequest(channelsUpdateHandler.deligateMessage(userAccount), PropertiesUtil.getProperty("channels_api_request_url") + userAccount.getToken());
         }else {
             TelegramResponse response = telegramConnector.sendRequest(telegramUpdateHandler.getTelegramRequest(user.getId()));
-            telegramUpdateHandler.analyseResponse(response, userAccount);
+            telegramUpdateHandler.analyseResponseTelegramResponse(response, userAccount);
         }
     }
 
     @RequestMapping(value = "/channels/update")
     @ResponseBody
     public void channelsUpdate(@RequestBody ChannelsRequest channelsRequest) throws Exception{
+        UserAccount userAccount = channelsUpdateHandler.getUserAccountByChannelId(((Data)channelsRequest.getData()).getChannelId());
         if("msg".equals(channelsRequest.getAction()) && "o".equals(channelsRequest.getData().getUser().getType())) {
-            telegramConnector.sendRequest(channelsUpdateHandler.deligateMessageToTelegram(channelsRequest));
+            userAccount.setUserText(channelsRequest.getData().getText());
+            telegramConnector.sendRequest(telegramUpdateHandler.deligateMessage(userAccount));
         }else if("channelLeave".equals(channelsRequest.getAction()) && "o".equals(channelsRequest.getData().getUser().getType())){
-            TelegramResponse telegramResponse = telegramConnector.sendRequest(channelsUpdateHandler.leaveDialog(channelsRequest));
+            TelegramResponse telegramResponse = telegramConnector.sendRequest(telegramUpdateHandler.leaveDialog(userAccount));
             if(telegramResponse.getOk()) {
-                telegramUpdateHandler.flushUserState(telegramResponse.getResult().getChat().getId());
+                channelsUpdateHandler.flushUserState(telegramResponse.getResult().getChat().getId());
             }
         }
     }
@@ -88,7 +94,7 @@ public class TelegramRequestController {
     @ExceptionHandler(UnresponsibleException.class)
     @ResponseBody
     public void unresponsibleException(UnresponsibleException e){
-        telegramUpdateHandler.flushUserState(e.getId());
+        channelsUpdateHandler.flushUserState(e.getId());
         log.log(Level.SEVERE, e.getDescription(), e);
     }
 
@@ -97,6 +103,7 @@ public class TelegramRequestController {
     public void telegramExceptionHandler(TelegramException e) throws Exception {
         TelegramRequest message = new TelegramRequest(e.getUserId(), e.getDescription());
         message.setReply_markup(e.getInlineKeyboardMarkup());
+        log.log(Level.SEVERE, e.getDescription(), e);
         telegramConnector.sendRequest(message);
     }
 

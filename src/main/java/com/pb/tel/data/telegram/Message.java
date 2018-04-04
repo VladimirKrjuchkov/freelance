@@ -23,6 +23,8 @@ public class Message{
 
     private String text;
 
+    private Contact contact;
+
     public Integer getMessage_id() {
         return message_id;
     }
@@ -63,6 +65,14 @@ public class Message{
         this.text = text;
     }
 
+    public Contact getContact() {
+        return contact;
+    }
+
+    public void setContact(Contact contact) {
+        this.contact = contact;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -74,7 +84,8 @@ public class Message{
         if (from != null ? !from.equals(message.from) : message.from != null) return false;
         if (chat != null ? !chat.equals(message.chat) : message.chat != null) return false;
         if (date != null ? !date.equals(message.date) : message.date != null) return false;
-        return text != null ? text.equals(message.text) : message.text == null;
+        if (text != null ? !text.equals(message.text) : message.text != null) return false;
+        return contact != null ? contact.equals(message.contact) : message.contact == null;
     }
 
     @Override
@@ -84,6 +95,7 @@ public class Message{
         result = 31 * result + (chat != null ? chat.hashCode() : 0);
         result = 31 * result + (date != null ? date.hashCode() : 0);
         result = 31 * result + (text != null ? text.hashCode() : 0);
+        result = 31 * result + (contact != null ? contact.hashCode() : 0);
         return result;
     }
 
@@ -95,6 +107,7 @@ public class Message{
                 ", chat=" + chat +
                 ", date=" + date +
                 ", text='" + text + '\'' +
+                ", contact=" + contact +
                 '}';
     }
 }

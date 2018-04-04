@@ -9,6 +9,8 @@ public enum UserState {
     WAITING_TTN("WAITING_TTN", "бот ждет ТТН"),
     WAITING_OPER("WAITING_OPER", "клиент ждет соеденения с оператором"),
     JOIN_TO_DIALOG("JOIN_TO_DIALOG", "клиента соеденили с оператором"),
+    ANONIM_USER("ANONIM_USER", "клиент не желает давать свои данные"),
+    WAITING_SHARE_CONTACT("WAITING_SHARE_CONTACT", "бот ждет, расшаривания контакта"),
     WRONG_ANSWER("WRONG_ANSWER", "неправильный ответ пользователя");
 
     String code;
