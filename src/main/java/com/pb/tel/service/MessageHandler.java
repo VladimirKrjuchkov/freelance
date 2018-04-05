@@ -31,6 +31,9 @@ public class MessageHandler extends AbstractUpdateHandler{
     private NovaPoshtaAPIHandler novaPoshtaAPIHandler;
 
     @Autowired
+    private EkbDataHandler ekbDataHandler;
+
+    @Autowired
     private ChannelsAPIHandler channelsAPIHandler;
 
     @Resource(name="customerDaoImpl")
@@ -61,17 +64,8 @@ public class MessageHandler extends AbstractUpdateHandler{
         }
         if(userAccount.getUserState() == UserState.WAITING_SHARE_CONTACT){
             if(TelegramButtons.register.getButton().equals(userAccount.getCallBackData())) {
-                try {
-                    //тут будет поход в ЕКБ и регистрация
-                    //1. Поход в ЕКБ
-                    customerDaoImpl.addCustomer(getCustomerFromUserAccount(userAccount));
-                    userAccount.setRegistered(true);
-                    return PropertiesUtil.getProperty("user_start_new_chat");
-
-                }catch (TelegramException e){
-                    flushUserState(userAccount.getId());
-                    throw e;
-                }
+                userAccount.setRegistered(registerNewCustomer(userAccount));
+                return PropertiesUtil.getProperty("user_start_new_chat");
             }
         }
         if(userAccount.getUserState() == UserState.WAITING_TTN){
@@ -109,6 +103,23 @@ public class MessageHandler extends AbstractUpdateHandler{
             rowMessage = rowMessage.replace("{oper_name}", userAccount.getOperName());
         }
         return rowMessage;
+    }
+
+    private boolean registerNewCustomer(UserAccount userAccount){
+        new Thread(new Runnable() {
+            public void run() {
+                try{
+                    Integer idEkb = ekbDataHandler.getEkbIdByPhone(userAccount.getPhone());
+                    userAccount.setIdEkb((idEkb == null) ? null : Integer.toString(idEkb));
+                    customerDaoImpl.addCustomer(getCustomerFromUserAccount(userAccount));
+
+                    }catch (Exception e){
+                        log.log(Level.SEVERE, "ERROR WHILE REGISER NEW CUSTOMER : ", e);
+                    }
+                }
+            }).start();
+
+        return true;
     }
 
     private Customer getCustomerFromUserAccount(UserAccount userAccount) throws TelegramException, UnresponsibleException {

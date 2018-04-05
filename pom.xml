@@ -192,6 +192,11 @@
             <version>6.0.5</version>
             <classifier>bin</classifier>
         </dependency>
+        <dependency>
+            <groupId>com.pb.uniwin</groupId>
+            <artifactId>UniWinUACommonServer</artifactId>
+            <version>1.0.22-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>

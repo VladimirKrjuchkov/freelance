@@ -52,6 +52,7 @@ public class CustomerDaoImpl implements CustomerDao{
 
     @Transactional(rollbackFor=Exception.class)
     public Customer addCustomer(Customer customer) throws TelegramException {
+        log.log(Level.INFO, "CUSTOMER TO ADD : " + customer);
         try {
             long start = System.currentTimeMillis();
             em.persist(customer);

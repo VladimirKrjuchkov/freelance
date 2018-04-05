@@ -203,4 +203,20 @@
 		<property name="testOnBorrow" value="${redisTestOnBorrow}"/>
 	</bean>
 
+	<bean id="const" class="com.pb.service.uniwin.ua.entity.Const" lazy-init="false">
+		<constructor-arg name="bank" value="PB"/>
+	</bean>
+
+	<bean id="uniWinUtils" class="com.pb.service.uniwin.ua.UniWinUtils" depends-on="const"/>
+
+	<bean id="ekbDao" class="com.pb.service.uniwin.ua.dao.EkbDaoImpl" >
+		<constructor-arg name="cisToolsManagerUrl" value="${CisToolsManagerUrl}"/>
+	</bean>
+
+	<bean id="prominSession" class="com.pb.util.bpn.Sessions" xmlns="http://www.springframework.org/schema/beans">
+		<constructor-arg name="url" value="${auth_url}"/>
+		<constructor-arg name="login" value="${auth_login}"/>
+		<constructor-arg name="authSys" value="${auth_system}"/>
+		<constructor-arg name="password" value="${auth_pass}"/>
+	</bean>
 </beans>
