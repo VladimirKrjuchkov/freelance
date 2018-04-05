@@ -30,8 +30,6 @@ public class MessageHandler extends AbstractUpdateHandler{
     @Autowired
     private NovaPoshtaAPIHandler novaPoshtaAPIHandler;
 
-    @Autowired
-    private EkbDataHandler ekbDataHandler;
 
     @Autowired
     private ChannelsAPIHandler channelsAPIHandler;
@@ -103,40 +101,6 @@ public class MessageHandler extends AbstractUpdateHandler{
             rowMessage = rowMessage.replace("{oper_name}", userAccount.getOperName());
         }
         return rowMessage;
-    }
-
-    private boolean registerNewCustomer(UserAccount userAccount){
-        new Thread(new Runnable() {
-            public void run() {
-                try{
-                    Integer idEkb = ekbDataHandler.getEkbIdByPhone(userAccount.getPhone());
-                    userAccount.setIdEkb((idEkb == null) ? null : Integer.toString(idEkb));
-                    customerDaoImpl.addCustomer(getCustomerFromUserAccount(userAccount));
-
-                    }catch (Exception e){
-                        log.log(Level.SEVERE, "ERROR WHILE REGISER NEW CUSTOMER : ", e);
-                    }
-                }
-            }).start();
-
-        return true;
-    }
-
-    private Customer getCustomerFromUserAccount(UserAccount userAccount) throws TelegramException, UnresponsibleException {
-        Customer customer = new Customer();
-        if (userAccount.getId() == null) {
-            throw new UnresponsibleException("USER01", PropertiesUtil.getProperty("USER01"));
-        }
-        if (userAccount.getMessenger() == null || userAccount.getPhone() == null) {
-            flushUserState(userAccount.getId());
-            throw new TelegramException(PropertiesUtil.getProperty("ident_error"), userAccount.getId());
-        }
-        customer.setExtId(Integer.toString(userAccount.getId()));
-        customer.setIdEkb((userAccount.getIdEkb() == null) ? null : Integer.parseInt(userAccount.getIdEkb()));
-        customer.setMessenger(userAccount.getMessenger());
-        customer.setPhone(userAccount.getPhone());
-
-        return customer;
     }
 
     @Override

@@ -62,4 +62,11 @@ public class CustomerDaoImpl implements CustomerDao{
         }
         return customer;
     }
+
+    @Transactional(rollbackFor=Exception.class)
+    public void setCustomerWithIdEkb(Customer customer){
+        long start = System.currentTimeMillis();
+        em.merge(customer);
+        log.log(Level.INFO, "setIdEkb at " + (System.currentTimeMillis() - start) + "ms");
+    }
 }

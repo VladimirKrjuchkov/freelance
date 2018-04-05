@@ -65,7 +65,7 @@ public class TelegramRequestController {
         userAccount.setReqId(update.getUpdate_id());
         userAccount.setPhone(user.getPhone());
         userAccount.setMessenger(user.getMessenger());
-        telegramUpdateHandler.registateUser(userAccount);
+        telegramUpdateHandler.registrateUser(userAccount);
         userAccountStore.putValue(user.getId(), userAccount, Utils.getDateAfterSeconds(180));
 
         if(userAccount.getUserState() == UserState.JOIN_TO_DIALOG){

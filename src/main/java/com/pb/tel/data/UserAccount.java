@@ -47,7 +47,7 @@ public class UserAccount {
 
     private String phone;
 
-    private String idEkb;
+    private String idEkb = null;
 
     private String messenger;
 
