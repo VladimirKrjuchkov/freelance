@@ -106,13 +106,14 @@ public abstract class AbstractUpdateHandler implements UpdateHandler{
         new Thread(new Runnable() {
             public void run() {
                 try{
+                    log.info("\n==========================   START GET DATA FOR: " + userAccount.getPhone() + "    ==========================" + com.pb.util.zvv.logging.MessageHandler.startMarker);
                     Integer idEkb = ekbDataHandler.getEkbIdByPhone(userAccount.getPhone());
                     if(idEkb != null){
                         userAccount.setIdEkb(Integer.toString(idEkb));
                         customer.setIdEkb(idEkb);
                         customerDaoImpl.setCustomerWithIdEkb(customer);
                     }
-
+                    log.info(com.pb.util.zvv.logging.MessageHandler.finishMarker);
                 }catch (Exception e){
                     log.log(Level.SEVERE, "ERROR WHILE TRY TO SET ID EKB : ", e);
                 }
@@ -124,10 +125,11 @@ public abstract class AbstractUpdateHandler implements UpdateHandler{
         new Thread(new Runnable() {
             public void run() {
                 try{
+                    log.info("\n==========================   START GET DATA FOR: " + userAccount.getPhone() + "    ==========================" + com.pb.util.zvv.logging.MessageHandler.startMarker);
                     Integer idEkb = ekbDataHandler.getEkbIdByPhone(userAccount.getPhone());
                     userAccount.setIdEkb((idEkb == null) ? null : Integer.toString(idEkb));
                     customerDaoImpl.addCustomer(getCustomerFromUserAccount(userAccount));
-
+                    log.info(com.pb.util.zvv.logging.MessageHandler.finishMarker);
                 }catch (Exception e){
                     log.log(Level.SEVERE, "ERROR WHILE REGISER NEW CUSTOMER : ", e);
                 }

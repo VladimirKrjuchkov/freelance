@@ -36,7 +36,7 @@ public class EkbDataHandler {
     public Integer getEkbIdByPhone(String phone){
         Integer ekbId = null;
         com.pb.service.uniwin.ua.message.Customer customer = new com.pb.service.uniwin.ua.message.Customer();
-        customer.setPhone("+"+phone);
+        customer.setPhone(Utils.makeEkbPhone(phone));
 //        customer.setPhone("+380959595999");
         long start = System.currentTimeMillis();
         List<ClientItem> clientItems = null;

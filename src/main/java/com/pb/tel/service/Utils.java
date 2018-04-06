@@ -67,4 +67,13 @@ public class Utils {
 //
 //        return builder.compact();
     }
+
+    public static String makeEkbPhone(String phone){
+        String prefix = phone.substring(0, 1);
+        if("+".equals(prefix)){
+            return phone;
+        }else{
+            return "+" + phone;
+        }
+    }
 }
