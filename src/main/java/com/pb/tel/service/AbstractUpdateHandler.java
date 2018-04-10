@@ -151,7 +151,7 @@ public abstract class AbstractUpdateHandler implements UpdateHandler{
         customer.setExtId(Integer.toString(userAccount.getId()));
         customer.setIdEkb((userAccount.getIdEkb() == null) ? null : Integer.parseInt(userAccount.getIdEkb()));
         customer.setMessenger(userAccount.getMessenger());
-        customer.setPhone(userAccount.getPhone());
+        customer.setPhone(Utils.makeEkbPhone(userAccount.getPhone()));
 
         return customer;
     }
