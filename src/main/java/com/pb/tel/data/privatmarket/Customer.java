@@ -37,7 +37,7 @@ public class Customer  implements Serializable{
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "date", nullable=false)
-    protected Date date;
+    protected Date date = new Date();
 
     public String getExtId() {
         return extId;

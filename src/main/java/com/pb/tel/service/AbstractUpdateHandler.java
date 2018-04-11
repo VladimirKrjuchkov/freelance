@@ -152,7 +152,6 @@ public abstract class AbstractUpdateHandler implements UpdateHandler{
         customer.setIdEkb((userAccount.getIdEkb() == null) ? null : Integer.parseInt(userAccount.getIdEkb()));
         customer.setMessenger(userAccount.getMessenger());
         customer.setPhone(Utils.makeEkbPhone(userAccount.getPhone()));
-
         return customer;
     }
 }
