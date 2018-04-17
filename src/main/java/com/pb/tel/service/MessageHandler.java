@@ -75,6 +75,12 @@ public class MessageHandler extends AbstractUpdateHandler{
                 return PropertiesUtil.getProperty("tracking_response_from_novaposhta") + " " + userAccount.getUserText() + ": " + message;
             }
         }
+        if(userAccount.getUserState() == UserState.USER_ANSWERD_YES) {
+            return PropertiesUtil.getProperty("thank_you");
+        }
+        if(userAccount.getUserState() == UserState.USER_ANSWERD_NO) {
+            return PropertiesUtil.getProperty("thank_you");
+        }
         if(userAccount.getUserState() == UserState.WRONG_ANSWER) {
             return PropertiesUtil.getProperty("wrong_answer");
         }

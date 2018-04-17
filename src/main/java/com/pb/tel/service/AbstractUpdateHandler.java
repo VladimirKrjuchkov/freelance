@@ -82,7 +82,11 @@ public abstract class AbstractUpdateHandler implements UpdateHandler{
                 userAccount.setUserState(UserState.NEW);
             }
 
-        }else if(userAccount.getUserState() == UserState.WRONG_ANSWER || userAccount.getUserState() == UserState.ANONIM_USER || userAccount.getUserState() == UserState.WAITING_SHARE_CONTACT){
+        }else if(userAccount.getUserState() == UserState.WRONG_ANSWER ||
+                 userAccount.getUserState() == UserState.ANONIM_USER  ||
+                 userAccount.getUserState() == UserState.WAITING_SHARE_CONTACT ||
+                 userAccount.getUserState() == UserState.USER_ANSWERD_YES ||
+                 userAccount.getUserState() == UserState.USER_ANSWERD_NO){
             userAccount.setUserState(UserState.NEW);
 
         }

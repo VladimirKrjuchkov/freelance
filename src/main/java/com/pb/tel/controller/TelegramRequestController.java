@@ -86,7 +86,8 @@ public class TelegramRequestController {
         }else if("channelLeave".equals(channelsRequest.getAction()) && "o".equals(channelsRequest.getData().getUser().getType())){
             TelegramResponse telegramResponse = telegramConnector.sendRequest(telegramUpdateHandler.leaveDialog(userAccount));
             if(telegramResponse.getOk()) {
-                channelsUpdateHandler.flushUserState(telegramResponse.getResult().getChat().getId());
+                userAccount.setUserState(UserState.LEAVING_DIALOG);
+                userAccountStore.putValue(userAccount.getId(), userAccount, Utils.getDateAfterSeconds(3600));
             }
         }
     }

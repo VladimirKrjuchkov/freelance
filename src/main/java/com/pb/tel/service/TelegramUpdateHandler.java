@@ -34,6 +34,9 @@ public class TelegramUpdateHandler extends AbstractUpdateHandler {
         TelegramRequest telegramRequest = new TelegramRequest();
         checkUserAnswer(userAccount);
         try {
+            if(userAccount.getUserState() == UserState.REPEAT_LEAVING_DIALOG){
+                return leaveDialog(userAccount);
+            }
             telegramRequest.setChat_id(id);
             telegramRequest.setText(messageHandler.getMessage(userAccount));
             if (userAccount.getUserState() == UserState.NEW || userAccount.getUserState() == UserState.WAITING_SHARE_CONTACT) {
@@ -107,8 +110,22 @@ public class TelegramUpdateHandler extends AbstractUpdateHandler {
     }
 
     public TelegramRequest leaveDialog(UserAccount userAccount) throws UnresponsibleException {
-        TelegramRequest message = new TelegramRequest(userAccount.getId(), PropertiesUtil.getProperty("oper_leave_dialog"));
-        message.setReply_markup(new ReplyKeyboardHide());
+        TelegramRequest message = new TelegramRequest(userAccount.getId(), PropertiesUtil.getProperty("after_oper_leave_dialog"));
+        InlineKeyboardMarkup reply_markup = new InlineKeyboardMarkup();
+        List<List<KeyboardButton>> keyboardButtons = new ArrayList<List<KeyboardButton>>();
+        KeyboardButton yes = new KeyboardButton(TelegramButtons.yes.getButton());
+        KeyboardButton no = new KeyboardButton(TelegramButtons.no.getButton());
+
+        List<KeyboardButton> yeses = new ArrayList<KeyboardButton>();
+        yeses.add(yes);
+        List<KeyboardButton> nos = new ArrayList<KeyboardButton>();
+        nos.add(no);
+
+        keyboardButtons.add(yeses);
+        keyboardButtons.add(nos);
+
+        reply_markup.setKeyboard(keyboardButtons);
+        message.setReply_markup(reply_markup);
         return message;
     }
 
@@ -125,6 +142,16 @@ public class TelegramUpdateHandler extends AbstractUpdateHandler {
                 }
             }
             userAccount.setUserState((userState == UserState.WAITING_PRESS_BUTTON) ? UserState.WRONG_ANSWER : UserState.ANONIM_USER);
+        }else if(userState == UserState.LEAVING_DIALOG || userState == UserState.REPEAT_LEAVING_DIALOG){
+            if(userAccount.getCallBackData() == null || (!TelegramButtons.yes.getButton().equals(userAccount.getCallBackData()) && !TelegramButtons.no.getButton().equals(userAccount.getCallBackData()))) {
+                userAccount.setUserState(UserState.REPEAT_LEAVING_DIALOG);
+            }else if(TelegramButtons.yes.getButton().equals(userAccount.getCallBackData())){
+                userAccount.setUserState(UserState.USER_ANSWERD_YES);
+
+            }else if(TelegramButtons.no.getButton().equals(userAccount.getCallBackData())){
+                userAccount.setUserState(UserState.USER_ANSWERD_NO);
+
+            }
         }
     }
 
