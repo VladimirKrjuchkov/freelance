@@ -34,9 +34,6 @@ public class TelegramUpdateHandler extends AbstractUpdateHandler {
         TelegramRequest telegramRequest = new TelegramRequest();
         checkUserAnswer(userAccount);
         try {
-            if(userAccount.getUserState() == UserState.REPEAT_LEAVING_DIALOG){
-                return leaveDialog(userAccount);
-            }
             telegramRequest.setChat_id(id);
             telegramRequest.setText(messageHandler.getMessage(userAccount));
             if (userAccount.getUserState() == UserState.NEW || userAccount.getUserState() == UserState.WAITING_SHARE_CONTACT) {
@@ -64,8 +61,11 @@ public class TelegramUpdateHandler extends AbstractUpdateHandler {
                 reply_markup.setKeyboard(keyboardButtons);
                 telegramRequest.setReply_markup(reply_markup);
             }
-            if(userAccount.getUserState() == UserState.WAITING_TTN || userAccount.getUserState() == UserState.ANONIM_USER){
+            if(userAccount.getUserState() == UserState.WAITING_TTN ||
+               userAccount.getUserState() == UserState.ANONIM_USER ||
+               userAccount.getUserState() == UserState.USER_ANSWERD_UNKNOWN){
                 telegramRequest.setReply_markup(new ReplyKeyboardHide());
+
             }
         }catch (TelegramException e){
             throw e;
@@ -142,15 +142,16 @@ public class TelegramUpdateHandler extends AbstractUpdateHandler {
                 }
             }
             userAccount.setUserState((userState == UserState.WAITING_PRESS_BUTTON) ? UserState.WRONG_ANSWER : UserState.ANONIM_USER);
-        }else if(userState == UserState.LEAVING_DIALOG || userState == UserState.REPEAT_LEAVING_DIALOG){
+        }else if(userState == UserState.LEAVING_DIALOG){
             if(userAccount.getCallBackData() == null || (!TelegramButtons.yes.getButton().equals(userAccount.getCallBackData()) && !TelegramButtons.no.getButton().equals(userAccount.getCallBackData()))) {
-                userAccount.setUserState(UserState.REPEAT_LEAVING_DIALOG);
+                userAccount.setUserState(UserState.USER_ANSWERD_UNKNOWN);
+                userAccount.setMark("");
             }else if(TelegramButtons.yes.getButton().equals(userAccount.getCallBackData())){
                 userAccount.setUserState(UserState.USER_ANSWERD_YES);
-
+                userAccount.setMark("yes");
             }else if(TelegramButtons.no.getButton().equals(userAccount.getCallBackData())){
                 userAccount.setUserState(UserState.USER_ANSWERD_NO);
-
+                userAccount.setMark("no");
             }
         }
     }

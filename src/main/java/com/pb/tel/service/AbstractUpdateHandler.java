@@ -86,7 +86,8 @@ public abstract class AbstractUpdateHandler implements UpdateHandler{
                  userAccount.getUserState() == UserState.ANONIM_USER  ||
                  userAccount.getUserState() == UserState.WAITING_SHARE_CONTACT ||
                  userAccount.getUserState() == UserState.USER_ANSWERD_YES ||
-                 userAccount.getUserState() == UserState.USER_ANSWERD_NO){
+                 userAccount.getUserState() == UserState.USER_ANSWERD_NO ||
+                userAccount.getUserState() == UserState.USER_ANSWERD_UNKNOWN){
             userAccount.setUserState(UserState.NEW);
 
         }

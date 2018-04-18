@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -83,7 +84,11 @@ public class TelegramRequestController {
         if("msg".equals(channelsRequest.getAction()) && "o".equals(channelsRequest.getData().getUser().getType())) {
             userAccount.setUserText(channelsRequest.getData().getText());
             telegramConnector.sendRequest(telegramUpdateHandler.deligateMessage(userAccount));
+        }else if("channelCreate".equals(channelsRequest.getAction()) && "u".equals(channelsRequest.getData().getUser().getType())){
+            userAccount.setSessionId(channelsRequest.getData().getSessionId());
+            userAccount.setSessionStartTime(new Date().getTime());
         }else if("channelLeave".equals(channelsRequest.getAction()) && "o".equals(channelsRequest.getData().getUser().getType())){
+            userAccount.setSessionEndTime(new Date().getTime());
             TelegramResponse telegramResponse = telegramConnector.sendRequest(telegramUpdateHandler.leaveDialog(userAccount));
             if(telegramResponse.getOk()) {
                 userAccount.setUserState(UserState.LEAVING_DIALOG);
@@ -104,7 +109,6 @@ public class TelegramRequestController {
     public void telegramExceptionHandler(TelegramException e) throws Exception {
         TelegramRequest message = new TelegramRequest(e.getUserId(), e.getDescription());
         message.setReply_markup(e.getInlineKeyboardMarkup());
-        log.log(Level.SEVERE, e.getDescription(), e);
         telegramConnector.sendRequest(message);
     }
 
