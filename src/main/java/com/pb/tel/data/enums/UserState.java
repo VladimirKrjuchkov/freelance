@@ -15,6 +15,7 @@ public enum UserState {
     USER_ANSWERD_UNKNOWN("USER_ANSWERD_UNKNOWN", "Юзер не дал ответа"),
     USER_ANSWERD_YES("USER_ANSWERD_YES", "Юзер дал положительный ответ"),
     USER_ANSWERD_NO("USER_ANSWERD_YES", "Юзер дал отрицательный ответ"),
+    SEND_WRONG_CONTACT("SEND_WRONG_CONTACT", "Юзер отправил не свой контакт"),
     WRONG_ANSWER("WRONG_ANSWER", "неправильный ответ пользователя");
 
     String code;

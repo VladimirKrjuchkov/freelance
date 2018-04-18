@@ -59,6 +59,8 @@ public class UserAccount {
 
     private String sessionId;
 
+    private String contactId;
+
     public Integer getId() {
         return id;
     }
@@ -235,6 +237,14 @@ public class UserAccount {
         this.sessionId = sessionId;
     }
 
+    public String getContactId() {
+        return contactId;
+    }
+
+    public void setContactId(String contactId) {
+        this.contactId = contactId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -265,7 +275,8 @@ public class UserAccount {
             return false;
         if (sessionEndTime != null ? !sessionEndTime.equals(that.sessionEndTime) : that.sessionEndTime != null)
             return false;
-        return sessionId != null ? sessionId.equals(that.sessionId) : that.sessionId == null;
+        if (sessionId != null ? !sessionId.equals(that.sessionId) : that.sessionId != null) return false;
+        return contactId != null ? contactId.equals(that.contactId) : that.contactId == null;
     }
 
     @Override
@@ -292,6 +303,7 @@ public class UserAccount {
         result = 31 * result + (sessionStartTime != null ? sessionStartTime.hashCode() : 0);
         result = 31 * result + (sessionEndTime != null ? sessionEndTime.hashCode() : 0);
         result = 31 * result + (sessionId != null ? sessionId.hashCode() : 0);
+        result = 31 * result + (contactId != null ? contactId.hashCode() : 0);
         return result;
     }
 
@@ -320,6 +332,7 @@ public class UserAccount {
                 ", sessionStartTime=" + sessionStartTime +
                 ", sessionEndTime=" + sessionEndTime +
                 ", sessionId='" + sessionId + '\'' +
+                ", contactId='" + contactId + '\'' +
                 '}';
     }
 }

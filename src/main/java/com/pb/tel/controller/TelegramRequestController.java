@@ -66,6 +66,7 @@ public class TelegramRequestController {
         userAccount.setReqId(update.getUpdate_id());
         userAccount.setPhone(user.getPhone());
         userAccount.setMessenger(user.getMessenger());
+        userAccount.setContactId(user.getContactId());
         telegramUpdateHandler.registrateUser(userAccount);
         userAccountStore.putValue(user.getId(), userAccount, Utils.getDateAfterSeconds(180));
 

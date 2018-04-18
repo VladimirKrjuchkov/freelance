@@ -57,7 +57,7 @@ public abstract class AbstractUpdateHandler implements UpdateHandler{
     }
 
     protected void updateUserState(UserAccount userAccount){
-        if(userAccount.getUserState() == UserState.NEW || userAccount.getUserState() == UserState.WAITING_SHARE_CONTACT){
+        if(userAccount.getUserState() == UserState.NEW || userAccount.getUserState() == UserState.WAITING_SHARE_CONTACT || userAccount.getUserState() == UserState.SEND_WRONG_CONTACT){
             if(userAccount.getRegistered()) {
                 userAccount.setUserState(UserState.WAITING_PRESS_BUTTON);
             }else{

@@ -77,6 +77,9 @@ public class MessageHandler extends AbstractUpdateHandler{
                 return PropertiesUtil.getProperty("tracking_response_from_novaposhta") + " " + userAccount.getUserText() + ": " + message;
             }
         }
+        if(userAccount.getUserState() == UserState.SEND_WRONG_CONTACT) {
+            return PropertiesUtil.getProperty("wrong_contact");
+        }
         if(userAccount.getUserState() == UserState.USER_ANSWERD_YES || userAccount.getUserState() == UserState.USER_ANSWERD_NO || userAccount.getUserState() == UserState.USER_ANSWERD_UNKNOWN) {
             chatOnlineHandler.sendStatistic(userAccount);
             return PropertiesUtil.getProperty("thank_you");
