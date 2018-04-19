@@ -41,6 +41,8 @@ public class Data{
 
     private DeviceInfo deviceInfo;
 
+    private String sessionId;
+
     public User getUser() {
         return user;
     }
@@ -145,6 +147,14 @@ public class Data{
         this.deviceInfo = deviceInfo;
     }
 
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -164,7 +174,8 @@ public class Data{
         if (invites != null ? !invites.equals(data.invites) : data.invites != null) return false;
         if (udid != null ? !udid.equals(data.udid) : data.udid != null) return false;
         if (ssoToken != null ? !ssoToken.equals(data.ssoToken) : data.ssoToken != null) return false;
-        return deviceInfo != null ? deviceInfo.equals(data.deviceInfo) : data.deviceInfo == null;
+        if (deviceInfo != null ? !deviceInfo.equals(data.deviceInfo) : data.deviceInfo != null) return false;
+        return sessionId != null ? sessionId.equals(data.sessionId) : data.sessionId == null;
     }
 
     @Override
@@ -182,6 +193,7 @@ public class Data{
         result = 31 * result + (udid != null ? udid.hashCode() : 0);
         result = 31 * result + (ssoToken != null ? ssoToken.hashCode() : 0);
         result = 31 * result + (deviceInfo != null ? deviceInfo.hashCode() : 0);
+        result = 31 * result + (sessionId != null ? sessionId.hashCode() : 0);
         return result;
     }
 
@@ -201,6 +213,7 @@ public class Data{
                 ", udid='" + udid + '\'' +
                 ", ssoToken='" + ssoToken + '\'' +
                 ", deviceInfo=" + deviceInfo +
+                ", sessionId='" + sessionId + '\'' +
                 '}';
     }
 }

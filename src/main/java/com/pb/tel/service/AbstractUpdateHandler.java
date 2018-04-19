@@ -57,7 +57,7 @@ public abstract class AbstractUpdateHandler implements UpdateHandler{
     }
 
     protected void updateUserState(UserAccount userAccount){
-        if(userAccount.getUserState() == UserState.NEW || userAccount.getUserState() == UserState.WAITING_SHARE_CONTACT){
+        if(userAccount.getUserState() == UserState.NEW || userAccount.getUserState() == UserState.WAITING_SHARE_CONTACT || userAccount.getUserState() == UserState.SEND_WRONG_CONTACT){
             if(userAccount.getRegistered()) {
                 userAccount.setUserState(UserState.WAITING_PRESS_BUTTON);
             }else{
@@ -82,7 +82,12 @@ public abstract class AbstractUpdateHandler implements UpdateHandler{
                 userAccount.setUserState(UserState.NEW);
             }
 
-        }else if(userAccount.getUserState() == UserState.WRONG_ANSWER || userAccount.getUserState() == UserState.ANONIM_USER || userAccount.getUserState() == UserState.WAITING_SHARE_CONTACT){
+        }else if(userAccount.getUserState() == UserState.WRONG_ANSWER ||
+                 userAccount.getUserState() == UserState.ANONIM_USER  ||
+                 userAccount.getUserState() == UserState.WAITING_SHARE_CONTACT ||
+                 userAccount.getUserState() == UserState.USER_ANSWERD_YES ||
+                 userAccount.getUserState() == UserState.USER_ANSWERD_NO ||
+                userAccount.getUserState() == UserState.USER_ANSWERD_UNKNOWN){
             userAccount.setUserState(UserState.NEW);
 
         }

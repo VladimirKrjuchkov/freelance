@@ -10,6 +10,8 @@ public enum TelegramButtons {
     myPost("myPost", PropertiesUtil.getProperty("myPost")),
     adviceButton("adviceButton", PropertiesUtil.getProperty("adviceButton")),
     register("register", PropertiesUtil.getProperty("register")),
+    yes("yes", PropertiesUtil.getProperty("yes")),
+    no("no", PropertiesUtil.getProperty("no")),
     callOper("callOper", PropertiesUtil.getProperty("callOper"));
 
     String code;

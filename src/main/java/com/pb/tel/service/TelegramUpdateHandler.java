@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -36,33 +37,38 @@ public class TelegramUpdateHandler extends AbstractUpdateHandler {
         try {
             telegramRequest.setChat_id(id);
             telegramRequest.setText(messageHandler.getMessage(userAccount));
-            if (userAccount.getUserState() == UserState.NEW || userAccount.getUserState() == UserState.WAITING_SHARE_CONTACT) {
-                InlineKeyboardMarkup reply_markup = new InlineKeyboardMarkup();
-                List<List<KeyboardButton>> keyboardButtons = new ArrayList<List<KeyboardButton>>();
-                if(userAccount.getRegistered()) {
-                    KeyboardButton tracking = new KeyboardButton(TelegramButtons.tracking.getButton());
-                    KeyboardButton callOper = new KeyboardButton(TelegramButtons.callOper.getButton());
+            if (userAccount.getUserState() == UserState.NEW ||
+                userAccount.getUserState() == UserState.WAITING_SHARE_CONTACT ||
+                userAccount.getUserState() == UserState.SEND_WRONG_CONTACT) {
+                    InlineKeyboardMarkup reply_markup = new InlineKeyboardMarkup();
+                    List<List<KeyboardButton>> keyboardButtons = new ArrayList<List<KeyboardButton>>();
+                    if(userAccount.getRegistered()) {
+                        KeyboardButton tracking = new KeyboardButton(TelegramButtons.tracking.getButton());
+                        KeyboardButton callOper = new KeyboardButton(TelegramButtons.callOper.getButton());
 
-                    List<KeyboardButton> trackings = new ArrayList<KeyboardButton>();
-                    trackings.add(tracking);
-                    List<KeyboardButton> callOpers = new ArrayList<KeyboardButton>();
-                    callOpers.add(callOper);
+                        List<KeyboardButton> trackings = new ArrayList<KeyboardButton>();
+                        trackings.add(tracking);
+                        List<KeyboardButton> callOpers = new ArrayList<KeyboardButton>();
+                        callOpers.add(callOper);
 
-                    keyboardButtons.add(trackings);
-                    keyboardButtons.add(callOpers);
+                        keyboardButtons.add(trackings);
+                        keyboardButtons.add(callOpers);
 
-                }else{
-                    KeyboardButton register = new KeyboardButton(TelegramButtons.register.getButton());
-                    register.setRequest_contact(true);
-                    List<KeyboardButton> registers = new ArrayList<KeyboardButton>();
-                    registers.add(register);
-                    keyboardButtons.add(registers);
-                }
-                reply_markup.setKeyboard(keyboardButtons);
-                telegramRequest.setReply_markup(reply_markup);
+                    }else{
+                        KeyboardButton register = new KeyboardButton(TelegramButtons.register.getButton());
+                        register.setRequest_contact(true);
+                        List<KeyboardButton> registers = new ArrayList<KeyboardButton>();
+                        registers.add(register);
+                        keyboardButtons.add(registers);
+                    }
+                    reply_markup.setKeyboard(keyboardButtons);
+                    telegramRequest.setReply_markup(reply_markup);
             }
-            if(userAccount.getUserState() == UserState.WAITING_TTN || userAccount.getUserState() == UserState.ANONIM_USER){
+            if(userAccount.getUserState() == UserState.WAITING_TTN ||
+               userAccount.getUserState() == UserState.ANONIM_USER ||
+               userAccount.getUserState() == UserState.USER_ANSWERD_UNKNOWN){
                 telegramRequest.setReply_markup(new ReplyKeyboardHide());
+
             }
         }catch (TelegramException e){
             throw e;
@@ -88,6 +94,7 @@ public class TelegramUpdateHandler extends AbstractUpdateHandler {
             if(update.getMessage().getContact() != null){
                 user.setText(TelegramButtons.register.getButton());
                 user.setPhone(update.getMessage().getContact().getPhone_number());
+                user.setContactId(update.getMessage().getContact().getUser_id());
             }
         }else if(update.getCallback_query() != null){
             user = update.getCallback_query().getFrom();
@@ -107,17 +114,38 @@ public class TelegramUpdateHandler extends AbstractUpdateHandler {
     }
 
     public TelegramRequest leaveDialog(UserAccount userAccount) throws UnresponsibleException {
-        TelegramRequest message = new TelegramRequest(userAccount.getId(), PropertiesUtil.getProperty("oper_leave_dialog"));
-        message.setReply_markup(new ReplyKeyboardHide());
+        TelegramRequest message = new TelegramRequest(userAccount.getId(), PropertiesUtil.getProperty("after_oper_leave_dialog"));
+        InlineKeyboardMarkup reply_markup = new InlineKeyboardMarkup();
+        List<List<KeyboardButton>> keyboardButtons = new ArrayList<List<KeyboardButton>>();
+        KeyboardButton yes = new KeyboardButton(TelegramButtons.yes.getButton());
+        KeyboardButton no = new KeyboardButton(TelegramButtons.no.getButton());
+
+        List<KeyboardButton> yeses = new ArrayList<KeyboardButton>();
+        yeses.add(yes);
+        List<KeyboardButton> nos = new ArrayList<KeyboardButton>();
+        nos.add(no);
+
+        keyboardButtons.add(yeses);
+        keyboardButtons.add(nos);
+
+        reply_markup.setKeyboard(keyboardButtons);
+        message.setReply_markup(reply_markup);
         return message;
     }
 
     private void checkUserAnswer(UserAccount userAccount){
         UserState userState = userAccount.getUserState();
-        if(userState == UserState.WAITING_PRESS_BUTTON || userState == UserState.WAITING_SHARE_CONTACT){
+        if(userState == UserState.WAITING_PRESS_BUTTON || userState == UserState.WAITING_SHARE_CONTACT || userState == UserState.SEND_WRONG_CONTACT){
             if(userAccount.getCallBackData() == null) {
                 userAccount.setUserState((userState == UserState.WAITING_PRESS_BUTTON) ? UserState.WRONG_ANSWER : UserState.ANONIM_USER);
                 return;
+            }
+            if(userState == UserState.WAITING_SHARE_CONTACT){
+                if(!Integer.toString(userAccount.getId()).equals(userAccount.getContactId())){
+                    userAccount.setUserState(UserState.SEND_WRONG_CONTACT);
+                }else{
+                    userAccount.setUserState(UserState.WAITING_SHARE_CONTACT);
+                }
             }
             for(TelegramButtons telegramButton : TelegramButtons.values()){
                 if(telegramButton.getButton().equals(userAccount.getCallBackData())){
@@ -125,6 +153,17 @@ public class TelegramUpdateHandler extends AbstractUpdateHandler {
                 }
             }
             userAccount.setUserState((userState == UserState.WAITING_PRESS_BUTTON) ? UserState.WRONG_ANSWER : UserState.ANONIM_USER);
+        }else if(userState == UserState.LEAVING_DIALOG){
+            if(userAccount.getCallBackData() == null || (!TelegramButtons.yes.getButton().equals(userAccount.getCallBackData()) && !TelegramButtons.no.getButton().equals(userAccount.getCallBackData()))) {
+                userAccount.setUserState(UserState.USER_ANSWERD_UNKNOWN);
+                userAccount.setMark("");
+            }else if(TelegramButtons.yes.getButton().equals(userAccount.getCallBackData())){
+                userAccount.setUserState(UserState.USER_ANSWERD_YES);
+                userAccount.setMark("yes");
+            }else if(TelegramButtons.no.getButton().equals(userAccount.getCallBackData())){
+                userAccount.setUserState(UserState.USER_ANSWERD_NO);
+                userAccount.setMark("no");
+            }
         }
     }
 

@@ -51,6 +51,16 @@ public class UserAccount {
 
     private String messenger;
 
+    private String mark;
+
+    private Long sessionStartTime;
+
+    private Long sessionEndTime;
+
+    private String sessionId;
+
+    private String contactId;
+
     public Integer getId() {
         return id;
     }
@@ -195,6 +205,46 @@ public class UserAccount {
         this.messenger = messenger;
     }
 
+    public String getMark() {
+        return mark;
+    }
+
+    public void setMark(String mark) {
+        this.mark = mark;
+    }
+
+    public Long getSessionStartTime() {
+        return sessionStartTime;
+    }
+
+    public void setSessionStartTime(Long sessionStartTime) {
+        this.sessionStartTime = sessionStartTime;
+    }
+
+    public Long getSessionEndTime() {
+        return sessionEndTime;
+    }
+
+    public void setSessionEndTime(Long sessionEndTime) {
+        this.sessionEndTime = sessionEndTime;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
+
+    public String getContactId() {
+        return contactId;
+    }
+
+    public void setContactId(String contactId) {
+        this.contactId = contactId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -219,7 +269,14 @@ public class UserAccount {
         if (registered != null ? !registered.equals(that.registered) : that.registered != null) return false;
         if (phone != null ? !phone.equals(that.phone) : that.phone != null) return false;
         if (idEkb != null ? !idEkb.equals(that.idEkb) : that.idEkb != null) return false;
-        return messenger != null ? messenger.equals(that.messenger) : that.messenger == null;
+        if (messenger != null ? !messenger.equals(that.messenger) : that.messenger != null) return false;
+        if (mark != null ? !mark.equals(that.mark) : that.mark != null) return false;
+        if (sessionStartTime != null ? !sessionStartTime.equals(that.sessionStartTime) : that.sessionStartTime != null)
+            return false;
+        if (sessionEndTime != null ? !sessionEndTime.equals(that.sessionEndTime) : that.sessionEndTime != null)
+            return false;
+        if (sessionId != null ? !sessionId.equals(that.sessionId) : that.sessionId != null) return false;
+        return contactId != null ? contactId.equals(that.contactId) : that.contactId == null;
     }
 
     @Override
@@ -242,6 +299,11 @@ public class UserAccount {
         result = 31 * result + (phone != null ? phone.hashCode() : 0);
         result = 31 * result + (idEkb != null ? idEkb.hashCode() : 0);
         result = 31 * result + (messenger != null ? messenger.hashCode() : 0);
+        result = 31 * result + (mark != null ? mark.hashCode() : 0);
+        result = 31 * result + (sessionStartTime != null ? sessionStartTime.hashCode() : 0);
+        result = 31 * result + (sessionEndTime != null ? sessionEndTime.hashCode() : 0);
+        result = 31 * result + (sessionId != null ? sessionId.hashCode() : 0);
+        result = 31 * result + (contactId != null ? contactId.hashCode() : 0);
         return result;
     }
 
@@ -266,6 +328,11 @@ public class UserAccount {
                 ", phone='" + phone + '\'' +
                 ", idEkb='" + idEkb + '\'' +
                 ", messenger='" + messenger + '\'' +
+                ", mark='" + mark + '\'' +
+                ", sessionStartTime=" + sessionStartTime +
+                ", sessionEndTime=" + sessionEndTime +
+                ", sessionId='" + sessionId + '\'' +
+                ", contactId='" + contactId + '\'' +
                 '}';
     }
 }

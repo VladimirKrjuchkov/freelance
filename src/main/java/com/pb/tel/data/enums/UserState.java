@@ -11,6 +11,11 @@ public enum UserState {
     JOIN_TO_DIALOG("JOIN_TO_DIALOG", "клиента соеденили с оператором"),
     ANONIM_USER("ANONIM_USER", "клиент не желает давать свои данные"),
     WAITING_SHARE_CONTACT("WAITING_SHARE_CONTACT", "бот ждет, расшаривания контакта"),
+    LEAVING_DIALOG("LEAVING_DIALOG", "ченнелс ждет оценки"),
+    USER_ANSWERD_UNKNOWN("USER_ANSWERD_UNKNOWN", "Юзер не дал ответа"),
+    USER_ANSWERD_YES("USER_ANSWERD_YES", "Юзер дал положительный ответ"),
+    USER_ANSWERD_NO("USER_ANSWERD_YES", "Юзер дал отрицательный ответ"),
+    SEND_WRONG_CONTACT("SEND_WRONG_CONTACT", "Юзер отправил не свой контакт"),
     WRONG_ANSWER("WRONG_ANSWER", "неправильный ответ пользователя");
 
     String code;
