@@ -129,7 +129,49 @@ public class FaceBookUpdateHandler extends AbstractUpdateHandler{
 
     @Override
     public Request deligateMessage(UserAccount userAccount) throws UnresponsibleException {
-        return null;
+        com.pb.tel.data.facebook.Message message = new Message();
+        Messaging messaging = new Messaging();
+        Participant recipient = new Participant();
+        recipient.setId(userAccount.getId());
+        messaging.setRecipient(recipient);
+        message.setText(userAccount.getUserText());
+        messaging.setMessage(message);
+        return messaging;
+    }
+
+    @Override
+    public Request leaveDialog(UserAccount userAccount) throws UnresponsibleException {
+        com.pb.tel.data.facebook.Message message = new Message();
+        Messaging messaging = new Messaging();
+        Participant recipient = new Participant();
+        recipient.setId(userAccount.getId());
+        messaging.setRecipient(recipient);
+        Attachment attachment = new Attachment();
+        attachment.setType("template");
+        Payload payload = new Payload();
+        payload.setTemplate_type("button");
+        payload.setText(PropertiesUtil.getProperty("after_oper_leave_dialog"));
+        List<Buttons> buttons = new ArrayList<Buttons>();
+
+        Buttons yes = new Buttons();
+        Buttons no = new Buttons();
+
+        yes.setType("postback");
+        yes.setTitle(TelegramButtons.yes.getButton());
+        yes.setPayload(TelegramButtons.yes.getCode());
+
+        no.setType("postback");
+        no.setTitle(TelegramButtons.no.getButton());
+        no.setPayload(TelegramButtons.no.getCode());
+
+        buttons.add(yes);
+        buttons.add(no);
+
+        payload.setButtons(buttons);
+        attachment.setPayload(payload);
+        message.setAttachment(attachment);
+        messaging.setMessage(message);
+        return messaging;
     }
 
     public void analyseFaceBookResponse(FaceBookResponse faceBookResponse, UserAccount userAccount){

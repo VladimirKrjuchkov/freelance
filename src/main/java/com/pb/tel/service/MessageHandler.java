@@ -116,4 +116,9 @@ public class MessageHandler extends AbstractUpdateHandler{
     public Request deligateMessage(UserAccount userAccount) throws UnresponsibleException {
         return null;
     }
+
+    @Override
+    public Request leaveDialog(UserAccount userAccount) throws UnresponsibleException {
+        return null;
+    }
 }

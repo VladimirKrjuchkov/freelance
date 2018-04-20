@@ -88,16 +88,32 @@ public class TelegramRequestController {
         UserAccount userAccount = channelsUpdateHandler.getUserAccountByChannelId(((Data)channelsRequest.getData()).getChannelId());
         if("msg".equals(channelsRequest.getAction()) && "o".equals(channelsRequest.getData().getUser().getType())) {
             userAccount.setUserText(channelsRequest.getData().getText());
-            telegramConnector.sendRequest(telegramUpdateHandler.deligateMessage(userAccount));
+            if("Telegram".equals(userAccount.getMessenger())) {
+                telegramConnector.sendRequest(telegramUpdateHandler.deligateMessage(userAccount));
+            }else if("Messenger".equals(userAccount.getMessenger())){
+                faceBookConnector.sendRequest(faceBookUpdateHandler.deligateMessage(userAccount));
+            }else{
+                return;
+            }
         }else if("channelCreate".equals(channelsRequest.getAction()) && "u".equals(channelsRequest.getData().getUser().getType())){
             userAccount.setSessionId(channelsRequest.getData().getSessionId());
             userAccount.setSessionStartTime(new Date().getTime());
         }else if("channelLeave".equals(channelsRequest.getAction()) && "o".equals(channelsRequest.getData().getUser().getType())){
             userAccount.setSessionEndTime(new Date().getTime());
-            TelegramResponse telegramResponse = telegramConnector.sendRequest(telegramUpdateHandler.leaveDialog(userAccount));
-            if(telegramResponse.getOk()) {
-                userAccount.setUserState(UserState.LEAVING_DIALOG);
-                userAccountStore.putValue(userAccount.getId(), userAccount, Utils.getDateAfterSeconds(3600));
+            if("Telegram".equals(userAccount.getMessenger())) {
+                TelegramResponse telegramResponse = telegramConnector.sendRequest(telegramUpdateHandler.leaveDialog(userAccount));
+                if (telegramResponse.getOk()) {
+                    userAccount.setUserState(UserState.LEAVING_DIALOG);
+                    userAccountStore.putValue(userAccount.getId(), userAccount, Utils.getDateAfterSeconds(3600));
+                }
+            }else if("Messenger".equals(userAccount.getMessenger())){
+                FaceBookResponse faceBookResponse = (FaceBookResponse) faceBookConnector.sendRequest(faceBookUpdateHandler.leaveDialog(userAccount));
+                if(userAccount.getId().equals(faceBookResponse.getRecipient_id()) && faceBookResponse.getMessage_id() != null){
+                    userAccount.setUserState(UserState.LEAVING_DIALOG);
+                    userAccountStore.putValue(userAccount.getId(), userAccount, Utils.getDateAfterSeconds(3600));
+                }
+            }else{
+                return;
             }
         }
     }

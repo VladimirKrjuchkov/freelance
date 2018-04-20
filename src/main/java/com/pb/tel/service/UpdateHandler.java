@@ -2,6 +2,7 @@ package com.pb.tel.service;
 
 import com.pb.tel.data.Request;
 import com.pb.tel.data.UserAccount;
+import com.pb.tel.data.telegram.TelegramRequest;
 import com.pb.tel.service.exception.UnresponsibleException;
 
 /**
@@ -10,4 +11,6 @@ import com.pb.tel.service.exception.UnresponsibleException;
 public interface UpdateHandler {
 
     public Request deligateMessage(UserAccount userAccount) throws UnresponsibleException;
+
+    public Request leaveDialog(UserAccount userAccount) throws UnresponsibleException;
 }

@@ -34,4 +34,9 @@ public class ChannelsUpdateHandler extends AbstractUpdateHandler {
         return channelsRequest;
     }
 
+    @Override
+    public Request leaveDialog(UserAccount userAccount) throws UnresponsibleException {
+        return null;
+    }
+
 }
