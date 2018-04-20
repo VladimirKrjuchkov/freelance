@@ -49,7 +49,7 @@ public class Utils {
                 .withIssuer(key)
                 .withHeader(headers)
                 .withExpiresAt(getDateAfterSeconds(180))
-                .withClaim("login", Integer.toString(userAccount.getId()))
+                .withClaim("login", userAccount.getId())
                 .withClaim("name", userAccount.getFirstName()!=null ? userAccount.getFirstName() : (userAccount.getLastName()!=null ? userAccount.getLastName() : (userAccount.getUserName() != null ? userAccount.getUserName() : "unknown_user")))
                 .sign(algorithm);
         return token;

@@ -2,6 +2,7 @@ package com.pb.tel.data.telegram;
 
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.pb.tel.data.Response;
 
 /**
  * Created by vladimir on 06.03.18.
@@ -9,7 +10,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class TelegramResponse {
+public class TelegramResponse implements Response{
 
     public TelegramResponse(){};
 

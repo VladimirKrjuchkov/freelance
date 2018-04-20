@@ -2,7 +2,7 @@ package com.pb.tel.service;
 
 import com.pb.tel.data.UserAccount;
 import com.pb.tel.data.channels.*;
-import com.pb.tel.service.exception.TelegramException;
+import com.pb.tel.service.exception.LogicException;
 import com.pb.util.zvv.PropertiesUtil;
 import com.pb.util.zvv.storage.Storage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class ChannelsAPIHandler {
     private MessageHandler messageHandler;
 
     @Resource(name="channelIdByUserIdStore")
-    private Storage<String, Integer> channelIdByUserIdStore;
+    private Storage<String, String> channelIdByUserIdStore;
 
     public void callOper(UserAccount userAccount) throws Exception {
         userAccount.setChannelId(createChannel(userAccount));
@@ -43,7 +43,7 @@ public class ChannelsAPIHandler {
     private String addOperToChannel(UserAccount userAccount) throws Exception {
         ChannelsRequest channelsRequest = new ChannelsRequest();
         channelsRequest.setAction("channelInvite");
-        channelsRequest.setReqId(Integer.toString(userAccount.getReqId()));
+        channelsRequest.setReqId(userAccount.getReqId());
         Data channelCreate = new Data();
         channelCreate.setCompanyId(PropertiesUtil.getProperty("channels_company_id"));
         channelCreate.setChannelId(userAccount.getChannelId());
@@ -55,7 +55,7 @@ public class ChannelsAPIHandler {
         if("error".equals(channelsResponse.getResult()) || channelsResponse.getData().getUsers().size() <=0){
             String message = messageHandler.fillInMessageByUserData(PropertiesUtil.getProperty("channels_create_token_error"), userAccount);
             telegramUpdateHandler.flushUserState(userAccount.getId());
-            throw new TelegramException(message, userAccount.getId());
+            throw new LogicException("channels_create_token_error", message);
         }
         return channelsResponse.getData().getUsers().get(0).getName();
     }
@@ -65,7 +65,7 @@ public class ChannelsAPIHandler {
         userAccount.setToken(createToken(userAccount));
         ChannelsRequest channelsRequest = new ChannelsRequest();
         channelsRequest.setAction("channelCreate");
-        channelsRequest.setReqId(Integer.toString(userAccount.getReqId()));
+        channelsRequest.setReqId(userAccount.getReqId());
         Data channelCreate = new Data();
         channelCreate.setType("help");
         channelCreate.setCompanyId(PropertiesUtil.getProperty("channels_company_id"));
@@ -74,7 +74,7 @@ public class ChannelsAPIHandler {
         if("error".equals(channelsResponse.getResult())){
             String message = messageHandler.fillInMessageByUserData(PropertiesUtil.getProperty("channels_create_token_error"), userAccount);
             telegramUpdateHandler.flushUserState(userAccount.getId());
-            throw new TelegramException(message, userAccount.getId());
+            throw new LogicException("channels_create_token_error", message);
         }
         return channelsResponse.getData().getChannelId();
     }
@@ -90,7 +90,7 @@ public class ChannelsAPIHandler {
         if("error".equals(channelsResponse.getResult())){
             String message = messageHandler.fillInMessageByUserData(PropertiesUtil.getProperty("channels_create_token_error"), userAccount);
             telegramUpdateHandler.flushUserState(userAccount.getId());
-            throw new TelegramException(message, userAccount.getId());
+            throw new LogicException("channels_create_token_error", message);
         }else {
             return analyseAndGetOperId(channelsResponse.getData().getOperators(), userAccount);
         }
@@ -99,9 +99,9 @@ public class ChannelsAPIHandler {
     private String createToken(UserAccount userAccount) throws Exception {
         ChannelsRequest channelsRequest = new ChannelsRequest();
         channelsRequest.setAction("tokenCreate");
-        channelsRequest.setReqId(Integer.toString(userAccount.getReqId()));
+        channelsRequest.setReqId(userAccount.getReqId());
         Data tokenCreate = new Data();
-        tokenCreate.setUdid(Integer.toString(userAccount.getUdid()));
+        tokenCreate.setUdid(userAccount.getUdid());
         tokenCreate.setSsoToken(Utils.createJWT(userAccount));
         DeviceInfo deviceInfo = new DeviceInfo();
         deviceInfo.setType("web");
@@ -112,12 +112,12 @@ public class ChannelsAPIHandler {
         if("error".equals(channelsResponse.getResult())){
             String message = messageHandler.fillInMessageByUserData(PropertiesUtil.getProperty("channels_create_token_error"), userAccount);
             telegramUpdateHandler.flushUserState(userAccount.getId());
-            throw new TelegramException(message, userAccount.getId());
+            throw new LogicException("channels_create_token_error", message);
         }
         return channelsResponse.getData().getToken();
     }
 
-    private String analyseAndGetOperId(List<Operator> opers, UserAccount userAccount) throws TelegramException {
+    private String analyseAndGetOperId(List<Operator> opers, UserAccount userAccount) throws LogicException {
         Comparator<Operator> ocomp = new OpersComporator();
         TreeSet<Operator> freeOpers = new TreeSet(ocomp);
         for(Operator oper: opers){
@@ -128,7 +128,7 @@ public class ChannelsAPIHandler {
         if(freeOpers.size() <= 0){
             String message = messageHandler.fillInMessageByUserData(PropertiesUtil.getProperty("channels_call_oper_error"), userAccount);
             telegramUpdateHandler.flushUserState(userAccount.getId());
-            throw new TelegramException(message, userAccount.getId());
+            throw new LogicException("channels_call_oper_error", message);
         }
 
         return freeOpers.first().getId();

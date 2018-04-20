@@ -1,7 +1,9 @@
 package com.pb.tel.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pb.tel.data.Mes;
 import com.pb.tel.data.Request;
+import com.pb.tel.data.Response;
 import com.pb.tel.data.channels.ChannelsRequest;
 import com.pb.tel.data.channels.ChannelsResponse;
 import com.pb.tel.data.novaposhta.NovaPoshtaResponse;
@@ -21,7 +23,7 @@ import java.util.logging.Logger;
  */
 
 @Service("channelsConnector")
-public class ChannelsConnector {
+public class ChannelsConnector implements Connector{
 
     private final Logger log = Logger.getLogger(ChannelsConnector.class.getCanonicalName());
 
@@ -35,5 +37,20 @@ public class ChannelsConnector {
         requestHTTP.setRequestProperties(requestProperties);
         DetailedAnswer answer = requestHTTP.performQueryDetailedResponse(jacksonObjectMapper.writeValueAsString(channelsRequest), url);
         return jacksonObjectMapper.readValue(answer.getBody().getBytes(), ChannelsResponse.class);
+    }
+
+    @Override
+    public Mes webHook(String oper) throws Exception {
+        return null;
+    }
+
+    @Override
+    public Response doWebHookRequest(String webHookUrl) throws Exception {
+        return null;
+    }
+
+    @Override
+    public Response sendRequest(Request request) throws Exception {
+        return null;
     }
 }

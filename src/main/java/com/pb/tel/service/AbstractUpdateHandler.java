@@ -26,10 +26,10 @@ public abstract class AbstractUpdateHandler implements UpdateHandler{
     private final Logger log = Logger.getLogger(AbstractUpdateHandler.class.getCanonicalName());
 
     @Resource(name="userAccountStore")
-    protected Storage<Integer, UserAccount> userAccountStore;
+    protected Storage<String, UserAccount> userAccountStore;
 
     @Resource(name="channelIdByUserIdStore")
-    private Storage<String, Integer> channelIdByUserIdStore;
+    private Storage<String, String> channelIdByUserIdStore;
 
     @Resource(name="customerDaoImpl")
     private CustomerDao customerDaoImpl;
@@ -37,9 +37,11 @@ public abstract class AbstractUpdateHandler implements UpdateHandler{
     @Autowired
     protected EkbDataHandler ekbDataHandler;
 
+    @Autowired
+    protected MessageHandler messageHandler;
 
     public void registrateUser(UserAccount userAccount){
-        List<Customer> customers = customerDaoImpl.getById(Integer.toString(userAccount.getId()));
+        List<Customer> customers = customerDaoImpl.getById(userAccount.getId());
         if(customers.size() > 0){
             Customer customer = customers.get(0);
             userAccount.setRegistered(true);
@@ -52,7 +54,7 @@ public abstract class AbstractUpdateHandler implements UpdateHandler{
         log.log(Level.INFO, "REGISTERED USER : " + userAccount.getRegistered());
     }
 
-    public void flushUserState(Integer userId){
+    public void flushUserState(String userId){
         userAccountStore.removeValue(userId);
     }
 
@@ -96,7 +98,7 @@ public abstract class AbstractUpdateHandler implements UpdateHandler{
     }
 
     public UserAccount getUserAccountByChannelId(String channelId ) throws UnresponsibleException {
-        Integer userId = channelIdByUserIdStore.getValue(channelId);
+        String userId = channelIdByUserIdStore.getValue(channelId);
         if(userId == null){
             throw  new UnresponsibleException("USER02", PropertiesUtil.getProperty("USER02"));
         }
@@ -144,6 +146,42 @@ public abstract class AbstractUpdateHandler implements UpdateHandler{
         return true;
     }
 
+    protected void checkUserAnswer(UserAccount userAccount){
+        UserState userState = userAccount.getUserState();
+
+        if(userState == UserState.WAITING_PRESS_BUTTON || userState == UserState.WAITING_SHARE_CONTACT || userState == UserState.SEND_WRONG_CONTACT){
+            if(userAccount.getCallBackData() == null) {
+                userAccount.setUserState((userState == UserState.WAITING_PRESS_BUTTON) ? UserState.WRONG_ANSWER : UserState.ANONIM_USER);
+                return;
+            }
+            if(userState == UserState.WAITING_SHARE_CONTACT){
+                if(!userAccount.getId().equals(userAccount.getContactId())){
+                    userAccount.setUserState(UserState.SEND_WRONG_CONTACT);
+                }else{
+                    userAccount.setUserState(UserState.WAITING_SHARE_CONTACT);
+                }
+            }
+
+            for(TelegramButtons telegramButton : TelegramButtons.values()){
+                if(telegramButton.getButton().equals(userAccount.getCallBackData())){
+                    return;
+                }
+            }
+            userAccount.setUserState((userState == UserState.WAITING_PRESS_BUTTON) ? UserState.WRONG_ANSWER : UserState.ANONIM_USER);
+        }else if(userState == UserState.LEAVING_DIALOG){
+            if(userAccount.getCallBackData() == null || (!TelegramButtons.yes.getButton().equals(userAccount.getCallBackData()) && !TelegramButtons.no.getButton().equals(userAccount.getCallBackData()))) {
+                userAccount.setUserState(UserState.USER_ANSWERD_UNKNOWN);
+                userAccount.setMark("");
+            }else if(TelegramButtons.yes.getButton().equals(userAccount.getCallBackData())){
+                userAccount.setUserState(UserState.USER_ANSWERD_YES);
+                userAccount.setMark("yes");
+            }else if(TelegramButtons.no.getButton().equals(userAccount.getCallBackData())){
+                userAccount.setUserState(UserState.USER_ANSWERD_NO);
+                userAccount.setMark("no");
+            }
+        }
+    }
+
     private Customer getCustomerFromUserAccount(UserAccount userAccount) throws TelegramException, UnresponsibleException {
         Customer customer = new Customer();
         if (userAccount.getId() == null) {
@@ -153,7 +191,7 @@ public abstract class AbstractUpdateHandler implements UpdateHandler{
             flushUserState(userAccount.getId());
             throw new TelegramException(PropertiesUtil.getProperty("ident_error"), userAccount.getId());
         }
-        customer.setExtId(Integer.toString(userAccount.getId()));
+        customer.setExtId(userAccount.getId());
         customer.setIdEkb((userAccount.getIdEkb() == null) ? null : Integer.parseInt(userAccount.getIdEkb()));
         customer.setMessenger(userAccount.getMessenger());
         customer.setPhone(Utils.makeEkbPhone(userAccount.getPhone()));

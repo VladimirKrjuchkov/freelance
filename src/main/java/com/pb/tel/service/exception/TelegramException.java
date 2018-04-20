@@ -11,21 +11,21 @@ public class TelegramException extends Exception {
 
     private String code;
     private String description;
-    private Integer userId;
+    private String userId;
     private InlineKeyboardMarkup inlineKeyboardMarkup;
 
-    public TelegramException(String code, String description, Integer userId){
+    public TelegramException(String code, String description, String userId){
         this.code = code;
         this.description = description;
         this.userId = userId;
     }
 
-    public TelegramException(String description, Integer userId){
+    public TelegramException(String description, String userId){
         this.description = description;
         this.userId = userId;
     }
 
-    public TelegramException(String description, Integer userId, InlineKeyboardMarkup inlineKeyboardMarkup){
+    public TelegramException(String description, String userId, InlineKeyboardMarkup inlineKeyboardMarkup){
         this.description = description;
         this.userId = userId;
         this.inlineKeyboardMarkup = inlineKeyboardMarkup;
@@ -47,11 +47,11 @@ public class TelegramException extends Exception {
         this.description = description;
     }
 
-    public Integer getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
@@ -68,7 +68,7 @@ public class TelegramException extends Exception {
         return "TelegramException{" +
                 "code='" + code + '\'' +
                 ", description='" + description + '\'' +
-                ", userId=" + userId +
+                ", userId='" + userId + '\'' +
                 ", inlineKeyboardMarkup=" + inlineKeyboardMarkup +
                 '}';
     }

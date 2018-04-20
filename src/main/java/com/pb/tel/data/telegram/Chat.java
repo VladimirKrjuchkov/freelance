@@ -10,7 +10,7 @@ public class Chat extends TelegramUser{
 
     public Chat(){};
 
-    private Integer id;
+    private String id;
 
     private String first_name;
 
@@ -18,11 +18,11 @@ public class Chat extends TelegramUser{
 
     private String type;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -75,7 +75,7 @@ public class Chat extends TelegramUser{
     @Override
     public String toString() {
         return "Chat{" +
-                "id=" + id +
+                "id='" + id + '\'' +
                 ", first_name='" + first_name + '\'' +
                 ", last_name='" + last_name + '\'' +
                 ", type='" + type + '\'' +

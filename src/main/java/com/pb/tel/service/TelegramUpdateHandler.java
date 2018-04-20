@@ -1,21 +1,18 @@
 package com.pb.tel.service;
 
-import com.pb.tel.dao.CustomerDao;
 import com.pb.tel.data.Request;
 import com.pb.tel.data.UserAccount;
 import com.pb.tel.data.enums.TelegramButtons;
 import com.pb.tel.data.enums.UserState;
 import com.pb.tel.data.telegram.*;
+import com.pb.tel.service.exception.LogicException;
 import com.pb.tel.service.exception.TelegramException;
 import com.pb.tel.service.exception.UnresponsibleException;
 import com.pb.util.zvv.PropertiesUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -27,10 +24,7 @@ public class TelegramUpdateHandler extends AbstractUpdateHandler {
 
     private final Logger log = Logger.getLogger(TelegramUpdateHandler.class.getCanonicalName());
 
-    @Autowired
-    private MessageHandler messageHandler;
-
-    public TelegramRequest getTelegramRequest(Integer id) throws Exception{
+    public TelegramRequest getTelegramRequest(String id) throws Exception{
         UserAccount userAccount = userAccountStore.getValue(id);
         TelegramRequest telegramRequest = new TelegramRequest();
         checkUserAnswer(userAccount);
@@ -70,6 +64,16 @@ public class TelegramUpdateHandler extends AbstractUpdateHandler {
                 telegramRequest.setReply_markup(new ReplyKeyboardHide());
 
             }
+        }catch (LogicException e){
+            InlineKeyboardMarkup reply_markup = new InlineKeyboardMarkup();
+            List<List<KeyboardButton>> keyboardButtons = new ArrayList<List<KeyboardButton>>();
+            KeyboardButton callOper = new KeyboardButton(TelegramButtons.callOper.getButton());
+            List<KeyboardButton> callOpers = new ArrayList<KeyboardButton>();
+            callOpers.add(callOper);
+            keyboardButtons.add(callOpers);
+            reply_markup.setKeyboard(keyboardButtons);
+            throw new TelegramException(e.getDescription(), userAccount.getId(), reply_markup);
+
         }catch (TelegramException e){
             throw e;
 
@@ -79,7 +83,7 @@ public class TelegramUpdateHandler extends AbstractUpdateHandler {
         return telegramRequest;
     }
 
-    public void analyseResponseTelegramResponse(TelegramResponse telegramResponse, UserAccount userAccount){
+    public void analyseTelegramResponse(TelegramResponse telegramResponse, UserAccount userAccount){
         if(telegramResponse.getOk()) {
             updateUserState(userAccount);
         }
@@ -131,40 +135,6 @@ public class TelegramUpdateHandler extends AbstractUpdateHandler {
         reply_markup.setKeyboard(keyboardButtons);
         message.setReply_markup(reply_markup);
         return message;
-    }
-
-    private void checkUserAnswer(UserAccount userAccount){
-        UserState userState = userAccount.getUserState();
-        if(userState == UserState.WAITING_PRESS_BUTTON || userState == UserState.WAITING_SHARE_CONTACT || userState == UserState.SEND_WRONG_CONTACT){
-            if(userAccount.getCallBackData() == null) {
-                userAccount.setUserState((userState == UserState.WAITING_PRESS_BUTTON) ? UserState.WRONG_ANSWER : UserState.ANONIM_USER);
-                return;
-            }
-            if(userState == UserState.WAITING_SHARE_CONTACT){
-                if(!Integer.toString(userAccount.getId()).equals(userAccount.getContactId())){
-                    userAccount.setUserState(UserState.SEND_WRONG_CONTACT);
-                }else{
-                    userAccount.setUserState(UserState.WAITING_SHARE_CONTACT);
-                }
-            }
-            for(TelegramButtons telegramButton : TelegramButtons.values()){
-                if(telegramButton.getButton().equals(userAccount.getCallBackData())){
-                    return;
-                }
-            }
-            userAccount.setUserState((userState == UserState.WAITING_PRESS_BUTTON) ? UserState.WRONG_ANSWER : UserState.ANONIM_USER);
-        }else if(userState == UserState.LEAVING_DIALOG){
-            if(userAccount.getCallBackData() == null || (!TelegramButtons.yes.getButton().equals(userAccount.getCallBackData()) && !TelegramButtons.no.getButton().equals(userAccount.getCallBackData()))) {
-                userAccount.setUserState(UserState.USER_ANSWERD_UNKNOWN);
-                userAccount.setMark("");
-            }else if(TelegramButtons.yes.getButton().equals(userAccount.getCallBackData())){
-                userAccount.setUserState(UserState.USER_ANSWERD_YES);
-                userAccount.setMark("yes");
-            }else if(TelegramButtons.no.getButton().equals(userAccount.getCallBackData())){
-                userAccount.setUserState(UserState.USER_ANSWERD_NO);
-                userAccount.setMark("no");
-            }
-        }
     }
 
 }

@@ -1,24 +1,22 @@
 package com.pb.tel.controller;
 
-import com.pb.tel.data.Mes;
 import com.pb.tel.data.UserAccount;
 import com.pb.tel.data.channels.ChannelsRequest;
 import com.pb.tel.data.channels.Data;
 import com.pb.tel.data.enums.UserState;
+import com.pb.tel.data.facebook.*;
+import com.pb.tel.data.facebook.Message;
 import com.pb.tel.data.telegram.*;
 import com.pb.tel.service.*;
 import com.pb.tel.service.exception.ChannelsException;
+import com.pb.tel.service.exception.FaceBookException;
 import com.pb.tel.service.exception.TelegramException;
 import com.pb.tel.service.exception.UnresponsibleException;
 import com.pb.util.zvv.PropertiesUtil;
 import com.pb.util.zvv.storage.Storage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -35,16 +33,22 @@ public class TelegramRequestController {
     private final Logger log = Logger.getLogger(TelegramRequestController.class.getCanonicalName());
 
     @Resource(name="userAccountStore")
-    private Storage<Integer, UserAccount> userAccountStore;
+    private Storage<String, UserAccount> userAccountStore;
 
     @Resource
     private TelegramUpdateHandler telegramUpdateHandler;
+
+    @Resource
+    private FaceBookUpdateHandler faceBookUpdateHandler;
 
     @Resource
     private ChannelsUpdateHandler channelsUpdateHandler;
 
     @Autowired
     private TelegramConnector telegramConnector;
+
+    @Autowired
+    private FaceBookConnector faceBookConnector;
 
     @Autowired
     private ChannelsConnector channelsConnector;
@@ -63,7 +67,7 @@ public class TelegramRequestController {
         userAccount.setCallBackData(user.getText());
         userAccount.setUserText(user.getText());
         userAccount.setUdid(user.getBot_id());
-        userAccount.setReqId(update.getUpdate_id());
+        userAccount.setReqId(Integer.toString(update.getUpdate_id()));
         userAccount.setPhone(user.getPhone());
         userAccount.setMessenger(user.getMessenger());
         userAccount.setContactId(user.getContactId());
@@ -74,7 +78,7 @@ public class TelegramRequestController {
             channelsConnector.doRequest(channelsUpdateHandler.deligateMessage(userAccount), PropertiesUtil.getProperty("channels_api_request_url") + userAccount.getToken());
         }else {
             TelegramResponse response = telegramConnector.sendRequest(telegramUpdateHandler.getTelegramRequest(user.getId()));
-            telegramUpdateHandler.analyseResponseTelegramResponse(response, userAccount);
+            telegramUpdateHandler.analyseTelegramResponse(response, userAccount);
         }
     }
 
@@ -98,6 +102,26 @@ public class TelegramRequestController {
         }
     }
 
+    @RequestMapping(value = "/facebook/update")
+    @ResponseBody
+    public String faceBookUpdate(@RequestBody(required = false) FaceBookRequest faceBookRequest,
+                                 @RequestParam(value = "hub.mode", required = false) String mode,
+                                 @RequestParam(value = "hub.verify_toke", required = false) String verify_toke,
+                                 @RequestParam(value = "hub.challenge", required = false) String challenge) throws Exception{
+
+        UserAccount userAccount = faceBookUpdateHandler.getUserFromRequest(faceBookRequest);
+        userAccountStore.putValue(userAccount.getId(), userAccount, Utils.getDateAfterSeconds(180));
+
+        if(userAccount.getUserState() == UserState.JOIN_TO_DIALOG){
+            channelsConnector.doRequest(channelsUpdateHandler.deligateMessage(userAccount), PropertiesUtil.getProperty("channels_api_request_url") + userAccount.getToken());
+        }else {
+            FaceBookResponse response = (FaceBookResponse) faceBookConnector.sendRequest(faceBookUpdateHandler.getFaceBookRequest(userAccount.getId()));
+            faceBookUpdateHandler.analyseFaceBookResponse(response, userAccount);
+        }
+
+        return challenge;
+    }
+
     @ExceptionHandler(UnresponsibleException.class)
     @ResponseBody
     public void unresponsibleException(UnresponsibleException e){
@@ -111,6 +135,24 @@ public class TelegramRequestController {
         TelegramRequest message = new TelegramRequest(e.getUserId(), e.getDescription());
         message.setReply_markup(e.getInlineKeyboardMarkup());
         telegramConnector.sendRequest(message);
+    }
+
+    @ExceptionHandler(FaceBookException.class)
+    @ResponseBody
+    public void faceBookExceptionHandler(FaceBookException e) throws Exception {
+        com.pb.tel.data.facebook.Message message = new Message();
+        Messaging messaging = new Messaging();
+        Participant recipient = new Participant();
+        recipient.setId(e.getUserId());
+        messaging.setRecipient(recipient);
+        if(e.getAttachment() != null){
+            e.getAttachment().getPayload().setText(e.getDescription());
+            message.setAttachment(e.getAttachment());
+        }else{
+            message.setText(e.getDescription());
+        }
+        messaging.setMessage(message);
+        faceBookConnector.sendRequest(messaging);
     }
 
     @ExceptionHandler(ChannelsException.class)

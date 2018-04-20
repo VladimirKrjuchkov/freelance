@@ -1,5 +1,6 @@
 package com.pb.tel.filter;
 
+import com.pb.tel.data.facebook.FaceBookRequest;
 import com.pb.util.zvv.PropertiesUtil;
 
 import javax.servlet.*;
@@ -9,21 +10,21 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Created by vladimir on 02.03.18.
+ * Created by vladimir on 11.04.18.
  */
-public class RequestFilter implements Filter{
+public class FaceBookRequestFilter implements Filter{
 
-    private final Logger log = Logger.getLogger(RequestFilter.class.getCanonicalName());
+    private final Logger log = Logger.getLogger(TelegramRequestFilter.class.getCanonicalName());
 
-    private final String telegramBotToken = PropertiesUtil.getProperty("telegram_bot_token");
+    private final String facebookUpdateToken = PropertiesUtil.getProperty("facebook_update_token");
 
     public void init(FilterConfig arg0) throws ServletException {}
 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        String requestToken = request.getParameter("token");
+        String requestToken = request.getParameter("hub.verify_token");
         HttpServletResponse httpResponse = (HttpServletResponse)response;
 
-        if(!telegramBotToken.equals(requestToken)){
+        if(!facebookUpdateToken.equals(requestToken)){
             log.log(Level.INFO, "Access denied for " + requestToken);
             httpResponse.sendError(403);
         }else {
@@ -32,5 +33,4 @@ public class RequestFilter implements Filter{
     }
 
     public void destroy() {}
-
 }

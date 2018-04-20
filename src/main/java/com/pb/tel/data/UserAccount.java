@@ -11,11 +11,11 @@ public class UserAccount {
 
     public UserAccount(){}
 
-    public UserAccount(Integer id){
+    public UserAccount(String id){
         this.id = id;
     }
 
-    private Integer id;
+    private String id;
 
     private String token;
 
@@ -29,9 +29,9 @@ public class UserAccount {
 
     private String callBackData;
 
-    private Integer udid;
+    private String udid;
 
-    private Integer reqId;
+    private String reqId;
 
     private String userText;
 
@@ -61,11 +61,11 @@ public class UserAccount {
 
     private String contactId;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -117,19 +117,19 @@ public class UserAccount {
         this.callBackData = callBackData;
     }
 
-    public Integer getUdid() {
+    public String getUdid() {
         return udid;
     }
 
-    public void setUdid(Integer udid) {
+    public void setUdid(String udid) {
         this.udid = udid;
     }
 
-    public Integer getReqId() {
+    public String getReqId() {
         return reqId;
     }
 
-    public void setReqId(Integer reqId) {
+    public void setReqId(String reqId) {
         this.reqId = reqId;
     }
 
@@ -310,15 +310,15 @@ public class UserAccount {
     @Override
     public String toString() {
         return "UserAccount{" +
-                "id=" + id +
+                "id='" + id + '\'' +
                 ", token='" + token + '\'' +
                 ", ssoToken='" + ssoToken + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", userName='" + userName + '\'' +
                 ", callBackData='" + callBackData + '\'' +
-                ", udid=" + udid +
-                ", reqId=" + reqId +
+                ", udid='" + udid + '\'' +
+                ", reqId='" + reqId + '\'' +
                 ", userText='" + userText + '\'' +
                 ", userState=" + userState +
                 ", operId='" + operId + '\'' +

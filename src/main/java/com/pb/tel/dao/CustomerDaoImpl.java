@@ -58,7 +58,7 @@ public class CustomerDaoImpl implements CustomerDao{
             em.persist(customer);
             log.log(Level.INFO, "setCustomer at " + (System.currentTimeMillis() - start) + "ms");
         }catch (Exception e){
-            throw new TelegramException(PropertiesUtil.getProperty("ident_error"), Integer.parseInt(customer.getExtId()));
+            throw new TelegramException(PropertiesUtil.getProperty("ident_error"), customer.getExtId());
         }
         return customer;
     }

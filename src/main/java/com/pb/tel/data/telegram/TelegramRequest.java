@@ -12,24 +12,24 @@ import com.pb.tel.data.Request;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class TelegramRequest implements Request {
 
-    public TelegramRequest(){};
+    public TelegramRequest(){}
 
-    public TelegramRequest(Integer chat_id, String text){
+    public TelegramRequest(String chat_id, String text){
         this.chat_id = chat_id;
         this.text = text;
     };
 
-    Integer chat_id;
+    String chat_id;
 
     String text;
 
     KeyboardMarkup reply_markup;
 
-    public Integer getChat_id() {
+    public String getChat_id() {
         return chat_id;
     }
 
-    public void setChat_id(Integer chat_id) {
+    public void setChat_id(String chat_id) {
         this.chat_id = chat_id;
     }
 
@@ -72,7 +72,7 @@ public class TelegramRequest implements Request {
     @Override
     public String toString() {
         return "TelegramRequest{" +
-                "chat_id=" + chat_id +
+                "chat_id='" + chat_id + '\'' +
                 ", text='" + text + '\'' +
                 ", reply_markup=" + reply_markup +
                 '}';

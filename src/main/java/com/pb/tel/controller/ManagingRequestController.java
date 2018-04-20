@@ -3,6 +3,7 @@ package com.pb.tel.controller;
 import com.pb.tel.data.Mes;
 import com.pb.tel.data.telegram.Message;
 import com.pb.tel.data.telegram.Update;
+import com.pb.tel.service.FaceBookConnector;
 import com.pb.tel.service.TelegramConnector;
 import com.pb.tel.service.TelegramUpdateHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +22,12 @@ public class ManagingRequestController {
     @Autowired
     private TelegramConnector telegramConnector;
 
-    @RequestMapping(value = "/webhook/{oper}", method=RequestMethod.GET)
+    @Autowired
+    private FaceBookConnector faceBookConnector;
+
+    @RequestMapping(value = "/telegram/webhook/{oper}", method=RequestMethod.GET)
     @ResponseBody
-    public Mes setWebhook(@PathVariable(value="oper") String oper) throws Exception {
+    public Mes setTelegramWebhook(@PathVariable(value="oper") String oper) throws Exception {
         return telegramConnector.webHook(oper);
     }
 

@@ -25,7 +25,7 @@ public class ChannelsUpdateHandler extends AbstractUpdateHandler {
     public Request deligateMessage(UserAccount userAccount){
         ChannelsRequest channelsRequest = new ChannelsRequest();
         channelsRequest.setAction("msg");
-        channelsRequest.setReqId(Integer.toString(userAccount.getReqId()));
+        channelsRequest.setReqId(userAccount.getReqId());
         Data data = new Data();
         data.setCompanyId(PropertiesUtil.getProperty("channels_company_id"));
         data.setChannelId(userAccount.getChannelId());

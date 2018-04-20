@@ -38,7 +38,7 @@ import java.util.logging.Logger;
  * Created by vladimir on 27.02.18.
  */
 @Service("telegramConnector")
-public class TelegramConnector {
+public class TelegramConnector implements Connector{
 
     private final Logger log = Logger.getLogger(TelegramConnector.class.getCanonicalName());
 
@@ -60,7 +60,7 @@ public class TelegramConnector {
         return mes;
     }
 
-    private TelegramResponse doWebHookRequest(String webHookUrl) throws Exception {
+    public TelegramResponse doWebHookRequest(String webHookUrl) throws Exception {
             RequestHTTPS requestHTTP = new RequestHTTPS(Integer.parseInt(PropertiesUtil.getProperty("connectTimeout")), Integer.parseInt(PropertiesUtil.getProperty("readTimeout")));
             String url = PropertiesUtil.getProperty("telegram_bot_url") + PropertiesUtil.getProperty("telegram_bot_token") + "/setWebhook" + "?url=" + webHookUrl;
             log.log(Level.INFO, "URL OF REQUEST : " + url);

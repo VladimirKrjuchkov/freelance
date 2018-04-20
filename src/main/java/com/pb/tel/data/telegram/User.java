@@ -12,7 +12,7 @@ public class User extends TelegramUser{
 
     public User(){};
 
-    private Integer id;
+    private String id;
 
     private Boolean is_bot;
 
@@ -31,7 +31,7 @@ public class User extends TelegramUser{
     private String text;
 
     @JsonIgnore
-    private Integer bot_id;
+    private String bot_id;
 
     @JsonIgnore
     private String phone;
@@ -42,11 +42,11 @@ public class User extends TelegramUser{
     @JsonIgnore
     private String contactId;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -106,11 +106,11 @@ public class User extends TelegramUser{
         this.text = text;
     }
 
-    public Integer getBot_id() {
+    public String getBot_id() {
         return bot_id;
     }
 
-    public void setBot_id(Integer bot_id) {
+    public void setBot_id(String bot_id) {
         this.bot_id = bot_id;
     }
 
@@ -181,7 +181,7 @@ public class User extends TelegramUser{
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
+                "id='" + id + '\'' +
                 ", is_bot=" + is_bot +
                 ", first_name='" + first_name + '\'' +
                 ", last_name='" + last_name + '\'' +
@@ -189,7 +189,7 @@ public class User extends TelegramUser{
                 ", username='" + username + '\'' +
                 ", call_back_data='" + call_back_data + '\'' +
                 ", text='" + text + '\'' +
-                ", bot_id=" + bot_id +
+                ", bot_id='" + bot_id + '\'' +
                 ", phone='" + phone + '\'' +
                 ", messenger='" + messenger + '\'' +
                 ", contactId='" + contactId + '\'' +

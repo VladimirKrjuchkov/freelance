@@ -1,15 +1,11 @@
 package com.pb.tel.service;
 
 import com.pb.tel.data.UserAccount;
-import com.pb.tel.data.enums.TelegramButtons;
 import com.pb.tel.data.novaposhta.Document;
 import com.pb.tel.data.novaposhta.MethodPropertie;
 import com.pb.tel.data.novaposhta.NovaPoshtaRequest;
 import com.pb.tel.data.novaposhta.NovaPoshtaResponse;
-import com.pb.tel.data.telegram.InlineKeyboardMarkup;
-import com.pb.tel.data.telegram.KeyboardButton;
-import com.pb.tel.data.telegram.User;
-import com.pb.tel.service.exception.TelegramException;
+import com.pb.tel.service.exception.LogicException;
 import com.pb.util.zvv.PropertiesUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -84,16 +80,9 @@ public class NovaPoshtaAPIHandler {
             }
         }else{
             if(PropertiesUtil.getProperty("bad_ttn").equals(response.getErrorCodes().get(0))){
-                InlineKeyboardMarkup reply_markup = new InlineKeyboardMarkup();
-                List<List<KeyboardButton>> keyboardButtons = new ArrayList<List<KeyboardButton>>();
-                KeyboardButton callOper = new KeyboardButton(TelegramButtons.callOper.getButton());
-                List<KeyboardButton> callOpers = new ArrayList<KeyboardButton>();
-                callOpers.add(callOper);
-                keyboardButtons.add(callOpers);
-                reply_markup.setKeyboard(keyboardButtons);
-                throw new TelegramException(PropertiesUtil.getProperty("bad_ttn_error"), userAccount.getId(), reply_markup);
+                throw new LogicException("bad_ttn_error", PropertiesUtil.getProperty("bad_ttn_error"));
             }
-            throw new TelegramException(PropertiesUtil.getProperty("tracking_error"), userAccount.getId());
+            throw new LogicException("tracking_error", PropertiesUtil.getProperty("tracking_error"));
         }
         return message;
     }
