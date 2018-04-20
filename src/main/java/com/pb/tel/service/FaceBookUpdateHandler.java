@@ -56,6 +56,10 @@ public class FaceBookUpdateHandler extends AbstractUpdateHandler{
                 userAccount.setCallBackData(TelegramButtons.tracking.getButton());
             }else if(TelegramButtons.callOper.getCode().equals(faceBookRequest.getEntry().get(0).getMessaging().get(0).getPostback().getPayload())){
                 userAccount.setCallBackData(TelegramButtons.callOper.getButton());
+            }else if(TelegramButtons.yes.getCode().equals(faceBookRequest.getEntry().get(0).getMessaging().get(0).getPostback().getPayload())){
+                userAccount.setCallBackData(TelegramButtons.yes.getButton());
+            }else if(TelegramButtons.no.getCode().equals(faceBookRequest.getEntry().get(0).getMessaging().get(0).getPostback().getPayload())){
+                userAccount.setCallBackData(TelegramButtons.no.getButton());
             }
         }
         if(faceBookRequest.getEntry().get(0).getMessaging().get(0).getMessage() != null){
