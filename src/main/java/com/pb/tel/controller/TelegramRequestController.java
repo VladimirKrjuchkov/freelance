@@ -126,6 +126,7 @@ public class TelegramRequestController {
                                  @RequestParam(value = "hub.challenge", required = false) String challenge) throws Exception{
 
         if("subscribe".equals(mode) && PropertiesUtil.getProperty("facebook_update_token").equals(verify_toke) && challenge != null){
+            log.log(Level.INFO, "subscribe mode : true");
             return challenge;
         }
         UserAccount userAccount = faceBookUpdateHandler.getUserFromRequest(faceBookRequest);
