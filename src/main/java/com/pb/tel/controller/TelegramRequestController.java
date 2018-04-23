@@ -122,7 +122,7 @@ public class TelegramRequestController {
     @ResponseBody
     public String faceBookUpdate(@RequestBody(required = false) FaceBookRequest faceBookRequest,
                                  @RequestParam(value = "hub.mode", required = false) String mode,
-                                 @RequestParam(value = "hub.verify_toke", required = false) String verify_toke,
+                                 @RequestParam(value = "hub.verify_token", required = false) String verify_toke,
                                  @RequestParam(value = "hub.challenge", required = false) String challenge) throws Exception{
 
         if("subscribe".equals(mode) && PropertiesUtil.getProperty("facebook_update_token").equals(verify_toke) && challenge != null){
