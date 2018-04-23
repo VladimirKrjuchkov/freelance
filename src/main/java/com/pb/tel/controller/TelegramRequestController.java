@@ -142,7 +142,7 @@ public class TelegramRequestController {
     @ResponseBody
     public void unresponsibleException(UnresponsibleException e){
         channelsUpdateHandler.flushUserState(e.getId());
-        log.log(Level.SEVERE, e.getDescription(), e);
+        log.log(Level.WARNING, e.getDescription(), e);
     }
 
     @ExceptionHandler(TelegramException.class)
