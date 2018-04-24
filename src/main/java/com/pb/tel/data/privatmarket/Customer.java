@@ -37,7 +37,18 @@ public class Customer  implements Serializable{
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "date", nullable=false)
-    protected Date date = new Date();
+    private Date date = new Date();
+
+    @Column(name = "locale", nullable=true)
+    private String locale;
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public static Logger getLog() {
+        return log;
+    }
 
     public String getExtId() {
         return extId;
@@ -79,6 +90,14 @@ public class Customer  implements Serializable{
         this.date = date;
     }
 
+    public String getLocale() {
+        return locale;
+    }
+
+    public void setLocale(String locale) {
+        this.locale = locale;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -90,7 +109,8 @@ public class Customer  implements Serializable{
         if (idEkb != null ? !idEkb.equals(customer.idEkb) : customer.idEkb != null) return false;
         if (phone != null ? !phone.equals(customer.phone) : customer.phone != null) return false;
         if (messenger != null ? !messenger.equals(customer.messenger) : customer.messenger != null) return false;
-        return date != null ? date.equals(customer.date) : customer.date == null;
+        if (date != null ? !date.equals(customer.date) : customer.date != null) return false;
+        return locale != null ? locale.equals(customer.locale) : customer.locale == null;
     }
 
     @Override
@@ -100,6 +120,7 @@ public class Customer  implements Serializable{
         result = 31 * result + (phone != null ? phone.hashCode() : 0);
         result = 31 * result + (messenger != null ? messenger.hashCode() : 0);
         result = 31 * result + (date != null ? date.hashCode() : 0);
+        result = 31 * result + (locale != null ? locale.hashCode() : 0);
         return result;
     }
 
@@ -111,6 +132,7 @@ public class Customer  implements Serializable{
                 ", phone='" + phone + '\'' +
                 ", messenger='" + messenger + '\'' +
                 ", date=" + date +
+                ", locale='" + locale + '\'' +
                 '}';
     }
 }

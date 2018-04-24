@@ -1,5 +1,6 @@
 package com.pb.tel.data;
 
+import com.pb.tel.data.enums.Locale;
 import com.pb.tel.data.enums.UserState;
 
 import java.util.logging.Logger;
@@ -60,6 +61,8 @@ public class UserAccount {
     private String sessionId;
 
     private String contactId;
+
+    private Locale locale;
 
     public String getId() {
         return id;
@@ -245,6 +248,14 @@ public class UserAccount {
         this.contactId = contactId;
     }
 
+    public Locale getLocale() {
+        return locale;
+    }
+
+    public void setLocale(Locale locale) {
+        this.locale = locale;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -276,7 +287,8 @@ public class UserAccount {
         if (sessionEndTime != null ? !sessionEndTime.equals(that.sessionEndTime) : that.sessionEndTime != null)
             return false;
         if (sessionId != null ? !sessionId.equals(that.sessionId) : that.sessionId != null) return false;
-        return contactId != null ? contactId.equals(that.contactId) : that.contactId == null;
+        if (contactId != null ? !contactId.equals(that.contactId) : that.contactId != null) return false;
+        return locale == that.locale;
     }
 
     @Override
@@ -304,6 +316,7 @@ public class UserAccount {
         result = 31 * result + (sessionEndTime != null ? sessionEndTime.hashCode() : 0);
         result = 31 * result + (sessionId != null ? sessionId.hashCode() : 0);
         result = 31 * result + (contactId != null ? contactId.hashCode() : 0);
+        result = 31 * result + (locale != null ? locale.hashCode() : 0);
         return result;
     }
 
@@ -333,6 +346,7 @@ public class UserAccount {
                 ", sessionEndTime=" + sessionEndTime +
                 ", sessionId='" + sessionId + '\'' +
                 ", contactId='" + contactId + '\'' +
+                ", locale=" + locale +
                 '}';
     }
 }

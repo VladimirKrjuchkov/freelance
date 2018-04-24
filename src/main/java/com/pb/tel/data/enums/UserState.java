@@ -16,7 +16,8 @@ public enum UserState {
     USER_ANSWERD_YES("USER_ANSWERD_YES", "Юзер дал положительный ответ"),
     USER_ANSWERD_NO("USER_ANSWERD_YES", "Юзер дал отрицательный ответ"),
     SEND_WRONG_CONTACT("SEND_WRONG_CONTACT", "Юзер отправил не свой контакт"),
-    WRONG_ANSWER("WRONG_ANSWER", "неправильный ответ пользователя");
+    WRONG_ANSWER("WRONG_ANSWER", "неправильный ответ пользователя"),
+    WAITING_USER_LOCALE("WAITING_USER_LOCALE", "бот ждет выбора локали");
 
     String code;
     String descr;

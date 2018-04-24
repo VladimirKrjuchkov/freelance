@@ -16,5 +16,5 @@ public interface CustomerDao {
 
     public Customer addCustomer(Customer customer) throws TelegramException;
 
-    public void setCustomerWithIdEkb(Customer customer);
+    public void updateCustomer(Customer customer);
 }

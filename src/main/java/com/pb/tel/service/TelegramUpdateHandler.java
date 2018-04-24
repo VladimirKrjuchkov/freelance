@@ -33,10 +33,23 @@ public class TelegramUpdateHandler extends AbstractUpdateHandler {
             telegramRequest.setText(messageHandler.getMessage(userAccount));
             if (userAccount.getUserState() == UserState.NEW ||
                 userAccount.getUserState() == UserState.WAITING_SHARE_CONTACT ||
-                userAccount.getUserState() == UserState.SEND_WRONG_CONTACT) {
+                userAccount.getUserState() == UserState.SEND_WRONG_CONTACT ||
+                userAccount.getUserState() == UserState.WAITING_USER_LOCALE) {
                     InlineKeyboardMarkup reply_markup = new InlineKeyboardMarkup();
                     List<List<KeyboardButton>> keyboardButtons = new ArrayList<List<KeyboardButton>>();
-                    if(userAccount.getRegistered()) {
+                    if(userAccount.getLocale() == null){
+                        KeyboardButton ua = new KeyboardButton(TelegramButtons.ua.getButton());
+                        KeyboardButton ru = new KeyboardButton(TelegramButtons.ru.getButton());
+
+                        List<KeyboardButton> uas = new ArrayList<KeyboardButton>();
+                        uas.add(ua);
+                        List<KeyboardButton> rus = new ArrayList<KeyboardButton>();
+                        rus.add(ru);
+
+                        keyboardButtons.add(uas);
+                        keyboardButtons.add(rus);
+
+                    }else if(userAccount.getRegistered()) {
                         KeyboardButton tracking = new KeyboardButton(TelegramButtons.tracking.getButton());
                         KeyboardButton callOper = new KeyboardButton(TelegramButtons.callOper.getButton());
 
@@ -60,7 +73,8 @@ public class TelegramUpdateHandler extends AbstractUpdateHandler {
             }
             if(userAccount.getUserState() == UserState.WAITING_TTN ||
                userAccount.getUserState() == UserState.ANONIM_USER ||
-               userAccount.getUserState() == UserState.USER_ANSWERD_UNKNOWN){
+               userAccount.getUserState() == UserState.USER_ANSWERD_UNKNOWN ||
+               userAccount.getUserState() == UserState.WRONG_ANSWER){
                 telegramRequest.setReply_markup(new ReplyKeyboardHide());
 
             }

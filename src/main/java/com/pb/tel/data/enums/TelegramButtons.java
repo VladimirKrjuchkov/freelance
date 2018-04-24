@@ -12,6 +12,8 @@ public enum TelegramButtons {
     register("register", PropertiesUtil.getProperty("register")),
     yes("yes", PropertiesUtil.getProperty("yes")),
     no("no", PropertiesUtil.getProperty("no")),
+    ua("ua", PropertiesUtil.getProperty("ua")),
+    ru("ru", PropertiesUtil.getProperty("ru")),
     callOper("callOper", PropertiesUtil.getProperty("callOper"));
 
     String code;

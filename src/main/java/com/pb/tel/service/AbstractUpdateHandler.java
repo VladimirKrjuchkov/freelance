@@ -3,6 +3,7 @@ package com.pb.tel.service;
 import com.pb.tel.dao.CustomerDao;
 import com.pb.tel.data.Request;
 import com.pb.tel.data.UserAccount;
+import com.pb.tel.data.enums.Locale;
 import com.pb.tel.data.enums.TelegramButtons;
 import com.pb.tel.data.enums.UserState;
 import com.pb.tel.data.privatmarket.Customer;
@@ -47,8 +48,15 @@ public abstract class AbstractUpdateHandler implements UpdateHandler{
             userAccount.setRegistered(true);
             userAccount.setPhone(customer.getPhone());
             Integer idEkb = customer.getIdEkb();
+            String locale = customer.getLocale();
+            if(userAccount.getLocale() == null) {
+                userAccount.setLocale(Locale.getByCode(locale));
+            }
             if(idEkb == null){
                 tryToSetIdEkb(userAccount, customer);
+            }
+            if(locale == null && userAccount.getLocale() != null){
+                setLocale(userAccount, customer);
             }
         }
         log.log(Level.INFO, "REGISTERED USER : " + userAccount.getRegistered());
@@ -59,8 +67,12 @@ public abstract class AbstractUpdateHandler implements UpdateHandler{
     }
 
     protected void updateUserState(UserAccount userAccount){
-        if(userAccount.getUserState() == UserState.NEW || userAccount.getUserState() == UserState.WAITING_SHARE_CONTACT || userAccount.getUserState() == UserState.SEND_WRONG_CONTACT){
-            if(userAccount.getRegistered()) {
+        if(userAccount.getUserState() == UserState.NEW || userAccount.getUserState() == UserState.WAITING_SHARE_CONTACT ||
+           userAccount.getUserState() == UserState.SEND_WRONG_CONTACT || userAccount.getUserState() == UserState.WAITING_USER_LOCALE){
+
+            if(userAccount.getLocale() == null){
+                userAccount.setUserState(UserState.WAITING_USER_LOCALE);
+            }else if(userAccount.getRegistered()) {
                 userAccount.setUserState(UserState.WAITING_PRESS_BUTTON);
             }else{
                 userAccount.setUserState(UserState.WAITING_SHARE_CONTACT);
@@ -89,9 +101,8 @@ public abstract class AbstractUpdateHandler implements UpdateHandler{
                  userAccount.getUserState() == UserState.WAITING_SHARE_CONTACT ||
                  userAccount.getUserState() == UserState.USER_ANSWERD_YES ||
                  userAccount.getUserState() == UserState.USER_ANSWERD_NO ||
-                userAccount.getUserState() == UserState.USER_ANSWERD_UNKNOWN){
+                 userAccount.getUserState() == UserState.USER_ANSWERD_UNKNOWN){
             userAccount.setUserState(UserState.NEW);
-
         }
 
         userAccountStore.putValue(userAccount.getId(), userAccount, Utils.getDateAfterSeconds(180));
@@ -118,11 +129,28 @@ public abstract class AbstractUpdateHandler implements UpdateHandler{
                     if(idEkb != null){
                         userAccount.setIdEkb(Integer.toString(idEkb));
                         customer.setIdEkb(idEkb);
-                        customerDaoImpl.setCustomerWithIdEkb(customer);
+                        customerDaoImpl.updateCustomer(customer);
                     }
                     log.info(com.pb.util.zvv.logging.MessageHandler.finishMarker);
                 }catch (Exception e){
                     log.log(Level.SEVERE, "ERROR WHILE TRY TO SET ID EKB : ", e);
+                }
+            }
+        }).start();
+    }
+
+    private void setLocale(UserAccount userAccount, Customer customer){
+        new Thread(new Runnable() {
+            public void run() {
+                try{
+                    log.info("\n==========================   START SET LOCALE FOR: " + userAccount.getPhone() + "    ==========================" + com.pb.util.zvv.logging.MessageHandler.startMarker);
+                    if(userAccount.getLocale() != null) {
+                        customer.setLocale(userAccount.getLocale().getCode());
+                        customerDaoImpl.updateCustomer(customer);
+                    }
+                    log.info(com.pb.util.zvv.logging.MessageHandler.finishMarker);
+                }catch (Exception e){
+                    log.log(Level.SEVERE, "ERROR WHILE SET LOCALE : ", e);
                 }
             }
         }).start();
@@ -149,9 +177,12 @@ public abstract class AbstractUpdateHandler implements UpdateHandler{
     protected void checkUserAnswer(UserAccount userAccount){
         UserState userState = userAccount.getUserState();
 
-        if(userState == UserState.WAITING_PRESS_BUTTON || userState == UserState.WAITING_SHARE_CONTACT || userState == UserState.SEND_WRONG_CONTACT){
+        if(userState == UserState.WAITING_PRESS_BUTTON ||
+           userState == UserState.WAITING_SHARE_CONTACT ||
+           userState == UserState.SEND_WRONG_CONTACT ||
+           userState == UserState.WAITING_USER_LOCALE){
             if(userAccount.getCallBackData() == null) {
-                userAccount.setUserState((userState == UserState.WAITING_PRESS_BUTTON) ? UserState.WRONG_ANSWER : UserState.ANONIM_USER);
+                userAccount.setUserState((userState == UserState.WAITING_PRESS_BUTTON || userState == UserState.WAITING_USER_LOCALE) ? UserState.WRONG_ANSWER : UserState.ANONIM_USER);
                 return;
             }
             if(userState == UserState.WAITING_SHARE_CONTACT){
@@ -167,7 +198,8 @@ public abstract class AbstractUpdateHandler implements UpdateHandler{
                     return;
                 }
             }
-            userAccount.setUserState((userState == UserState.WAITING_PRESS_BUTTON) ? UserState.WRONG_ANSWER : UserState.ANONIM_USER);
+            userAccount.setUserState((userState == UserState.WAITING_PRESS_BUTTON || userState == UserState.WAITING_USER_LOCALE) ? UserState.WRONG_ANSWER : UserState.ANONIM_USER);
+
         }else if(userState == UserState.LEAVING_DIALOG){
             if(userAccount.getCallBackData() == null || (!TelegramButtons.yes.getButton().equals(userAccount.getCallBackData()) && !TelegramButtons.no.getButton().equals(userAccount.getCallBackData()))) {
                 userAccount.setUserState(UserState.USER_ANSWERD_UNKNOWN);
@@ -195,6 +227,7 @@ public abstract class AbstractUpdateHandler implements UpdateHandler{
         customer.setIdEkb((userAccount.getIdEkb() == null) ? null : Integer.parseInt(userAccount.getIdEkb()));
         customer.setMessenger(userAccount.getMessenger());
         customer.setPhone(Utils.makeEkbPhone(userAccount.getPhone()));
+        customer.setLocale(userAccount.getLocale().getCode());
         return customer;
     }
 }

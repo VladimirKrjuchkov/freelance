@@ -3,6 +3,7 @@ package com.pb.tel.service;
 import com.pb.tel.dao.CustomerDao;
 import com.pb.tel.data.Request;
 import com.pb.tel.data.UserAccount;
+import com.pb.tel.data.enums.Locale;
 import com.pb.tel.data.enums.TelegramButtons;
 import com.pb.tel.data.enums.UserState;
 import com.pb.tel.data.novaposhta.NovaPoshtaResponse;
@@ -47,8 +48,12 @@ public class MessageHandler extends AbstractUpdateHandler{
     /*Костыльный метод который будет замене походом на БД*/
     private String getRowMessageByUserState(UserAccount userAccount) throws Exception{
         if(userAccount.getUserState() == UserState.NEW) {
-            if(userAccount.getRegistered()) {
+            if(userAccount.getLocale() == null){
+                return PropertiesUtil.getProperty("unknown_locale_user_start_new_chat");
+
+            }else if(userAccount.getRegistered()) {
                 return PropertiesUtil.getProperty("user_start_new_chat");
+
             }else{
                 return PropertiesUtil.getProperty("unregistered_user_start_new_chat");
             }
@@ -67,6 +72,14 @@ public class MessageHandler extends AbstractUpdateHandler{
                 userAccount.setRegistered(registerNewCustomer(userAccount));
                 return PropertiesUtil.getProperty("user_start_new_chat");
             }
+        }
+        if(userAccount.getUserState() == UserState.WAITING_USER_LOCALE){
+            if(TelegramButtons.ua.getButton().equals(userAccount.getCallBackData())) {
+                userAccount.setLocale(Locale.UA);
+            }else if(TelegramButtons.ru.getButton().equals(userAccount.getCallBackData())){
+                userAccount.setLocale(Locale.RU);
+            }
+            return PropertiesUtil.getProperty("user_start_new_chat");
         }
         if(userAccount.getUserState() == UserState.WAITING_TTN){
             if(TelegramButtons.callOper.getButton().equals(userAccount.getCallBackData())) {
