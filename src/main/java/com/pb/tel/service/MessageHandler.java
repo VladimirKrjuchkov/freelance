@@ -31,7 +31,6 @@ public class MessageHandler extends AbstractUpdateHandler{
     @Autowired
     private NovaPoshtaAPIHandler novaPoshtaAPIHandler;
 
-
     @Autowired
     private ChannelsAPIHandler channelsAPIHandler;
 
@@ -79,7 +78,12 @@ public class MessageHandler extends AbstractUpdateHandler{
             }else if(TelegramButtons.ru.getButton().equals(userAccount.getCallBackData())){
                 userAccount.setLocale(Locale.RU);
             }
-            return PropertiesUtil.getProperty("user_start_new_chat");
+            if(userAccount.getRegistered()) {
+                return PropertiesUtil.getProperty("user_start_new_chat");
+
+            }else{
+                return PropertiesUtil.getProperty("unregistered_user_start_new_chat");
+            }
         }
         if(userAccount.getUserState() == UserState.WAITING_TTN){
             if(TelegramButtons.callOper.getButton().equals(userAccount.getCallBackData())) {
