@@ -154,7 +154,7 @@ public class FaceBookUpdateHandler extends AbstractUpdateHandler{
         attachment.setType("template");
         Payload payload = new Payload();
         payload.setTemplate_type("button");
-        payload.setText(PropertiesUtil.getProperty("after_oper_leave_dialog"));
+        payload.setText(MessageHandler.getMessage(userAccount.getLocale(), "after_oper_leave_dialog"));
         List<Buttons> buttons = new ArrayList<Buttons>();
 
         Buttons yes = new Buttons();

@@ -1,7 +1,6 @@
 package com.pb.tel.service;
 
 import com.pb.tel.dao.CustomerDao;
-import com.pb.tel.data.Request;
 import com.pb.tel.data.UserAccount;
 import com.pb.tel.data.enums.Locale;
 import com.pb.tel.data.enums.TelegramButtons;
@@ -221,7 +220,7 @@ public abstract class AbstractUpdateHandler implements UpdateHandler{
         }
         if (userAccount.getMessenger() == null || userAccount.getPhone() == null) {
             flushUserState(userAccount.getId());
-            throw new TelegramException(PropertiesUtil.getProperty("ident_error"), userAccount.getId());
+            throw new TelegramException(MessageHandler.getMessage(userAccount.getLocale(), "ident_error"), userAccount.getId());
         }
         customer.setExtId(userAccount.getId());
         customer.setIdEkb((userAccount.getIdEkb() == null) ? null : Integer.parseInt(userAccount.getIdEkb()));

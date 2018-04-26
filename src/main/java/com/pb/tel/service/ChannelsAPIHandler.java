@@ -3,6 +3,7 @@ package com.pb.tel.service;
 import com.pb.tel.data.UserAccount;
 import com.pb.tel.data.channels.*;
 import com.pb.tel.service.exception.LogicException;
+import com.pb.tel.service.exception.UnresponsibleException;
 import com.pb.util.zvv.PropertiesUtil;
 import com.pb.util.zvv.storage.Storage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +54,7 @@ public class ChannelsAPIHandler {
         channelsRequest.setData(channelCreate);
         ChannelsResponse channelsResponse = channelsConnector.doRequest(channelsRequest, PropertiesUtil.getProperty("channels_api_request_url")+userAccount.getToken());
         if("error".equals(channelsResponse.getResult()) || channelsResponse.getData().getUsers().size() <=0){
-            String message = messageHandler.fillInMessageByUserData(PropertiesUtil.getProperty("channels_create_token_error"), userAccount);
+            String message = messageHandler.fillInMessageByUserData(MessageHandler.getMessage(userAccount.getLocale(), "channels_create_token_error"), userAccount);
             telegramUpdateHandler.flushUserState(userAccount.getId());
             throw new LogicException("channels_create_token_error", message);
         }
@@ -72,7 +73,7 @@ public class ChannelsAPIHandler {
         channelsRequest.setData(channelCreate);
         ChannelsResponse channelsResponse = channelsConnector.doRequest(channelsRequest, PropertiesUtil.getProperty("channels_api_request_url")+userAccount.getToken());
         if("error".equals(channelsResponse.getResult())){
-            String message = messageHandler.fillInMessageByUserData(PropertiesUtil.getProperty("channels_create_token_error"), userAccount);
+            String message = messageHandler.fillInMessageByUserData(MessageHandler.getMessage(userAccount.getLocale(), "channels_create_token_error"), userAccount);
             telegramUpdateHandler.flushUserState(userAccount.getId());
             throw new LogicException("channels_create_token_error", message);
         }
@@ -88,7 +89,7 @@ public class ChannelsAPIHandler {
         channelsRequest.setAction("botOperatorsGet");
         ChannelsResponse channelsResponse = channelsConnector.doRequest(channelsRequest, PropertiesUtil.getProperty("bots_api_request_url"));
         if("error".equals(channelsResponse.getResult())){
-            String message = messageHandler.fillInMessageByUserData(PropertiesUtil.getProperty("channels_create_token_error"), userAccount);
+            String message = messageHandler.fillInMessageByUserData(MessageHandler.getMessage(userAccount.getLocale(), "channels_create_token_error"), userAccount);
             telegramUpdateHandler.flushUserState(userAccount.getId());
             throw new LogicException("channels_create_token_error", message);
         }else {
@@ -110,14 +111,14 @@ public class ChannelsAPIHandler {
         channelsRequest.setData(tokenCreate);
         ChannelsResponse channelsResponse = channelsConnector.doRequest(channelsRequest, PropertiesUtil.getProperty("channels_api_token_url"));
         if("error".equals(channelsResponse.getResult())){
-            String message = messageHandler.fillInMessageByUserData(PropertiesUtil.getProperty("channels_create_token_error"), userAccount);
+            String message = messageHandler.fillInMessageByUserData(MessageHandler.getMessage(userAccount.getLocale(), "channels_create_token_error"), userAccount);
             telegramUpdateHandler.flushUserState(userAccount.getId());
             throw new LogicException("channels_create_token_error", message);
         }
         return channelsResponse.getData().getToken();
     }
 
-    private String analyseAndGetOperId(List<Operator> opers, UserAccount userAccount) throws LogicException {
+    private String analyseAndGetOperId(List<Operator> opers, UserAccount userAccount) throws LogicException, UnresponsibleException {
         Comparator<Operator> ocomp = new OpersComporator();
         TreeSet<Operator> freeOpers = new TreeSet(ocomp);
         for(Operator oper: opers){
@@ -126,7 +127,7 @@ public class ChannelsAPIHandler {
             }
         }
         if(freeOpers.size() <= 0){
-            String message = messageHandler.fillInMessageByUserData(PropertiesUtil.getProperty("channels_call_oper_error"), userAccount);
+            String message = messageHandler.fillInMessageByUserData(MessageHandler.getMessage(userAccount.getLocale(), "channels_call_oper_error"), userAccount);
             telegramUpdateHandler.flushUserState(userAccount.getId());
             throw new LogicException("channels_call_oper_error", message);
         }

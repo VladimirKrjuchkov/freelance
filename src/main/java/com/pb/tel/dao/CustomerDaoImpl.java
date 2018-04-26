@@ -1,7 +1,10 @@
 package com.pb.tel.dao;
 
+import com.pb.tel.data.enums.Locale;
 import com.pb.tel.data.privatmarket.Customer;
+import com.pb.tel.service.MessageHandler;
 import com.pb.tel.service.exception.TelegramException;
+import com.pb.tel.service.exception.UnresponsibleException;
 import com.pb.util.zvv.PropertiesUtil;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -51,14 +54,15 @@ public class CustomerDaoImpl implements CustomerDao{
     }
 
     @Transactional(rollbackFor=Exception.class)
-    public Customer addCustomer(Customer customer) throws TelegramException {
+    public Customer addCustomer(Customer customer) throws TelegramException, UnresponsibleException {
         log.log(Level.INFO, "CUSTOMER TO ADD : " + customer);
         try {
             long start = System.currentTimeMillis();
             em.persist(customer);
             log.log(Level.INFO, "setCustomer at " + (System.currentTimeMillis() - start) + "ms");
+
         }catch (Exception e){
-            throw new TelegramException(PropertiesUtil.getProperty("ident_error"), customer.getExtId());
+            throw new TelegramException(MessageHandler.getMessage(Locale.getByCode(customer.getLocale()), "ident_error"), customer.getExtId());
         }
         return customer;
     }

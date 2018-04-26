@@ -147,6 +147,11 @@
 		<property name="cacheManager" ref="ehcacheFactoryBean"/>
 	</bean>
 
+	<bean id="messageDaoImpl" class="com.pb.tel.dao.MessageDaoImpl"/>
+
+	<bean id="messageHandler" class="com.pb.tel.service.MessageHandler">
+		<constructor-arg ref="messageDaoImpl"/>
+	</bean>
 
 
 	<!-- <bean id="transactionManager"  class="org.springframework.orm.hibernate5.HibernateTransactionManager">

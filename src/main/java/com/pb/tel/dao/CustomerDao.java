@@ -2,6 +2,7 @@ package com.pb.tel.dao;
 
 import com.pb.tel.data.privatmarket.Customer;
 import com.pb.tel.service.exception.TelegramException;
+import com.pb.tel.service.exception.UnresponsibleException;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ public interface CustomerDao {
 
     public List<Customer> getById(String id);
 
-    public Customer addCustomer(Customer customer) throws TelegramException;
+    public Customer addCustomer(Customer customer) throws TelegramException, UnresponsibleException;
 
     public void updateCustomer(Customer customer);
 }

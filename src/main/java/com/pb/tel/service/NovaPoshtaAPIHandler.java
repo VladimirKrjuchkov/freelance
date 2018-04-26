@@ -30,7 +30,7 @@ public class NovaPoshtaAPIHandler {
         NovaPoshtaRequest request = new NovaPoshtaRequest();
         request.setModelName("TrackingDocument");
         request.setCalledMethod("getStatusDocuments");
-        request.setLanguage("ua");
+        request.setLanguage(userAccount.getLocale().getCode());
         MethodPropertie methodPropertie = new MethodPropertie();
         Document document = new Document();
         document.setDocumentNumber(makeCorrectTTN(userAccount.getUserText()));
@@ -80,9 +80,9 @@ public class NovaPoshtaAPIHandler {
             }
         }else{
             if(PropertiesUtil.getProperty("bad_ttn").equals(response.getErrorCodes().get(0))){
-                throw new LogicException("bad_ttn_error", PropertiesUtil.getProperty("bad_ttn_error"));
+                throw new LogicException("bad_ttn_error", MessageHandler.getMessage(userAccount.getLocale(), "bad_ttn_error"));
             }
-            throw new LogicException("tracking_error", PropertiesUtil.getProperty("tracking_error"));
+            throw new LogicException("tracking_error", MessageHandler.getMessage(userAccount.getLocale(), "tracking_error"));
         }
         return message;
     }

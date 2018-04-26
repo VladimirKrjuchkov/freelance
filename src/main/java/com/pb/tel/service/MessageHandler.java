@@ -1,22 +1,22 @@
 package com.pb.tel.service;
 
-import com.pb.tel.dao.CustomerDao;
+import com.pb.tel.dao.MessageDao;
 import com.pb.tel.data.Request;
 import com.pb.tel.data.UserAccount;
 import com.pb.tel.data.enums.Locale;
 import com.pb.tel.data.enums.TelegramButtons;
 import com.pb.tel.data.enums.UserState;
-import com.pb.tel.data.novaposhta.NovaPoshtaResponse;
-import com.pb.tel.data.privatmarket.Customer;
-import com.pb.tel.data.telegram.CallbackQuery;
-import com.pb.tel.data.telegram.User;
-import com.pb.tel.service.exception.TelegramException;
+import com.pb.tel.data.privatmarket.BotMessage;
 import com.pb.tel.service.exception.UnresponsibleException;
 import com.pb.util.zvv.PropertiesUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,7 +26,7 @@ import java.util.logging.Logger;
 @Service("messageHandler")
 public class MessageHandler extends AbstractUpdateHandler{
 
-    private final Logger log = Logger.getLogger(MessageHandler.class.getCanonicalName());
+    private static final Logger log = Logger.getLogger(MessageHandler.class.getCanonicalName());
 
     @Autowired
     private NovaPoshtaAPIHandler novaPoshtaAPIHandler;
@@ -36,8 +36,32 @@ public class MessageHandler extends AbstractUpdateHandler{
 
     @Autowired ChatOnlineHandler chatOnlineHandler;
 
-    @Resource(name="customerDaoImpl")
-    private CustomerDao customerDaoImpl;
+    @Autowired
+    private MessageDao messageDaoImpl;
+
+    private static Map<String, BotMessage> botMessagesUa = new ConcurrentHashMap<String, BotMessage>();;
+
+    private static Map<String, BotMessage> botMessagesRu = new ConcurrentHashMap<String, BotMessage>();;
+
+    public MessageHandler(MessageDao messageDaoImpl){
+        this.messageDaoImpl = messageDaoImpl;
+        init();
+    }
+
+    public void init(){
+        log.log(Level.INFO, "------ START INIT MESSAGES OBJECTS ------");
+        List<BotMessage> listBotMessagesUa = messageDaoImpl.getByLang("ua");
+        List<BotMessage> listBotMessagesRu = messageDaoImpl.getByLang("ru");
+        log.log(Level.INFO, "listBotMessagesUa length : " + listBotMessagesUa.size());
+        log.log(Level.INFO, "listBotMessagesRu length : " + listBotMessagesRu.size());
+        for(BotMessage botMessage : listBotMessagesUa){
+            botMessagesUa.put(botMessage.getCode(), botMessage);
+        }
+        for(BotMessage botMessage : listBotMessagesRu){
+            botMessagesRu.put(botMessage.getCode(), botMessage);
+        }
+        log.log(Level.INFO, "------ FINISH INIT MESSAGES OBJECTS ------");
+    }
 
     public String getMessage(UserAccount userAccount) throws Exception{
         log.log(Level.INFO, "User " + userAccount.getId() + " state : " + userAccount.getUserState() + " (" + userAccount.getUserState().getDescr() + ")");
@@ -48,28 +72,28 @@ public class MessageHandler extends AbstractUpdateHandler{
     private String getRowMessageByUserState(UserAccount userAccount) throws Exception{
         if(userAccount.getUserState() == UserState.NEW) {
             if(userAccount.getLocale() == null){
-                return PropertiesUtil.getProperty("unknown_locale_user_start_new_chat");
+                return getMessage(userAccount.getLocale(), "unknown_locale_user_start_new_chat");
 
             }else if(userAccount.getRegistered()) {
-                return PropertiesUtil.getProperty("user_start_new_chat");
+                return getMessage(userAccount.getLocale(), "user_start_new_chat");
 
             }else{
-                return PropertiesUtil.getProperty("unregistered_user_start_new_chat");
+                return getMessage(userAccount.getLocale(), "unregistered_user_start_new_chat");
             }
         }
         if(userAccount.getUserState() == UserState.WAITING_PRESS_BUTTON){
             if(TelegramButtons.tracking.getButton().equals(userAccount.getCallBackData())) {
-                return PropertiesUtil.getProperty("user_choose_tracking");
+                return getMessage(userAccount.getLocale(), "user_choose_tracking");
             }
             if(TelegramButtons.callOper.getButton().equals(userAccount.getCallBackData())) {
                 channelsAPIHandler.callOper(userAccount);
-                return PropertiesUtil.getProperty("user_call_oper");
+                return getMessage(userAccount.getLocale(), "user_call_oper");
             }
         }
         if(userAccount.getUserState() == UserState.WAITING_SHARE_CONTACT){
             if(TelegramButtons.register.getButton().equals(userAccount.getCallBackData())) {
                 userAccount.setRegistered(registerNewCustomer(userAccount));
-                return PropertiesUtil.getProperty("user_start_new_chat");
+                return getMessage(userAccount.getLocale(), "user_start_new_chat");
             }
         }
         if(userAccount.getUserState() == UserState.WAITING_USER_LOCALE){
@@ -79,33 +103,33 @@ public class MessageHandler extends AbstractUpdateHandler{
                 userAccount.setLocale(Locale.RU);
             }
             if(userAccount.getRegistered()) {
-                return PropertiesUtil.getProperty("user_start_new_chat");
+                return getMessage(userAccount.getLocale(), "user_start_new_chat");
 
             }else{
-                return PropertiesUtil.getProperty("unregistered_user_start_new_chat");
+                return getMessage(userAccount.getLocale(), "unregistered_user_start_new_chat");
             }
         }
         if(userAccount.getUserState() == UserState.WAITING_TTN){
             if(TelegramButtons.callOper.getButton().equals(userAccount.getCallBackData())) {
                 channelsAPIHandler.callOper(userAccount);
-                return PropertiesUtil.getProperty("user_call_oper");
+                return getMessage(userAccount.getLocale(), "user_call_oper");
             }else {
                 String message = novaPoshtaAPIHandler.getTrackingByTTN(userAccount);
-                return PropertiesUtil.getProperty("tracking_response_from_novaposhta") + " " + userAccount.getUserText() + ": " + message;
+                return getMessage(userAccount.getLocale(), "tracking_response_from_novaposhta") + " " + userAccount.getUserText() + ": " + message;
             }
         }
         if(userAccount.getUserState() == UserState.SEND_WRONG_CONTACT) {
-            return PropertiesUtil.getProperty("wrong_contact");
+            return getMessage(userAccount.getLocale(), "wrong_contact");
         }
         if(userAccount.getUserState() == UserState.USER_ANSWERD_YES || userAccount.getUserState() == UserState.USER_ANSWERD_NO || userAccount.getUserState() == UserState.USER_ANSWERD_UNKNOWN) {
             chatOnlineHandler.sendStatistic(userAccount);
-            return PropertiesUtil.getProperty("thank_you");
+            return getMessage(userAccount.getLocale(), "thank_you");
         }
         if(userAccount.getUserState() == UserState.WRONG_ANSWER) {
-            return PropertiesUtil.getProperty("wrong_answer");
+            return getMessage(userAccount.getLocale(), "wrong_answer");
         }
         if(userAccount.getUserState() == UserState.ANONIM_USER) {
-            return PropertiesUtil.getProperty("can_not_repeat_dialog");
+            return getMessage(userAccount.getLocale(), "can_not_repeat_dialog");
         }
         return null;
     }
@@ -137,5 +161,18 @@ public class MessageHandler extends AbstractUpdateHandler{
     @Override
     public Request leaveDialog(UserAccount userAccount) throws UnresponsibleException {
         return null;
+    }
+
+    public static String getMessage(Locale locale, String code) throws UnresponsibleException {
+        try{
+            if(locale == Locale.RU){
+                return URLDecoder.decode(botMessagesRu.get(code).getMessage(), Utils.encode);
+            }else{
+                return URLDecoder.decode(botMessagesUa.get(code).getMessage(), Utils.encode);
+            }
+
+        }catch (UnsupportedEncodingException e){
+            throw new UnresponsibleException("COD01", PropertiesUtil.getProperty("COD01"));
+        }
     }
 }

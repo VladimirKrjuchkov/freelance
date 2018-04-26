@@ -132,7 +132,7 @@ public class TelegramUpdateHandler extends AbstractUpdateHandler {
     }
 
     public TelegramRequest leaveDialog(UserAccount userAccount) throws UnresponsibleException {
-        TelegramRequest message = new TelegramRequest(userAccount.getId(), PropertiesUtil.getProperty("after_oper_leave_dialog"));
+        TelegramRequest message = new TelegramRequest(userAccount.getId(), MessageHandler.getMessage(userAccount.getLocale(),"after_oper_leave_dialog"));
         InlineKeyboardMarkup reply_markup = new InlineKeyboardMarkup();
         List<List<KeyboardButton>> keyboardButtons = new ArrayList<List<KeyboardButton>>();
         KeyboardButton yes = new KeyboardButton(TelegramButtons.yes.getButton());
