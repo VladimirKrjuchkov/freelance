@@ -134,6 +134,7 @@ public class TelegramRequestController {
 
         if(userAccount.getUserState() == UserState.JOIN_TO_DIALOG){
             channelsConnector.doRequest(channelsUpdateHandler.deligateMessage(userAccount), PropertiesUtil.getProperty("channels_api_request_url") + userAccount.getToken());
+
         }else {
             FaceBookResponse response = (FaceBookResponse) faceBookConnector.sendRequest(faceBookUpdateHandler.getFaceBookRequest(userAccount.getId()));
             faceBookUpdateHandler.analyseFaceBookResponse(response, userAccount);

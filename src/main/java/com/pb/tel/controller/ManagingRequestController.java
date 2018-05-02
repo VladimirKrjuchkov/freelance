@@ -4,6 +4,7 @@ import com.pb.tel.data.Mes;
 import com.pb.tel.data.telegram.Message;
 import com.pb.tel.data.telegram.Update;
 import com.pb.tel.service.FaceBookConnector;
+import com.pb.tel.service.MessageHandler;
 import com.pb.tel.service.TelegramConnector;
 import com.pb.tel.service.TelegramUpdateHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +24,22 @@ public class ManagingRequestController {
     private TelegramConnector telegramConnector;
 
     @Autowired
+    private MessageHandler messageHandler;
+
+    @Autowired
     private FaceBookConnector faceBookConnector;
 
     @RequestMapping(value = "/telegram/webhook/{oper}", method=RequestMethod.GET)
     @ResponseBody
     public Mes setTelegramWebhook(@PathVariable(value="oper") String oper) throws Exception {
         return telegramConnector.webHook(oper);
+    }
+
+    @RequestMapping(value = "/reinit", method=RequestMethod.GET)
+    @ResponseBody
+    public Mes reinitStaticData() throws Exception {
+        messageHandler.init();
+        return new Mes(Mes.MesState.ok, "Reinit data success!");
     }
 
     @ExceptionHandler(Exception.class)

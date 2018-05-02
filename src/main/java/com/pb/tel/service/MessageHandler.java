@@ -39,9 +39,9 @@ public class MessageHandler extends AbstractUpdateHandler{
     @Autowired
     private MessageDao messageDaoImpl;
 
-    private static Map<String, BotMessage> botMessagesUa = new ConcurrentHashMap<String, BotMessage>();;
+    private static Map<String, BotMessage> botMessagesUa = new ConcurrentHashMap<String, BotMessage>();
 
-    private static Map<String, BotMessage> botMessagesRu = new ConcurrentHashMap<String, BotMessage>();;
+    private static Map<String, BotMessage> botMessagesRu = new ConcurrentHashMap<String, BotMessage>();
 
     public MessageHandler(MessageDao messageDaoImpl){
         this.messageDaoImpl = messageDaoImpl;
@@ -50,6 +50,8 @@ public class MessageHandler extends AbstractUpdateHandler{
 
     public void init(){
         log.log(Level.INFO, "------ START INIT MESSAGES OBJECTS ------");
+        botMessagesUa.clear();
+        botMessagesRu.clear();
         List<BotMessage> listBotMessagesUa = messageDaoImpl.getByLang("ua");
         List<BotMessage> listBotMessagesRu = messageDaoImpl.getByLang("ru");
         log.log(Level.INFO, "listBotMessagesUa length : " + listBotMessagesUa.size());
