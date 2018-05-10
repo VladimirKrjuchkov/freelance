@@ -4,3 +4,6 @@ USER03=Empty userAccountStore
 EKB01=No user found in EKB
 CO01=Logic error while send statistic to Chat online
 COD01=Message decode error
+CHAN01=Error while get chat participants
+UPD01=Error while update account storage
+UPD02=Error while prolong account storage

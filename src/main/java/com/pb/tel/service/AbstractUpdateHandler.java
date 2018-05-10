@@ -54,6 +54,8 @@ public abstract class AbstractUpdateHandler implements UpdateHandler{
             }
             if(idEkb == null){
                 tryToSetIdEkb(userAccount, customer);
+            }else{
+                userAccount.setIdEkb(Integer.toString(customer.getIdEkb()));
             }
             if(locale == null && userAccount.getLocale() != null){
                 setLocale(userAccount, customer);
@@ -92,7 +94,7 @@ public abstract class AbstractUpdateHandler implements UpdateHandler{
                 userAccountStore.putValue(userAccount.getId() + UserState.JOIN_TO_DIALOG.getCode(), userAccount, Utils.getDateAfterSeconds(3600));
                 log.log(Level.INFO, "userAccount was prolonged successfuly, new id : " + userAccount.getId() + userAccount.getUserState().getCode());
                 userAccount.setUserState(UserState.JOIN_TO_DIALOG);
-                return;
+
             }else {
                 userAccount.setUserState(UserState.NEW);
             }

@@ -38,7 +38,27 @@ public class ChannelsAPIHandler {
     public void callOper(UserAccount userAccount) throws Exception {
         userAccount.setChannelId(createChannel(userAccount));
         userAccount.setOperName(addOperToChannel(userAccount));
+        sendUserInfo(userAccount);
         channelIdByUserIdStore.putValue(userAccount.getChannelId(), userAccount.getId(), Utils.getDateAfterSeconds(3600));
+    }
+
+    private void sendUserInfo(UserAccount userAccount) throws Exception {
+        ChannelsRequest channelsRequest = new ChannelsRequest();
+        channelsRequest.setAction("msg");
+        channelsRequest.setReqId(userAccount.getReqId());
+        Data data = new Data();
+        data.setCompanyId(PropertiesUtil.getProperty("channels_company_id"));
+        data.setChannelId(userAccount.getChannelId());
+        String info = "ФИО: " + userAccount.getLastName() + " " + userAccount.getFirstName() + "\n"
+                    + "ЕКБ: " + userAccount.getIdEkb() + "\n"
+                    + "Мессенджер: " + userAccount.getMessenger() + "\n"
+                    + "Язык общения: " + userAccount.getLocale() + "\n"
+                    + "********************" + "\n"
+                    + "\n"
+                    + "\n";
+        data.setText(info);
+        channelsRequest.setData(data);
+        channelsConnector.doRequest(channelsRequest, PropertiesUtil.getProperty("channels_api_request_url") + userAccount.getToken());
     }
 
     private String addOperToChannel(UserAccount userAccount) throws Exception {
@@ -55,7 +75,7 @@ public class ChannelsAPIHandler {
         ChannelsResponse channelsResponse = channelsConnector.doRequest(channelsRequest, PropertiesUtil.getProperty("channels_api_request_url")+userAccount.getToken());
         if("error".equals(channelsResponse.getResult()) || channelsResponse.getData().getUsers().size() <=0){
             String message = messageHandler.fillInMessageByUserData(MessageHandler.getMessage(userAccount.getLocale(), "channels_create_token_error"), userAccount);
-            telegramUpdateHandler.flushUserState(userAccount.getId());
+//            telegramUpdateHandler.flushUserState(userAccount.getId());
             throw new LogicException("channels_create_token_error", message);
         }
         return channelsResponse.getData().getUsers().get(0).getName();
