@@ -24,12 +24,11 @@ public class TelegramUpdateHandler extends AbstractUpdateHandler {
 
     private final Logger log = Logger.getLogger(TelegramUpdateHandler.class.getCanonicalName());
 
-    public TelegramRequest getTelegramRequest(String id) throws Exception{
-        UserAccount userAccount = userAccountStore.getValue(id);
+    public TelegramRequest getTelegramRequest(UserAccount userAccount) throws Exception{
         TelegramRequest telegramRequest = new TelegramRequest();
         checkUserAnswer(userAccount);
         try {
-            telegramRequest.setChat_id(id);
+            telegramRequest.setChat_id(userAccount.getId());
             telegramRequest.setText(messageHandler.getMessage(userAccount));
             if (userAccount.getUserState() == UserState.NEW ||
                 userAccount.getUserState() == UserState.WAITING_SHARE_CONTACT ||
@@ -92,7 +91,7 @@ public class TelegramUpdateHandler extends AbstractUpdateHandler {
             throw e;
 
         }catch (Exception e){
-            throw new UnresponsibleException(id, e.getMessage(), e);
+            throw new UnresponsibleException(userAccount.getId(), e.getMessage(), e);
         }
         return telegramRequest;
     }

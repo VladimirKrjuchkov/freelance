@@ -14,6 +14,7 @@ import com.pb.tel.service.exception.TelegramException;
 import com.pb.tel.service.exception.UnresponsibleException;
 import com.pb.util.zvv.PropertiesUtil;
 import com.pb.util.zvv.storage.Storage;
+import com.pb.util.zvv.storage.StorageExpiry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +34,7 @@ public class TelegramRequestController {
     private final Logger log = Logger.getLogger(TelegramRequestController.class.getCanonicalName());
 
     @Resource(name="userAccountStore")
-    private Storage<String, UserAccount> userAccountStore;
+    private StorageExpiry<String, UserAccount> userAccountStore;
 
     @Resource
     private TelegramUpdateHandler telegramUpdateHandler;
@@ -57,7 +58,10 @@ public class TelegramRequestController {
     @ResponseBody
     public void update(@RequestBody Update update) throws Exception{
         User user = telegramUpdateHandler.getUserFromUpdate(update);
-        UserAccount userAccount = userAccountStore.getValue(user.getId());
+        UserAccount userAccount = userAccountStore.getValue(user.getId()+UserState.JOIN_TO_DIALOG.getCode());
+        if(userAccount == null) {
+            userAccount = userAccountStore.getValue(user.getId());
+        }
         if(userAccount == null) {
             userAccount = new UserAccount(user.getId());
         }
@@ -72,12 +76,11 @@ public class TelegramRequestController {
         userAccount.setMessenger(user.getMessenger());
         userAccount.setContactId(user.getContactId());
         telegramUpdateHandler.registrateUser(userAccount);
-        userAccountStore.putValue(user.getId(), userAccount, Utils.getDateAfterSeconds(180));
 
         if(userAccount.getUserState() == UserState.JOIN_TO_DIALOG){
             channelsConnector.doRequest(channelsUpdateHandler.deligateMessage(userAccount), PropertiesUtil.getProperty("channels_api_request_url") + userAccount.getToken());
         }else {
-            TelegramResponse response = telegramConnector.sendRequest(telegramUpdateHandler.getTelegramRequest(user.getId()));
+            TelegramResponse response = telegramConnector.sendRequest(telegramUpdateHandler.getTelegramRequest(userAccount));
             telegramUpdateHandler.analyseTelegramResponse(response, userAccount);
         }
     }
@@ -104,13 +107,11 @@ public class TelegramRequestController {
                 TelegramResponse telegramResponse = telegramConnector.sendRequest(telegramUpdateHandler.leaveDialog(userAccount));
                 if (telegramResponse.getOk()) {
                     userAccount.setUserState(UserState.LEAVING_DIALOG);
-                    userAccountStore.putValue(userAccount.getId(), userAccount, Utils.getDateAfterSeconds(3600));
                 }
             }else if("Messenger".equals(userAccount.getMessenger())){
                 FaceBookResponse faceBookResponse = (FaceBookResponse) faceBookConnector.sendRequest(faceBookUpdateHandler.leaveDialog(userAccount));
                 if(userAccount.getId().equals(faceBookResponse.getRecipient_id()) && faceBookResponse.getMessage_id() != null){
                     userAccount.setUserState(UserState.LEAVING_DIALOG);
-                    userAccountStore.putValue(userAccount.getId(), userAccount, Utils.getDateAfterSeconds(3600));
                 }
             }else{
                 return;
@@ -130,13 +131,12 @@ public class TelegramRequestController {
             return challenge;
         }
         UserAccount userAccount = faceBookUpdateHandler.getUserFromRequest(faceBookRequest);
-        userAccountStore.putValue(userAccount.getId(), userAccount, Utils.getDateAfterSeconds(180));
 
         if(userAccount.getUserState() == UserState.JOIN_TO_DIALOG){
             channelsConnector.doRequest(channelsUpdateHandler.deligateMessage(userAccount), PropertiesUtil.getProperty("channels_api_request_url") + userAccount.getToken());
 
         }else {
-            FaceBookResponse response = (FaceBookResponse) faceBookConnector.sendRequest(faceBookUpdateHandler.getFaceBookRequest(userAccount.getId()));
+            FaceBookResponse response = (FaceBookResponse) faceBookConnector.sendRequest(faceBookUpdateHandler.getFaceBookRequest(userAccount));
             faceBookUpdateHandler.analyseFaceBookResponse(response, userAccount);
         }
 

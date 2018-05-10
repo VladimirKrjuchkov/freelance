@@ -40,7 +40,10 @@ public class FaceBookUpdateHandler extends AbstractUpdateHandler{
         if(id == null){
             throw new UnresponsibleException("USER01", PropertiesUtil.getProperty("USER01"));
         }
-        UserAccount userAccount = userAccountStore.getValue(id);
+        UserAccount userAccount = userAccountStore.getValue(id + UserState.JOIN_TO_DIALOG.getCode());
+        if(userAccount == null) {
+            userAccount = userAccountStore.getValue(id);
+        }
         if(userAccount == null) {
             userAccount = new UserAccount(id);
             FaceBookUser faceBookUser = faceBookConnector.getUserProfileData(id);
@@ -68,14 +71,13 @@ public class FaceBookUpdateHandler extends AbstractUpdateHandler{
         return userAccount;
     }
 
-    public Messaging getFaceBookRequest(String id) throws Exception {
-        UserAccount userAccount = userAccountStore.getValue(id);
+    public Messaging getFaceBookRequest(UserAccount userAccount) throws Exception {
         checkUserAnswer(userAccount);
         com.pb.tel.data.facebook.Message message = new Message();
         Messaging messaging = new Messaging();
         try {
             Participant recipient = new Participant();
-            recipient.setId(id);
+            recipient.setId(userAccount.getId());
             messaging.setRecipient(recipient);
             String text = null;
             text = messageHandler.getMessage(userAccount);

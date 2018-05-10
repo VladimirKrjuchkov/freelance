@@ -10,6 +10,7 @@ import com.pb.tel.service.exception.TelegramException;
 import com.pb.tel.service.exception.UnresponsibleException;
 import com.pb.util.zvv.PropertiesUtil;
 import com.pb.util.zvv.storage.Storage;
+import com.pb.util.zvv.storage.StorageExpiry;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Resource;
@@ -26,7 +27,7 @@ public abstract class AbstractUpdateHandler implements UpdateHandler{
     private final Logger log = Logger.getLogger(AbstractUpdateHandler.class.getCanonicalName());
 
     @Resource(name="userAccountStore")
-    protected Storage<String, UserAccount> userAccountStore;
+    protected StorageExpiry<String, UserAccount> userAccountStore;
 
     @Resource(name="channelIdByUserIdStore")
     private Storage<String, String> channelIdByUserIdStore;
@@ -81,15 +82,16 @@ public abstract class AbstractUpdateHandler implements UpdateHandler{
             if(TelegramButtons.tracking.getButton().equals(userAccount.getCallBackData())) {
                 userAccount.setUserState(UserState.WAITING_TTN);
             }else if(TelegramButtons.callOper.getButton().equals(userAccount.getCallBackData())){
+                userAccountStore.putValue(userAccount.getId() + UserState.JOIN_TO_DIALOG.getCode(), userAccount, Utils.getDateAfterSeconds(3600));
+                log.log(Level.INFO, "userAccount was prolonged successfuly, new id : " + userAccount.getId() + userAccount.getUserState().getCode());
                 userAccount.setUserState(UserState.JOIN_TO_DIALOG);
-                userAccountStore.putValue(userAccount.getId(), userAccount, Utils.getDateAfterSeconds(3600));
-                return;
             }
 
         }else if(userAccount.getUserState() == UserState.WAITING_TTN){
             if(TelegramButtons.callOper.getButton().equals(userAccount.getCallBackData())) {
+                userAccountStore.putValue(userAccount.getId() + UserState.JOIN_TO_DIALOG.getCode(), userAccount, Utils.getDateAfterSeconds(3600));
+                log.log(Level.INFO, "userAccount was prolonged successfuly, new id : " + userAccount.getId() + userAccount.getUserState().getCode());
                 userAccount.setUserState(UserState.JOIN_TO_DIALOG);
-                userAccountStore.putValue(userAccount.getId(), userAccount, Utils.getDateAfterSeconds(3600));
                 return;
             }else {
                 userAccount.setUserState(UserState.NEW);
@@ -97,13 +99,16 @@ public abstract class AbstractUpdateHandler implements UpdateHandler{
 
         }else if(userAccount.getUserState() == UserState.WRONG_ANSWER ||
                  userAccount.getUserState() == UserState.ANONIM_USER  ||
-                 userAccount.getUserState() == UserState.WAITING_SHARE_CONTACT ||
-                 userAccount.getUserState() == UserState.USER_ANSWERD_YES ||
+                 userAccount.getUserState() == UserState.WAITING_SHARE_CONTACT){
+            userAccount.setUserState(UserState.NEW);
+
+        }else if(userAccount.getUserState() == UserState.USER_ANSWERD_YES ||
                  userAccount.getUserState() == UserState.USER_ANSWERD_NO ||
                  userAccount.getUserState() == UserState.USER_ANSWERD_UNKNOWN){
+            userAccountStore.removeValue(userAccount.getId() + UserState.JOIN_TO_DIALOG.getCode());
             userAccount.setUserState(UserState.NEW);
-        }
 
+        }
         userAccountStore.putValue(userAccount.getId(), userAccount, Utils.getDateAfterSeconds(180));
     }
 
@@ -112,7 +117,7 @@ public abstract class AbstractUpdateHandler implements UpdateHandler{
         if(userId == null){
             throw  new UnresponsibleException("USER02", PropertiesUtil.getProperty("USER02"));
         }
-        UserAccount userAccount = userAccountStore.getValue(userId);
+        UserAccount userAccount = userAccountStore.getValue(userId + UserState.JOIN_TO_DIALOG.getCode());
         if(userAccount == null){
             throw  new UnresponsibleException("USER03", PropertiesUtil.getProperty("USER03"));
         }
