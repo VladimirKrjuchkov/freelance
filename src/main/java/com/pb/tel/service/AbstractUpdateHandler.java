@@ -46,16 +46,18 @@ public abstract class AbstractUpdateHandler implements UpdateHandler{
         if(customers.size() > 0){
             Customer customer = customers.get(0);
             userAccount.setRegistered(true);
-            userAccount.setPhone(customer.getPhone());
-            Integer idEkb = customer.getIdEkb();
             String locale = customer.getLocale();
             if(userAccount.getLocale() == null) {
                 userAccount.setLocale(Locale.getByCode(locale));
             }
-            if(idEkb == null){
-                tryToSetIdEkb(userAccount, customer);
-            }else{
-                userAccount.setIdEkb(Integer.toString(customer.getIdEkb()));
+            if("Telegram".equals(userAccount.getMessenger())) {
+                userAccount.setPhone(customer.getPhone());
+                Integer idEkb = customer.getIdEkb();
+                if (idEkb == null) {
+                    tryToSetIdEkb(userAccount, customer);
+                } else {
+                    userAccount.setIdEkb(Integer.toString(customer.getIdEkb()));
+                }
             }
             if(locale == null && userAccount.getLocale() != null){
                 setLocale(userAccount, customer);
@@ -167,7 +169,10 @@ public abstract class AbstractUpdateHandler implements UpdateHandler{
             public void run() {
                 try{
                     log.info("\n==========================   START GET DATA FOR: " + userAccount.getPhone() + "    ==========================" + com.pb.util.zvv.logging.MessageHandler.startMarker);
-                    Integer idEkb = ekbDataHandler.getEkbIdByPhone(userAccount.getPhone());
+                    Integer idEkb = null;
+                    if(userAccount.getPhone() != null) {
+                         idEkb = ekbDataHandler.getEkbIdByPhone(userAccount.getPhone());
+                    }
                     userAccount.setIdEkb((idEkb == null) ? null : Integer.toString(idEkb));
                     customerDaoImpl.addCustomer(getCustomerFromUserAccount(userAccount));
                     log.info(com.pb.util.zvv.logging.MessageHandler.finishMarker);
@@ -225,14 +230,13 @@ public abstract class AbstractUpdateHandler implements UpdateHandler{
         if (userAccount.getId() == null) {
             throw new UnresponsibleException("USER01", PropertiesUtil.getProperty("USER01"));
         }
-        if (userAccount.getMessenger() == null || userAccount.getPhone() == null) {
-            flushUserState(userAccount.getId());
-            throw new TelegramException(MessageHandler.getMessage(userAccount.getLocale(), "ident_error"), userAccount.getId());
+        if (userAccount.getMessenger() == null) {
+            throw new UnresponsibleException("USER04", PropertiesUtil.getProperty("USER04"));
         }
         customer.setExtId(userAccount.getId());
         customer.setIdEkb((userAccount.getIdEkb() == null) ? null : Integer.parseInt(userAccount.getIdEkb()));
         customer.setMessenger(userAccount.getMessenger());
-        customer.setPhone(Utils.makeEkbPhone(userAccount.getPhone()));
+        customer.setPhone((userAccount.getPhone() == null) ? null : Utils.makeEkbPhone(userAccount.getPhone()));
         customer.setLocale(userAccount.getLocale().getCode());
         return customer;
     }

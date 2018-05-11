@@ -1,6 +1,7 @@
 USER01=Null user
 USER02=Empty channelIdByUserIdStore
 USER03=Empty userAccountStore
+USER04=Empty field Messenger
 EKB01=No user found in EKB
 CO01=Logic error while send statistic to Chat online
 COD01=Message decode error

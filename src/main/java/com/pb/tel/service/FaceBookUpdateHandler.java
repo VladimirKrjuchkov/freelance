@@ -50,7 +50,6 @@ public class FaceBookUpdateHandler extends AbstractUpdateHandler{
             userAccount.setFirstName(faceBookUser.getFirst_name());
             userAccount.setLastName(faceBookUser.getLast_name());
             userAccount.setMessenger("Messenger");
-            userAccount.setRegistered(true);
             userAccount.setUdid(id);
             userAccount.setReqId(UUID.randomUUID().toString());
         }
@@ -63,7 +62,13 @@ public class FaceBookUpdateHandler extends AbstractUpdateHandler{
                 userAccount.setCallBackData(TelegramButtons.yes.getButton());
             }else if(TelegramButtons.no.getCode().equals(faceBookRequest.getEntry().get(0).getMessaging().get(0).getPostback().getPayload())){
                 userAccount.setCallBackData(TelegramButtons.no.getButton());
+            }else if(TelegramButtons.ua.getCode().equals(faceBookRequest.getEntry().get(0).getMessaging().get(0).getPostback().getPayload())){
+                userAccount.setCallBackData(TelegramButtons.ua.getButton());
+            }else if(TelegramButtons.ru.getCode().equals(faceBookRequest.getEntry().get(0).getMessaging().get(0).getPostback().getPayload())){
+                userAccount.setCallBackData(TelegramButtons.ru.getButton());
             }
+        }else{
+            userAccount.setCallBackData(null);
         }
         if(faceBookRequest.getEntry().get(0).getMessaging().get(0).getMessage() != null){
             userAccount.setUserText(faceBookRequest.getEntry().get(0).getMessaging().get(0).getMessage().getText());
@@ -79,9 +84,9 @@ public class FaceBookUpdateHandler extends AbstractUpdateHandler{
             Participant recipient = new Participant();
             recipient.setId(userAccount.getId());
             messaging.setRecipient(recipient);
-            String text = null;
-            text = messageHandler.getMessage(userAccount);
-            if (userAccount.getUserState() == UserState.NEW) {
+            String text = messageHandler.getMessage(userAccount);
+            if (userAccount.getUserState() == UserState.NEW ||
+                userAccount.getUserState() == UserState.WAITING_USER_LOCALE) {
                 Attachment attachment = new Attachment();
                 attachment.setType("template");
                 Payload payload = new Payload();
@@ -89,20 +94,35 @@ public class FaceBookUpdateHandler extends AbstractUpdateHandler{
                 payload.setText(text);
                 List<Buttons> buttons = new ArrayList<Buttons>();
 
-                Buttons tracking = new Buttons();
-                Buttons callOper = new Buttons();
+                if(userAccount.getLocale() == null){
+                    Buttons ua = new Buttons();
+                    Buttons ru = new Buttons();
+                    ua.setType("postback");
+                    ua.setTitle(TelegramButtons.ua.getButton());
+                    ua.setPayload(TelegramButtons.ua.getCode());
 
-                tracking.setType("postback");
-                tracking.setTitle(TelegramButtons.tracking.getButton());
-                tracking.setPayload(TelegramButtons.tracking.getCode());
+                    ru.setType("postback");
+                    ru.setTitle(TelegramButtons.ru.getButton());
+                    ru.setPayload(TelegramButtons.ru.getCode());
 
-                callOper.setType("postback");
-                callOper.setTitle(TelegramButtons.callOper.getButton());
-                callOper.setPayload(TelegramButtons.callOper.getCode());
+                    buttons.add(ua);
+                    buttons.add(ru);
 
-                buttons.add(tracking);
-                buttons.add(callOper);
+                }else {
+                    Buttons tracking = new Buttons();
+                    Buttons callOper = new Buttons();
 
+                    tracking.setType("postback");
+                    tracking.setTitle(TelegramButtons.tracking.getButton());
+                    tracking.setPayload(TelegramButtons.tracking.getCode());
+
+                    callOper.setType("postback");
+                    callOper.setTitle(TelegramButtons.callOper.getButton());
+                    callOper.setPayload(TelegramButtons.callOper.getCode());
+
+                    buttons.add(tracking);
+                    buttons.add(callOper);
+                }
                 payload.setButtons(buttons);
                 attachment.setPayload(payload);
                 message.setAttachment(attachment);

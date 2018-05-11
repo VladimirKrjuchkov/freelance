@@ -29,7 +29,7 @@ public class Customer  implements Serializable{
     @Column(name = "idEkb", nullable=true)
     private Integer idEkb;
 
-    @Column(name = "phone", nullable=false)
+    @Column(name = "phone", nullable=true)
     private String phone;
 
     @Column(name = "messenger", nullable=false)

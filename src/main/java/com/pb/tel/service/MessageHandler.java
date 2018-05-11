@@ -104,6 +104,9 @@ public class MessageHandler extends AbstractUpdateHandler{
             }else if(TelegramButtons.ru.getButton().equals(userAccount.getCallBackData())){
                 userAccount.setLocale(Locale.RU);
             }
+            if("Messenger".equals(userAccount.getMessenger())) {
+                userAccount.setRegistered(registerNewCustomer(userAccount));
+            }
             if(userAccount.getRegistered()) {
                 return getMessage(userAccount.getLocale(), "user_start_new_chat");
 
