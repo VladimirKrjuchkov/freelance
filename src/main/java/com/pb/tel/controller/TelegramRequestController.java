@@ -13,7 +13,6 @@ import com.pb.tel.service.exception.FaceBookException;
 import com.pb.tel.service.exception.TelegramException;
 import com.pb.tel.service.exception.UnresponsibleException;
 import com.pb.util.zvv.PropertiesUtil;
-import com.pb.util.zvv.storage.Storage;
 import com.pb.util.zvv.storage.StorageExpiry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
