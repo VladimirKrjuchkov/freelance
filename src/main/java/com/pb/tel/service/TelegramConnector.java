@@ -3,6 +3,8 @@ package com.pb.tel.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pb.tel.data.Mes;
 import com.pb.tel.data.Request;
+import com.pb.tel.data.Response;
+import com.pb.tel.data.facebook.FaceBookUser;
 import com.pb.tel.data.telegram.SimpleTelegramResponse;
 import com.pb.tel.data.telegram.TelegramRequest;
 import com.pb.tel.data.telegram.TelegramResponse;
@@ -10,6 +12,7 @@ import com.pb.tel.data.telegram.User;
 import com.pb.uniwin.atm.host.DetailedAnswer;
 import com.pb.uniwin.atm.host.RequestHTTPS;
 import com.pb.util.zvv.PropertiesUtil;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -24,6 +27,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.apache.http.entity.mime.content.FileBody;
 import java.io.File;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -89,14 +93,38 @@ public class TelegramConnector implements Connector{
             return telegramResponse;
     }
 
-    public TelegramResponse sendRequest(Request request) throws Exception {
+    @Override
+    public Response sendRequest(Request request) throws Exception {
+        return null;
+    }
+
+    public TelegramResponse sendRequest(Request request, String APIMethod) throws Exception {
             RequestHTTPS requestHTTP = new RequestHTTPS(Integer.parseInt(PropertiesUtil.getProperty("connectTimeout")), Integer.parseInt(PropertiesUtil.getProperty("readTimeout")));
-            String url = PropertiesUtil.getProperty("telegram_bot_url") + PropertiesUtil.getProperty("telegram_bot_token") + "/sendMessage";
+            String url = PropertiesUtil.getProperty("telegram_bot_url") + PropertiesUtil.getProperty("telegram_bot_token") + "/" + APIMethod;
             Map<String, String> requestProperties = new HashMap<String, String>();
             requestProperties.put("Content-Type", MediaType.APPLICATION_JSON_VALUE);
             requestProperties.put("Accept", MediaType.APPLICATION_JSON_VALUE);
             requestHTTP.setRequestProperties(requestProperties);
             DetailedAnswer answer = requestHTTP.performQueryDetailedResponse(jacksonObjectMapper.writeValueAsString(request), url);
             return jacksonObjectMapper.readValue(answer.getBody().getBytes(), TelegramResponse.class);
+    }
+
+    public TelegramResponse sendGetRequest(String apiMethod, HashMap<String, String> params) throws Exception {
+        RequestHTTPS requestHTTP = new RequestHTTPS(Integer.parseInt(PropertiesUtil.getProperty("connectTimeout")), Integer.parseInt(PropertiesUtil.getProperty("readTimeout")));
+        String url = PropertiesUtil.getProperty("telegram_bot_url") + PropertiesUtil.getProperty("telegram_bot_token") + "/" + apiMethod + "?";
+        for(String key : params.keySet()){
+            url += key+"="+params.get(key);
+        }
+        requestHTTP.setRequestMethod("GET");
+        DetailedAnswer answer = requestHTTP.performQueryDetailedResponse(jacksonObjectMapper.writeValueAsString(null), url);
+        return jacksonObjectMapper.readValue(answer.getBody().getBytes(), TelegramResponse.class);
+    }
+
+    public byte[] downloadFile(String filePath) throws Exception {
+        RequestHTTPS requestHTTP = new RequestHTTPS(Integer.parseInt(PropertiesUtil.getProperty("connectTimeout")), Integer.parseInt(PropertiesUtil.getProperty("readTimeout")));
+        String url = PropertiesUtil.getProperty("telegram_file_url") + PropertiesUtil.getProperty("telegram_bot_token") + "/" + filePath;
+        requestHTTP.setRequestMethod("GET");
+        InputStream is = requestHTTP.getDataFromURL(url);
+        return IOUtils.toByteArray(is);
     }
 }

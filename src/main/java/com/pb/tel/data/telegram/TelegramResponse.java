@@ -55,16 +55,6 @@ public class TelegramResponse implements Response{
     }
 
     @Override
-    public String toString() {
-        return "TelegramResponse{" +
-                "ok=" + ok +
-                ", result=" + result +
-                ", description='" + description + '\'' +
-                ", error_code='" + error_code + '\'' +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -84,5 +74,15 @@ public class TelegramResponse implements Response{
         result1 = 31 * result1 + (description != null ? description.hashCode() : 0);
         result1 = 31 * result1 + (error_code != null ? error_code.hashCode() : 0);
         return result1;
+    }
+
+    @Override
+    public String toString() {
+        return "TelegramResponse{" +
+                "ok=" + ok +
+                ", result=" + result +
+                ", description='" + description + '\'' +
+                ", error_code='" + error_code + '\'' +
+                '}';
     }
 }

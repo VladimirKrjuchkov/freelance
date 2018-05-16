@@ -1,7 +1,9 @@
 package com.pb.tel.service;
 
+import com.pb.tel.data.File;
 import com.pb.tel.data.Request;
 import com.pb.tel.data.UserAccount;
+import com.pb.tel.data.channels.Operator;
 import com.pb.tel.data.enums.TelegramButtons;
 import com.pb.tel.data.enums.UserState;
 import com.pb.tel.data.telegram.*;
@@ -11,8 +13,8 @@ import com.pb.tel.service.exception.UnresponsibleException;
 import com.pb.util.zvv.PropertiesUtil;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -102,7 +104,7 @@ public class TelegramUpdateHandler extends AbstractUpdateHandler {
         }
     }
 
-    public User getUserFromUpdate(Update update){
+    public User getUserFromUpdate(Update update) throws UnresponsibleException {
         User user = null;
         if(update.getMessage() != null) {
             user = update.getMessage().getFrom();
@@ -112,6 +114,38 @@ public class TelegramUpdateHandler extends AbstractUpdateHandler {
                 user.setText(TelegramButtons.register.getButton());
                 user.setPhone(update.getMessage().getContact().getPhone_number());
                 user.setContactId(update.getMessage().getContact().getUser_id());
+            }
+            if(update.getMessage().getPhoto() != null){
+                List<InputFile> photos = update.getMessage().getPhoto();
+                Comparator<InputFile> ocomp = new PhotoComporator();
+                TreeSet<InputFile> files = new TreeSet(ocomp);
+                for(InputFile photo: photos){
+                    files.add(photo);
+                }
+                InputFile file = files.first();
+                user.setFile_id(file.getFile_id());
+                user.setFileSize(file.getFile_size());
+                user.setFileWidth(file.getWidth());
+                user.setFileHeight(file.getHeight());
+                if(file.getFile_path() != null){
+                    user.setFile_path(file.getFile_path());
+                }else{
+                    HashMap<String, String> params = new HashMap<String, String>();
+                    params.put("file_id", user.getFile_id());
+                    try {
+                        TelegramResponse telegramResponse = telegramConnector.sendGetRequest("getFile", params);
+                        if(!telegramResponse.getOk()){
+                            throw new Exception();
+                        }else{
+                            user.setFile_path(telegramResponse.getResult().getFile_path());
+                        }
+                    } catch (Exception e) {
+                        log.log(Level.SEVERE, PropertiesUtil.getProperty("FILE01"), e);
+                        throw new UnresponsibleException("FILE01", PropertiesUtil.getProperty("FILE01"));
+                    }
+                }
+                user.setFileName(user.getFile_path().split("/")[1]);
+                user.setFileType("image/"+(user.getFileName().split("\\.")[1]));
             }
         }else if(update.getCallback_query() != null){
             user = update.getCallback_query().getFrom();
@@ -123,9 +157,34 @@ public class TelegramUpdateHandler extends AbstractUpdateHandler {
         return user;
     }
 
+    public File getFileFromUser(User user){
+        if(user.getFileHeight() != null && user.getFile_id() != null &&
+           user.getFileName() != null && user.getFile_path() != null &&
+           user.getFileSize() != null && user.getFileType() != null &&
+           user.getFileWidth() != null) {
+            File file = new File();
+            file.setHeight(user.getFileHeight());
+            file.setId(user.getFile_id());
+            file.setName(user.getFileName());
+            file.setPath(user.getFile_path());
+            file.setSize(user.getFileSize());
+            file.setType(user.getFileType());
+            file.setWidth(user.getFileWidth());
+            file.setUrl(PropertiesUtil.getProperty("telegram_file_url") + PropertiesUtil.getProperty("telegram_bot_token") + "/" + user.getFile_path());
+            log.log(Level.INFO, "FILE = " + file);
+            return file;
+        }else{
+            return  null;
+        }
+
+    }
+
     @Override
     public Request deligateMessage(UserAccount userAccount) throws UnresponsibleException {
         TelegramRequest message = new TelegramRequest(userAccount.getId(), userAccount.getUserText());
+        if(userAccount.getFile() != null) {
+            message.setPhoto(userAccount.getFile().getUrl());
+        }
         message.setReply_markup(new ReplyKeyboardHide());
         return message;
     }
@@ -148,6 +207,19 @@ public class TelegramUpdateHandler extends AbstractUpdateHandler {
         reply_markup.setKeyboard(keyboardButtons);
         message.setReply_markup(reply_markup);
         return message;
+    }
+
+    class PhotoComporator implements Comparator<InputFile> {
+
+        public int compare(InputFile a, InputFile b){
+
+            if(a.getFile_size()> b.getFile_size())
+                return -1;
+            else if(a.getFile_size()< b.getFile_size())
+                return 1;
+            else
+                return 0;
+        }
     }
 
 }

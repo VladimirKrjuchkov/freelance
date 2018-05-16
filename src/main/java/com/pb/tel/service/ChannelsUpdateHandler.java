@@ -2,9 +2,7 @@ package com.pb.tel.service;
 
 import com.pb.tel.data.Request;
 import com.pb.tel.data.UserAccount;
-import com.pb.tel.data.channels.ChannelsRequest;
-import com.pb.tel.data.channels.ChannelsResponse;
-import com.pb.tel.data.channels.Data;
+import com.pb.tel.data.channels.*;
 import com.pb.tel.service.exception.UnresponsibleException;
 import com.pb.util.zvv.PropertiesUtil;
 import com.pb.util.zvv.storage.Storage;
@@ -12,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -30,12 +30,34 @@ public class ChannelsUpdateHandler extends AbstractUpdateHandler {
     @Override
     public Request deligateMessage(UserAccount userAccount){
         ChannelsRequest channelsRequest = new ChannelsRequest();
-        channelsRequest.setAction("msg");
         channelsRequest.setReqId(userAccount.getReqId());
         Data data = new Data();
         data.setCompanyId(PropertiesUtil.getProperty("channels_company_id"));
         data.setChannelId(userAccount.getChannelId());
-        data.setText(userAccount.getUserText());
+        if(userAccount.getFile() != null){
+            channelsRequest.setAction("msgFile");
+            List<File> files = new ArrayList<File>();
+            File file = new File();
+            file.setUrl(userAccount.getFile().getUrl());
+            file.setType(userAccount.getFile().getType());
+            file.setSize(userAccount.getFile().getSize());
+            file.setName(userAccount.getFile().getName());
+            file.setHeight(userAccount.getFile().getHeight());
+            Meta meta = new Meta();
+            meta.setWidth(userAccount.getFile().getWidth());
+            Preview preview = new Preview();
+            preview.setWidth(userAccount.getFile().getWidth());
+            preview.setSize(userAccount.getFile().getSize());
+            preview.setUrl(userAccount.getFile().getUrl());
+            preview.setHeight(userAccount.getFile().getHeight());
+            meta.setPreview(preview);
+            file.setMeta(meta);
+            files.add(file);
+            data.setFiles(files);
+        }else{
+            channelsRequest.setAction("msg");
+            data.setText(userAccount.getUserText());
+        }
         channelsRequest.setData(data);
         return channelsRequest;
     }

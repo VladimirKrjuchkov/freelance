@@ -41,6 +41,9 @@ public abstract class AbstractUpdateHandler implements UpdateHandler{
     @Autowired
     protected MessageHandler messageHandler;
 
+    @Autowired
+    protected TelegramConnector telegramConnector;
+
     public void registrateUser(UserAccount userAccount){
         List<Customer> customers = customerDaoImpl.getById(userAccount.getId());
         if(customers.size() > 0){

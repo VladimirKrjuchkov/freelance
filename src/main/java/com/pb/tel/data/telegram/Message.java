@@ -3,6 +3,7 @@ package com.pb.tel.data.telegram;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * Created by vladimir on 02.03.18.
@@ -24,6 +25,16 @@ public class Message{
     private String text;
 
     private Contact contact;
+
+    private List<InputFile> photo;
+
+    private InputFile document;
+
+    private String file_id;
+
+    private Integer file_size;
+
+    private String file_path;
 
     public Integer getMessage_id() {
         return message_id;
@@ -73,6 +84,46 @@ public class Message{
         this.contact = contact;
     }
 
+    public List<InputFile> getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(List<InputFile> photo) {
+        this.photo = photo;
+    }
+
+    public InputFile getDocument() {
+        return document;
+    }
+
+    public void setDocument(InputFile document) {
+        this.document = document;
+    }
+
+    public String getFile_id() {
+        return file_id;
+    }
+
+    public void setFile_id(String file_id) {
+        this.file_id = file_id;
+    }
+
+    public Integer getFile_size() {
+        return file_size;
+    }
+
+    public void setFile_size(Integer file_size) {
+        this.file_size = file_size;
+    }
+
+    public String getFile_path() {
+        return file_path;
+    }
+
+    public void setFile_path(String file_path) {
+        this.file_path = file_path;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -85,7 +136,12 @@ public class Message{
         if (chat != null ? !chat.equals(message.chat) : message.chat != null) return false;
         if (date != null ? !date.equals(message.date) : message.date != null) return false;
         if (text != null ? !text.equals(message.text) : message.text != null) return false;
-        return contact != null ? contact.equals(message.contact) : message.contact == null;
+        if (contact != null ? !contact.equals(message.contact) : message.contact != null) return false;
+        if (photo != null ? !photo.equals(message.photo) : message.photo != null) return false;
+        if (document != null ? !document.equals(message.document) : message.document != null) return false;
+        if (file_id != null ? !file_id.equals(message.file_id) : message.file_id != null) return false;
+        if (file_size != null ? !file_size.equals(message.file_size) : message.file_size != null) return false;
+        return file_path != null ? file_path.equals(message.file_path) : message.file_path == null;
     }
 
     @Override
@@ -96,6 +152,11 @@ public class Message{
         result = 31 * result + (date != null ? date.hashCode() : 0);
         result = 31 * result + (text != null ? text.hashCode() : 0);
         result = 31 * result + (contact != null ? contact.hashCode() : 0);
+        result = 31 * result + (photo != null ? photo.hashCode() : 0);
+        result = 31 * result + (document != null ? document.hashCode() : 0);
+        result = 31 * result + (file_id != null ? file_id.hashCode() : 0);
+        result = 31 * result + (file_size != null ? file_size.hashCode() : 0);
+        result = 31 * result + (file_path != null ? file_path.hashCode() : 0);
         return result;
     }
 
@@ -108,6 +169,11 @@ public class Message{
                 ", date=" + date +
                 ", text='" + text + '\'' +
                 ", contact=" + contact +
+                ", photo=" + photo +
+                ", document=" + document +
+                ", file_id='" + file_id + '\'' +
+                ", file_size=" + file_size +
+                ", file_path='" + file_path + '\'' +
                 '}';
     }
 }

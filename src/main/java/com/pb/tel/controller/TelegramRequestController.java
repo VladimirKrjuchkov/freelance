@@ -1,5 +1,6 @@
 package com.pb.tel.controller;
 
+import com.pb.tel.data.File;
 import com.pb.tel.data.UserAccount;
 import com.pb.tel.data.channels.ChannelsRequest;
 import com.pb.tel.data.channels.Data;
@@ -74,12 +75,13 @@ public class TelegramRequestController {
         userAccount.setPhone(user.getPhone());
         userAccount.setMessenger(user.getMessenger());
         userAccount.setContactId(user.getContactId());
+        userAccount.setFile(telegramUpdateHandler.getFileFromUser(user));
         telegramUpdateHandler.registrateUser(userAccount);
 
         if(userAccount.getUserState() == UserState.JOIN_TO_DIALOG){
             channelsConnector.doRequest(channelsUpdateHandler.deligateMessage(userAccount), PropertiesUtil.getProperty("channels_api_request_url") + userAccount.getToken());
         }else {
-            TelegramResponse response = telegramConnector.sendRequest(telegramUpdateHandler.getTelegramRequest(userAccount));
+            TelegramResponse response = telegramConnector.sendRequest(telegramUpdateHandler.getTelegramRequest(userAccount), "sendMessage");
             telegramUpdateHandler.analyseTelegramResponse(response, userAccount);
         }
     }
@@ -88,10 +90,20 @@ public class TelegramRequestController {
     @ResponseBody
     public void channelsUpdate(@RequestBody ChannelsRequest channelsRequest) throws Exception{
         UserAccount userAccount = channelsUpdateHandler.getUserAccountByChannelId(((Data)channelsRequest.getData()).getChannelId());
-        if("msg".equals(channelsRequest.getAction()) && "o".equals(channelsRequest.getData().getUser().getType()) && userAccount.getUserState()==UserState.JOIN_TO_DIALOG) {
+        if(("msg".equals(channelsRequest.getAction()) || "msgFile".equals(channelsRequest.getAction())) && "o".equals(channelsRequest.getData().getUser().getType()) && userAccount.getUserState()==UserState.JOIN_TO_DIALOG) {
             userAccount.setUserText(channelsRequest.getData().getText());
+            if(channelsRequest.getData().getFiles() != null && channelsRequest.getData().getFiles().size() > 0) {
+                File file = new File(channelsRequest.getData().getFiles().get(0).getUrl());
+                userAccount.setFile(file);
+            }else{
+                userAccount.setFile(null);
+            }
             if("Telegram".equals(userAccount.getMessenger())) {
-                telegramConnector.sendRequest(telegramUpdateHandler.deligateMessage(userAccount));
+                if("msg".equals(channelsRequest.getAction())) {
+                    telegramConnector.sendRequest(telegramUpdateHandler.deligateMessage(userAccount), "sendMessage");
+                }else if("msgFile".equals(channelsRequest.getAction())){
+                    telegramConnector.sendRequest(telegramUpdateHandler.deligateMessage(userAccount), "sendPhoto");
+                }
             }else if("Messenger".equals(userAccount.getMessenger())){
                 faceBookConnector.sendRequest(faceBookUpdateHandler.deligateMessage(userAccount));
             }else{
@@ -104,7 +116,7 @@ public class TelegramRequestController {
             if(channelsUpdateHandler.checkDialogStatus(userAccount) == 0) {
                 userAccount.setSessionEndTime(new Date().getTime());
                 if ("Telegram".equals(userAccount.getMessenger())) {
-                    TelegramResponse telegramResponse = telegramConnector.sendRequest(telegramUpdateHandler.leaveDialog(userAccount));
+                    TelegramResponse telegramResponse = telegramConnector.sendRequest(telegramUpdateHandler.leaveDialog(userAccount), "sendMessage");
                        if (telegramResponse.getOk()) {
                           userAccount.setUserState(UserState.LEAVING_DIALOG);
                        }
@@ -159,7 +171,7 @@ public class TelegramRequestController {
     public void telegramExceptionHandler(TelegramException e) throws Exception {
         TelegramRequest message = new TelegramRequest(e.getUserId(), e.getDescription());
         message.setReply_markup(e.getInlineKeyboardMarkup());
-        telegramConnector.sendRequest(message);
+        telegramConnector.sendRequest(message, "sendMessage");
     }
 
     @ExceptionHandler(FaceBookException.class)

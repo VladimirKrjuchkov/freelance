@@ -64,6 +64,8 @@ public class UserAccount {
 
     private Locale locale;
 
+    private File file;
+
     public String getId() {
         return id;
     }
@@ -256,6 +258,14 @@ public class UserAccount {
         this.locale = locale;
     }
 
+    public File getFile() {
+        return file;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -288,7 +298,8 @@ public class UserAccount {
             return false;
         if (sessionId != null ? !sessionId.equals(that.sessionId) : that.sessionId != null) return false;
         if (contactId != null ? !contactId.equals(that.contactId) : that.contactId != null) return false;
-        return locale == that.locale;
+        if (locale != that.locale) return false;
+        return file != null ? file.equals(that.file) : that.file == null;
     }
 
     @Override
@@ -317,6 +328,7 @@ public class UserAccount {
         result = 31 * result + (sessionId != null ? sessionId.hashCode() : 0);
         result = 31 * result + (contactId != null ? contactId.hashCode() : 0);
         result = 31 * result + (locale != null ? locale.hashCode() : 0);
+        result = 31 * result + (file != null ? file.hashCode() : 0);
         return result;
     }
 
@@ -347,6 +359,7 @@ public class UserAccount {
                 ", sessionId='" + sessionId + '\'' +
                 ", contactId='" + contactId + '\'' +
                 ", locale=" + locale +
+                ", file=" + file +
                 '}';
     }
 }

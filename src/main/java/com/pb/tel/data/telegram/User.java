@@ -3,6 +3,8 @@ package com.pb.tel.data.telegram;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.util.Arrays;
+
 /**
  * Created by vladimir on 02.03.18.
  */
@@ -41,6 +43,30 @@ public class User extends TelegramUser{
 
     @JsonIgnore
     private String contactId;
+
+    @JsonIgnore
+    private String file_id;
+
+    @JsonIgnore
+    private String file_path;
+
+    @JsonIgnore
+    private byte[] file;
+
+    @JsonIgnore
+    private String fileType;
+
+    @JsonIgnore
+    private Integer fileSize;
+
+    @JsonIgnore
+    private String fileName;
+
+    @JsonIgnore
+    private Integer fileHeight;
+
+    @JsonIgnore
+    private Integer fileWidth;
 
     public String getId() {
         return id;
@@ -138,6 +164,70 @@ public class User extends TelegramUser{
         this.contactId = contactId;
     }
 
+    public String getFile_id() {
+        return file_id;
+    }
+
+    public void setFile_id(String file_id) {
+        this.file_id = file_id;
+    }
+
+    public String getFile_path() {
+        return file_path;
+    }
+
+    public void setFile_path(String file_path) {
+        this.file_path = file_path;
+    }
+
+    public byte[] getFile() {
+        return file;
+    }
+
+    public void setFile(byte[] file) {
+        this.file = file;
+    }
+
+    public String getFileType() {
+        return fileType;
+    }
+
+    public void setFileType(String fileType) {
+        this.fileType = fileType;
+    }
+
+    public Integer getFileSize() {
+        return fileSize;
+    }
+
+    public void setFileSize(Integer fileSize) {
+        this.fileSize = fileSize;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public Integer getFileHeight() {
+        return fileHeight;
+    }
+
+    public void setFileHeight(Integer fileHeight) {
+        this.fileHeight = fileHeight;
+    }
+
+    public Integer getFileWidth() {
+        return fileWidth;
+    }
+
+    public void setFileWidth(Integer fileWidth) {
+        this.fileWidth = fileWidth;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -158,7 +248,15 @@ public class User extends TelegramUser{
         if (bot_id != null ? !bot_id.equals(user.bot_id) : user.bot_id != null) return false;
         if (phone != null ? !phone.equals(user.phone) : user.phone != null) return false;
         if (messenger != null ? !messenger.equals(user.messenger) : user.messenger != null) return false;
-        return contactId != null ? contactId.equals(user.contactId) : user.contactId == null;
+        if (contactId != null ? !contactId.equals(user.contactId) : user.contactId != null) return false;
+        if (file_id != null ? !file_id.equals(user.file_id) : user.file_id != null) return false;
+        if (file_path != null ? !file_path.equals(user.file_path) : user.file_path != null) return false;
+        if (!Arrays.equals(file, user.file)) return false;
+        if (fileType != null ? !fileType.equals(user.fileType) : user.fileType != null) return false;
+        if (fileSize != null ? !fileSize.equals(user.fileSize) : user.fileSize != null) return false;
+        if (fileName != null ? !fileName.equals(user.fileName) : user.fileName != null) return false;
+        if (fileHeight != null ? !fileHeight.equals(user.fileHeight) : user.fileHeight != null) return false;
+        return fileWidth != null ? fileWidth.equals(user.fileWidth) : user.fileWidth == null;
     }
 
     @Override
@@ -175,6 +273,14 @@ public class User extends TelegramUser{
         result = 31 * result + (phone != null ? phone.hashCode() : 0);
         result = 31 * result + (messenger != null ? messenger.hashCode() : 0);
         result = 31 * result + (contactId != null ? contactId.hashCode() : 0);
+        result = 31 * result + (file_id != null ? file_id.hashCode() : 0);
+        result = 31 * result + (file_path != null ? file_path.hashCode() : 0);
+        result = 31 * result + Arrays.hashCode(file);
+        result = 31 * result + (fileType != null ? fileType.hashCode() : 0);
+        result = 31 * result + (fileSize != null ? fileSize.hashCode() : 0);
+        result = 31 * result + (fileName != null ? fileName.hashCode() : 0);
+        result = 31 * result + (fileHeight != null ? fileHeight.hashCode() : 0);
+        result = 31 * result + (fileWidth != null ? fileWidth.hashCode() : 0);
         return result;
     }
 
@@ -193,6 +299,14 @@ public class User extends TelegramUser{
                 ", phone='" + phone + '\'' +
                 ", messenger='" + messenger + '\'' +
                 ", contactId='" + contactId + '\'' +
+                ", file_id='" + file_id + '\'' +
+                ", file_path='" + file_path + '\'' +
+                ", file=" + Arrays.toString(file) +
+                ", fileType='" + fileType + '\'' +
+                ", fileSize=" + fileSize +
+                ", fileName='" + fileName + '\'' +
+                ", fileHeight=" + fileHeight +
+                ", fileWidth=" + fileWidth +
                 '}';
     }
 }

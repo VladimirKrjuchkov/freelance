@@ -43,6 +43,8 @@ public class Data{
 
     private String sessionId;
 
+    private List<File> files;
+
     public User getUser() {
         return user;
     }
@@ -155,6 +157,14 @@ public class Data{
         this.sessionId = sessionId;
     }
 
+    public List<File> getFiles() {
+        return files;
+    }
+
+    public void setFiles(List<File> files) {
+        this.files = files;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -175,7 +185,8 @@ public class Data{
         if (udid != null ? !udid.equals(data.udid) : data.udid != null) return false;
         if (ssoToken != null ? !ssoToken.equals(data.ssoToken) : data.ssoToken != null) return false;
         if (deviceInfo != null ? !deviceInfo.equals(data.deviceInfo) : data.deviceInfo != null) return false;
-        return sessionId != null ? sessionId.equals(data.sessionId) : data.sessionId == null;
+        if (sessionId != null ? !sessionId.equals(data.sessionId) : data.sessionId != null) return false;
+        return files != null ? files.equals(data.files) : data.files == null;
     }
 
     @Override
@@ -194,6 +205,7 @@ public class Data{
         result = 31 * result + (ssoToken != null ? ssoToken.hashCode() : 0);
         result = 31 * result + (deviceInfo != null ? deviceInfo.hashCode() : 0);
         result = 31 * result + (sessionId != null ? sessionId.hashCode() : 0);
+        result = 31 * result + (files != null ? files.hashCode() : 0);
         return result;
     }
 
@@ -214,6 +226,7 @@ public class Data{
                 ", ssoToken='" + ssoToken + '\'' +
                 ", deviceInfo=" + deviceInfo +
                 ", sessionId='" + sessionId + '\'' +
+                ", files=" + files +
                 '}';
     }
 }
