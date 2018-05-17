@@ -39,7 +39,8 @@ public class EkbDataHandler {
     public Integer getEkbIdByPhone(String phone){
         Integer ekbId = null;
         com.pb.service.uniwin.ua.message.Customer customer = new com.pb.service.uniwin.ua.message.Customer();
-        customer.setPhone(Utils.makeEkbPhone(phone));
+        phone = Utils.makeEkbPhone(phone);
+        customer.setPhone(phone);
         long start = System.currentTimeMillis();
         List<ClientItem> clientItems = null;
         try {
@@ -57,6 +58,7 @@ public class EkbDataHandler {
     }
 
     private Integer getClientIdWithFinancePhone(String phone, List<ClientItem> clientItems) throws Exception {
+        log.log(Level.INFO, "GET CLIENT WHITH FINANCE GREEN PHONE: " + phone);
         Integer idEkb = null;
         for(ClientItem clientItem : clientItems){
             List<Contact> contacts = clientItem.getContact().getAllContacts();
