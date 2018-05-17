@@ -3,6 +3,8 @@ package com.pb.tel.data.facebook;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import java.util.List;
+
 /**
  * Created by vladimir on 12.04.18.
  */
@@ -20,6 +22,8 @@ public class Message {
     private String text;
 
     private Attachment attachment;
+
+    private List<Attachment> attachments;
 
     public String getMid() {
         return mid;
@@ -53,6 +57,14 @@ public class Message {
         this.attachment = attachment;
     }
 
+    public List<Attachment> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List<Attachment> attachments) {
+        this.attachments = attachments;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -63,7 +75,8 @@ public class Message {
         if (mid != null ? !mid.equals(message.mid) : message.mid != null) return false;
         if (seq != null ? !seq.equals(message.seq) : message.seq != null) return false;
         if (text != null ? !text.equals(message.text) : message.text != null) return false;
-        return attachment != null ? attachment.equals(message.attachment) : message.attachment == null;
+        if (attachment != null ? !attachment.equals(message.attachment) : message.attachment != null) return false;
+        return attachments != null ? attachments.equals(message.attachments) : message.attachments == null;
     }
 
     @Override
@@ -72,6 +85,7 @@ public class Message {
         result = 31 * result + (seq != null ? seq.hashCode() : 0);
         result = 31 * result + (text != null ? text.hashCode() : 0);
         result = 31 * result + (attachment != null ? attachment.hashCode() : 0);
+        result = 31 * result + (attachments != null ? attachments.hashCode() : 0);
         return result;
     }
 
@@ -82,6 +96,7 @@ public class Message {
                 ", seq='" + seq + '\'' +
                 ", text='" + text + '\'' +
                 ", attachment=" + attachment +
+                ", attachments=" + attachments +
                 '}';
     }
 }

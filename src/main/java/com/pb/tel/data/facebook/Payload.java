@@ -19,6 +19,8 @@ public class Payload {
 
     private String text;
 
+    private String url;
+
     List<Buttons> buttons;
 
     public String getTemplate_type() {
@@ -35,6 +37,14 @@ public class Payload {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public List<Buttons> getButtons() {
@@ -55,6 +65,7 @@ public class Payload {
         if (template_type != null ? !template_type.equals(payload.template_type) : payload.template_type != null)
             return false;
         if (text != null ? !text.equals(payload.text) : payload.text != null) return false;
+        if (url != null ? !url.equals(payload.url) : payload.url != null) return false;
         return buttons != null ? buttons.equals(payload.buttons) : payload.buttons == null;
     }
 
@@ -62,6 +73,7 @@ public class Payload {
     public int hashCode() {
         int result = template_type != null ? template_type.hashCode() : 0;
         result = 31 * result + (text != null ? text.hashCode() : 0);
+        result = 31 * result + (url != null ? url.hashCode() : 0);
         result = 31 * result + (buttons != null ? buttons.hashCode() : 0);
         return result;
     }
@@ -71,6 +83,7 @@ public class Payload {
         return "Payload{" +
                 "template_type='" + template_type + '\'' +
                 ", text='" + text + '\'' +
+                ", url='" + url + '\'' +
                 ", buttons=" + buttons +
                 '}';
     }

@@ -1,7 +1,9 @@
 package com.pb.tel.service;
 
+import com.pb.tel.data.File;
 import com.pb.tel.data.Request;
 import com.pb.tel.data.UserAccount;
+import com.pb.tel.data.enums.MessageContent;
 import com.pb.tel.data.enums.TelegramButtons;
 import com.pb.tel.data.enums.UserState;
 import com.pb.tel.data.facebook.*;
@@ -72,6 +74,18 @@ public class FaceBookUpdateHandler extends AbstractUpdateHandler{
         }
         if(faceBookRequest.getEntry().get(0).getMessaging().get(0).getMessage() != null){
             userAccount.setUserText(faceBookRequest.getEntry().get(0).getMessaging().get(0).getMessage().getText());
+            if(faceBookRequest.getEntry().get(0).getMessaging().get(0).getMessage().getAttachments() != null &&
+               faceBookRequest.getEntry().get(0).getMessaging().get(0).getMessage().getAttachments().size() > 0){
+                File file = new File();
+                file.setUrl(faceBookRequest.getEntry().get(0).getMessaging().get(0).getMessage().getAttachments().get(0).getPayload().getUrl());
+                if("image".equals(faceBookRequest.getEntry().get(0).getMessaging().get(0).getMessage().getAttachments().get(0).getType())){
+                    userAccount.setMessageContent(MessageContent.PICTURE);
+                    file.setType("image");
+                }
+                userAccount.setFile(file);
+            }else{
+                userAccount.setFile(null);
+            }
         }
         return userAccount;
     }
@@ -161,6 +175,16 @@ public class FaceBookUpdateHandler extends AbstractUpdateHandler{
         recipient.setId(userAccount.getId());
         messaging.setRecipient(recipient);
         message.setText(userAccount.getUserText());
+        if(userAccount.getFile() != null){
+            Attachment attachment = new Attachment();
+            if(userAccount.getMessageContent() == MessageContent.PICTURE){
+                attachment.setType("image");
+            }
+            Payload payload = new Payload();
+            payload.setUrl(userAccount.getFile().getUrl());
+            attachment.setPayload(payload);
+            message.setAttachment(attachment);
+        }
         messaging.setMessage(message);
         return messaging;
     }
