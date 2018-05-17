@@ -4,6 +4,7 @@ import com.pb.tel.data.File;
 import com.pb.tel.data.UserAccount;
 import com.pb.tel.data.channels.ChannelsRequest;
 import com.pb.tel.data.channels.Data;
+import com.pb.tel.data.enums.MessageContent;
 import com.pb.tel.data.enums.UserState;
 import com.pb.tel.data.facebook.*;
 import com.pb.tel.data.facebook.Message;
@@ -75,6 +76,7 @@ public class TelegramRequestController {
         userAccount.setPhone(user.getPhone());
         userAccount.setMessenger(user.getMessenger());
         userAccount.setContactId(user.getContactId());
+        userAccount.setMessageContent(user.getMessageContent());
         userAccount.setFile(telegramUpdateHandler.getFileFromUser(user));
         telegramUpdateHandler.registrateUser(userAccount);
 
@@ -94,7 +96,13 @@ public class TelegramRequestController {
             userAccount.setUserText(channelsRequest.getData().getText());
             if(channelsRequest.getData().getFiles() != null && channelsRequest.getData().getFiles().size() > 0) {
                 File file = new File(channelsRequest.getData().getFiles().get(0).getUrl());
+                file.setType(channelsRequest.getData().getFiles().get(0).getType());
                 userAccount.setFile(file);
+                if(file.getType().contains("application")){
+                    userAccount.setMessageContent(MessageContent.DOCUMENT);
+                }else if(file.getType().contains("image")){
+                    userAccount.setMessageContent(MessageContent.PICTURE);
+                }
             }else{
                 userAccount.setFile(null);
             }
@@ -102,7 +110,11 @@ public class TelegramRequestController {
                 if("msg".equals(channelsRequest.getAction())) {
                     telegramConnector.sendRequest(telegramUpdateHandler.deligateMessage(userAccount), "sendMessage");
                 }else if("msgFile".equals(channelsRequest.getAction())){
-                    telegramConnector.sendRequest(telegramUpdateHandler.deligateMessage(userAccount), "sendPhoto");
+                    if(userAccount.getMessageContent() == MessageContent.PICTURE) {
+                        telegramConnector.sendRequest(telegramUpdateHandler.deligateMessage(userAccount), "sendPhoto");
+                    }else if(userAccount.getMessageContent() == MessageContent.DOCUMENT){
+                        telegramConnector.sendRequest(telegramUpdateHandler.deligateMessage(userAccount), "sendDocument");
+                    }
                 }
             }else if("Messenger".equals(userAccount.getMessenger())){
                 faceBookConnector.sendRequest(faceBookUpdateHandler.deligateMessage(userAccount));

@@ -25,6 +25,8 @@ public class TelegramRequest implements Request {
 
     String photo;
 
+    String document;
+
     KeyboardMarkup reply_markup;
 
     public String getChat_id() {
@@ -51,6 +53,14 @@ public class TelegramRequest implements Request {
         this.photo = photo;
     }
 
+    public String getDocument() {
+        return document;
+    }
+
+    public void setDocument(String document) {
+        this.document = document;
+    }
+
     public KeyboardMarkup getReply_markup() {
         return reply_markup;
     }
@@ -69,6 +79,7 @@ public class TelegramRequest implements Request {
         if (chat_id != null ? !chat_id.equals(that.chat_id) : that.chat_id != null) return false;
         if (text != null ? !text.equals(that.text) : that.text != null) return false;
         if (photo != null ? !photo.equals(that.photo) : that.photo != null) return false;
+        if (document != null ? !document.equals(that.document) : that.document != null) return false;
         return reply_markup != null ? reply_markup.equals(that.reply_markup) : that.reply_markup == null;
     }
 
@@ -77,6 +88,7 @@ public class TelegramRequest implements Request {
         int result = chat_id != null ? chat_id.hashCode() : 0;
         result = 31 * result + (text != null ? text.hashCode() : 0);
         result = 31 * result + (photo != null ? photo.hashCode() : 0);
+        result = 31 * result + (document != null ? document.hashCode() : 0);
         result = 31 * result + (reply_markup != null ? reply_markup.hashCode() : 0);
         return result;
     }
@@ -87,6 +99,7 @@ public class TelegramRequest implements Request {
                 "chat_id='" + chat_id + '\'' +
                 ", text='" + text + '\'' +
                 ", photo='" + photo + '\'' +
+                ", document='" + document + '\'' +
                 ", reply_markup=" + reply_markup +
                 '}';
     }

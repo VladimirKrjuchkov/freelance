@@ -21,6 +21,10 @@ public class InputFile {
 
     private Integer height;
 
+    private String file_name;
+
+    private String mime_type;
+
     public String getFile_id() {
         return file_id;
     }
@@ -61,6 +65,22 @@ public class InputFile {
         this.height = height;
     }
 
+    public String getFile_name() {
+        return file_name;
+    }
+
+    public void setFile_name(String file_name) {
+        this.file_name = file_name;
+    }
+
+    public String getMime_type() {
+        return mime_type;
+    }
+
+    public void setMime_type(String mime_type) {
+        this.mime_type = mime_type;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -72,7 +92,9 @@ public class InputFile {
         if (file_size != null ? !file_size.equals(inputFile.file_size) : inputFile.file_size != null) return false;
         if (file_path != null ? !file_path.equals(inputFile.file_path) : inputFile.file_path != null) return false;
         if (width != null ? !width.equals(inputFile.width) : inputFile.width != null) return false;
-        return height != null ? height.equals(inputFile.height) : inputFile.height == null;
+        if (height != null ? !height.equals(inputFile.height) : inputFile.height != null) return false;
+        if (file_name != null ? !file_name.equals(inputFile.file_name) : inputFile.file_name != null) return false;
+        return mime_type != null ? mime_type.equals(inputFile.mime_type) : inputFile.mime_type == null;
     }
 
     @Override
@@ -82,6 +104,8 @@ public class InputFile {
         result = 31 * result + (file_path != null ? file_path.hashCode() : 0);
         result = 31 * result + (width != null ? width.hashCode() : 0);
         result = 31 * result + (height != null ? height.hashCode() : 0);
+        result = 31 * result + (file_name != null ? file_name.hashCode() : 0);
+        result = 31 * result + (mime_type != null ? mime_type.hashCode() : 0);
         return result;
     }
 
@@ -93,6 +117,8 @@ public class InputFile {
                 ", file_path='" + file_path + '\'' +
                 ", width=" + width +
                 ", height=" + height +
+                ", file_name='" + file_name + '\'' +
+                ", mime_type='" + mime_type + '\'' +
                 '}';
     }
 }

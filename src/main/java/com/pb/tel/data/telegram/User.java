@@ -2,6 +2,7 @@ package com.pb.tel.data.telegram;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.pb.tel.data.enums.MessageContent;
 
 import java.util.Arrays;
 
@@ -67,6 +68,9 @@ public class User extends TelegramUser{
 
     @JsonIgnore
     private Integer fileWidth;
+
+    @JsonIgnore
+    private MessageContent messageContent;
 
     public String getId() {
         return id;
@@ -228,6 +232,14 @@ public class User extends TelegramUser{
         this.fileWidth = fileWidth;
     }
 
+    public MessageContent getMessageContent() {
+        return messageContent;
+    }
+
+    public void setMessageContent(MessageContent messageContent) {
+        this.messageContent = messageContent;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -256,7 +268,8 @@ public class User extends TelegramUser{
         if (fileSize != null ? !fileSize.equals(user.fileSize) : user.fileSize != null) return false;
         if (fileName != null ? !fileName.equals(user.fileName) : user.fileName != null) return false;
         if (fileHeight != null ? !fileHeight.equals(user.fileHeight) : user.fileHeight != null) return false;
-        return fileWidth != null ? fileWidth.equals(user.fileWidth) : user.fileWidth == null;
+        if (fileWidth != null ? !fileWidth.equals(user.fileWidth) : user.fileWidth != null) return false;
+        return messageContent == user.messageContent;
     }
 
     @Override
@@ -281,6 +294,7 @@ public class User extends TelegramUser{
         result = 31 * result + (fileName != null ? fileName.hashCode() : 0);
         result = 31 * result + (fileHeight != null ? fileHeight.hashCode() : 0);
         result = 31 * result + (fileWidth != null ? fileWidth.hashCode() : 0);
+        result = 31 * result + (messageContent != null ? messageContent.hashCode() : 0);
         return result;
     }
 
@@ -307,6 +321,7 @@ public class User extends TelegramUser{
                 ", fileName='" + fileName + '\'' +
                 ", fileHeight=" + fileHeight +
                 ", fileWidth=" + fileWidth +
+                ", messageContent=" + messageContent +
                 '}';
     }
 }
