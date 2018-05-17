@@ -82,6 +82,10 @@ public class FaceBookUpdateHandler extends AbstractUpdateHandler{
                     userAccount.setMessageContent(MessageContent.PICTURE);
                     file.setType("image");
                 }
+                if("file".equals(faceBookRequest.getEntry().get(0).getMessaging().get(0).getMessage().getAttachments().get(0).getType())){
+                    userAccount.setMessageContent(MessageContent.DOCUMENT);
+                    file.setType("application");
+                }
                 userAccount.setFile(file);
             }else{
                 userAccount.setFile(null);
@@ -179,6 +183,8 @@ public class FaceBookUpdateHandler extends AbstractUpdateHandler{
             Attachment attachment = new Attachment();
             if(userAccount.getMessageContent() == MessageContent.PICTURE){
                 attachment.setType("image");
+            }else if(userAccount.getMessageContent() == MessageContent.DOCUMENT){
+                attachment.setType("file");
             }
             Payload payload = new Payload();
             payload.setUrl(userAccount.getFile().getUrl());

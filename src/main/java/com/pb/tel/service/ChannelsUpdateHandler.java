@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.logging.Logger;
 
 /**
@@ -29,6 +30,7 @@ public class ChannelsUpdateHandler extends AbstractUpdateHandler {
 
     @Override
     public Request deligateMessage(UserAccount userAccount){
+        Random generator = new Random();
         ChannelsRequest channelsRequest = new ChannelsRequest();
         channelsRequest.setReqId(userAccount.getReqId());
         Data data = new Data();
@@ -40,8 +42,8 @@ public class ChannelsUpdateHandler extends AbstractUpdateHandler {
             File file = new File();
             file.setUrl(userAccount.getFile().getUrl());
             file.setType(userAccount.getFile().getType());
-            file.setSize(userAccount.getFile().getSize());
-            file.setName(userAccount.getFile().getName());
+            file.setSize((userAccount.getFile().getSize()==null) ? 999 : userAccount.getFile().getSize());
+            file.setName((userAccount.getFile().getName()==null) ? ("unknown_file_" + generator.nextInt(10)) : userAccount.getFile().getName());
             file.setHeight(userAccount.getFile().getHeight());
             Meta meta = new Meta();
             meta.setWidth(userAccount.getFile().getWidth());
