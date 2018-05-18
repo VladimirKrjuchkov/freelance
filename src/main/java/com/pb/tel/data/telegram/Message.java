@@ -36,6 +36,8 @@ public class Message{
 
     private String file_path;
 
+    private String caption;
+
     public Integer getMessage_id() {
         return message_id;
     }
@@ -124,6 +126,14 @@ public class Message{
         this.file_path = file_path;
     }
 
+    public String getCaption() {
+        return caption;
+    }
+
+    public void setCaption(String caption) {
+        this.caption = caption;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -141,7 +151,8 @@ public class Message{
         if (document != null ? !document.equals(message.document) : message.document != null) return false;
         if (file_id != null ? !file_id.equals(message.file_id) : message.file_id != null) return false;
         if (file_size != null ? !file_size.equals(message.file_size) : message.file_size != null) return false;
-        return file_path != null ? file_path.equals(message.file_path) : message.file_path == null;
+        if (file_path != null ? !file_path.equals(message.file_path) : message.file_path != null) return false;
+        return caption != null ? caption.equals(message.caption) : message.caption == null;
     }
 
     @Override
@@ -157,6 +168,7 @@ public class Message{
         result = 31 * result + (file_id != null ? file_id.hashCode() : 0);
         result = 31 * result + (file_size != null ? file_size.hashCode() : 0);
         result = 31 * result + (file_path != null ? file_path.hashCode() : 0);
+        result = 31 * result + (caption != null ? caption.hashCode() : 0);
         return result;
     }
 
@@ -174,6 +186,7 @@ public class Message{
                 ", file_id='" + file_id + '\'' +
                 ", file_size=" + file_size +
                 ", file_path='" + file_path + '\'' +
+                ", caption='" + caption + '\'' +
                 '}';
     }
 }

@@ -145,6 +145,7 @@ public class TelegramUpdateHandler extends AbstractUpdateHandler {
                         throw new UnresponsibleException("FILE01", PropertiesUtil.getProperty("FILE01"));
                     }
                 }
+                user.setText(update.getMessage().getCaption());
                 user.setFileName(user.getFile_path().split("/")[1]);
                 user.setFileType("image/"+(user.getFileName().split("\\.")[1]));
                 user.setMessageContent(MessageContent.PICTURE);
