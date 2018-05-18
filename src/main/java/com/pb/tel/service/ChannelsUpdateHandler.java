@@ -47,6 +47,7 @@ public class ChannelsUpdateHandler extends AbstractUpdateHandler {
             file.setHeight(userAccount.getFile().getHeight());
             Meta meta = new Meta();
             meta.setWidth(userAccount.getFile().getWidth());
+            meta.setHeight(userAccount.getFile().getHeight());
             Preview preview = new Preview();
             preview.setWidth(userAccount.getFile().getWidth());
             preview.setSize(userAccount.getFile().getSize());

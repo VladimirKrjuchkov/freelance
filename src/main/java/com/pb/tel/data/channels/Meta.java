@@ -15,6 +15,8 @@ public class Meta {
 
     private Integer width;
 
+    private Integer height;
+
     private Preview preview;
 
     public Integer getWidth() {
@@ -23,6 +25,14 @@ public class Meta {
 
     public void setWidth(Integer width) {
         this.width = width;
+    }
+
+    public Integer getHeight() {
+        return height;
+    }
+
+    public void setHeight(Integer height) {
+        this.height = height;
     }
 
     public Preview getPreview() {
@@ -41,12 +51,14 @@ public class Meta {
         Meta meta = (Meta) o;
 
         if (width != null ? !width.equals(meta.width) : meta.width != null) return false;
+        if (height != null ? !height.equals(meta.height) : meta.height != null) return false;
         return preview != null ? preview.equals(meta.preview) : meta.preview == null;
     }
 
     @Override
     public int hashCode() {
         int result = width != null ? width.hashCode() : 0;
+        result = 31 * result + (height != null ? height.hashCode() : 0);
         result = 31 * result + (preview != null ? preview.hashCode() : 0);
         return result;
     }
@@ -55,6 +67,7 @@ public class Meta {
     public String toString() {
         return "Meta{" +
                 "width=" + width +
+                ", height=" + height +
                 ", preview=" + preview +
                 '}';
     }
