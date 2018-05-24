@@ -42,7 +42,8 @@
     <filter-mapping>
         <filter-name>LoggingRequestResponseFilter</filter-name>
         <!-- <url-pattern>/*</url-pattern> -->
-        <url-pattern>/webhook/*</url-pattern>
+        <url-pattern>/telegram/webhook*</url-pattern>
+        <url-pattern>/telegram/flush/*</url-pattern>
         <url-pattern>/update</url-pattern>
         <url-pattern>/reinit</url-pattern>
         <url-pattern>/channels/*</url-pattern>

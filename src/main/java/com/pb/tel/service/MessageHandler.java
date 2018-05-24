@@ -1,6 +1,7 @@
 package com.pb.tel.service;
 
 import com.pb.tel.dao.MessageDao;
+import com.pb.tel.data.Mes;
 import com.pb.tel.data.Request;
 import com.pb.tel.data.UserAccount;
 import com.pb.tel.data.enums.Locale;
@@ -179,5 +180,10 @@ public class MessageHandler extends AbstractUpdateHandler{
         }catch (UnsupportedEncodingException e){
             throw new UnresponsibleException("COD01", PropertiesUtil.getProperty("COD01"));
         }
+    }
+
+    public Mes flushById(String id){
+        userAccountStore.removeValue(id);
+        return new Mes(Mes.MesState.ok, "Flush by id=" + id + " success!");
     }
 }

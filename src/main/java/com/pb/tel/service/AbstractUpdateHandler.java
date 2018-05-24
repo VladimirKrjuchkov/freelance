@@ -168,23 +168,24 @@ public abstract class AbstractUpdateHandler implements UpdateHandler{
     }
 
     protected boolean registerNewCustomer(UserAccount userAccount){
-        new Thread(new Runnable() {
-            public void run() {
-                try{
-                    log.info("\n==========================   START GET DATA FOR: " + userAccount.getPhone() + "    ==========================" + com.pb.util.zvv.logging.MessageHandler.startMarker);
-                    Integer idEkb = null;
-                    if(userAccount.getPhone() != null) {
-                         idEkb = ekbDataHandler.getEkbIdByPhone(userAccount.getPhone());
+        if(!"test".equals(userAccount.getMode())) {
+            new Thread(new Runnable() {
+                public void run() {
+                    try {
+                        log.info("\n==========================   START GET DATA FOR: " + userAccount.getPhone() + "    ==========================" + com.pb.util.zvv.logging.MessageHandler.startMarker);
+                        Integer idEkb = null;
+                        if (userAccount.getPhone() != null) {
+                            idEkb = ekbDataHandler.getEkbIdByPhone(userAccount.getPhone());
+                        }
+                        userAccount.setIdEkb((idEkb == null) ? null : Integer.toString(idEkb));
+                        customerDaoImpl.addCustomer(getCustomerFromUserAccount(userAccount));
+                        log.info(com.pb.util.zvv.logging.MessageHandler.finishMarker);
+                    } catch (Exception e) {
+                        log.log(Level.SEVERE, "ERROR WHILE REGISER NEW CUSTOMER : ", e);
                     }
-                    userAccount.setIdEkb((idEkb == null) ? null : Integer.toString(idEkb));
-                    customerDaoImpl.addCustomer(getCustomerFromUserAccount(userAccount));
-                    log.info(com.pb.util.zvv.logging.MessageHandler.finishMarker);
-                }catch (Exception e){
-                    log.log(Level.SEVERE, "ERROR WHILE REGISER NEW CUSTOMER : ", e);
                 }
-            }
-        }).start();
-
+            }).start();
+        }
         return true;
     }
 

@@ -1,6 +1,7 @@
 package com.pb.tel.controller;
 
 import com.pb.tel.data.File;
+import com.pb.tel.data.Request;
 import com.pb.tel.data.UserAccount;
 import com.pb.tel.data.channels.ChannelsRequest;
 import com.pb.tel.data.channels.Data;
@@ -57,7 +58,8 @@ public class TelegramRequestController {
 
     @RequestMapping(value = "/update")
     @ResponseBody
-    public void update(@RequestBody Update update) throws Exception{
+    public Request update(@RequestBody Update update,
+                          @RequestParam(value = "mode", required = false) String mode) throws Exception{
         User user = telegramUpdateHandler.getUserFromUpdate(update);
         UserAccount userAccount = userAccountStore.getValue(user.getId()+UserState.JOIN_TO_DIALOG.getCode());
         if(userAccount == null) {
@@ -77,15 +79,21 @@ public class TelegramRequestController {
         userAccount.setMessenger(user.getMessenger());
         userAccount.setContactId(user.getContactId());
         userAccount.setMessageContent(user.getMessageContent());
+        userAccount.setMode(mode);
         userAccount.setFile(telegramUpdateHandler.getFileFromUser(user));
         telegramUpdateHandler.registrateUser(userAccount);
 
+
+        Request request = null;
         if(userAccount.getUserState() == UserState.JOIN_TO_DIALOG){
-            channelsConnector.doRequest(channelsUpdateHandler.deligateMessage(userAccount), PropertiesUtil.getProperty("channels_api_request_url") + userAccount.getToken());
+            request = channelsUpdateHandler.deligateMessage(userAccount);
+            channelsConnector.doRequest(request, PropertiesUtil.getProperty("channels_api_request_url") + userAccount.getToken());
         }else {
-            TelegramResponse response = telegramConnector.sendRequest(telegramUpdateHandler.getTelegramRequest(userAccount), "sendMessage");
+            request = telegramUpdateHandler.getTelegramRequest(userAccount);
+            TelegramResponse response = telegramConnector.sendRequest(request, "sendMessage");
             telegramUpdateHandler.analyseTelegramResponse(response, userAccount);
         }
+        return request;
     }
 
     @RequestMapping(value = "/channels/update")
@@ -148,27 +156,32 @@ public class TelegramRequestController {
 
     @RequestMapping(value = "/facebook/update")
     @ResponseBody
-    public String faceBookUpdate(@RequestBody(required = false) FaceBookRequest faceBookRequest,
+    public Object faceBookUpdate(@RequestBody(required = false) FaceBookRequest faceBookRequest,
                                  @RequestParam(value = "hub.mode", required = false) String mode,
                                  @RequestParam(value = "hub.verify_token", required = false) String verify_toke,
-                                 @RequestParam(value = "hub.challenge", required = false) String challenge) throws Exception{
+                                 @RequestParam(value = "hub.challenge", required = false) String challenge,
+                                 @RequestParam(value = "testMode", required = false) Boolean testMode) throws Exception{
 
         if("subscribe".equals(mode) && PropertiesUtil.getProperty("facebook_update_token").equals(verify_toke) && challenge != null){
             log.log(Level.INFO, "subscribe mode : true");
             return challenge;
         }
         UserAccount userAccount = faceBookUpdateHandler.getUserFromRequest(faceBookRequest);
+        if(testMode != null && testMode){
+            userAccount.setMode("test");
+        }
         faceBookUpdateHandler.registrateUser(userAccount);
-
+        Messaging request = null;
         if(userAccount.getUserState() == UserState.JOIN_TO_DIALOG){
             channelsConnector.doRequest(channelsUpdateHandler.deligateMessage(userAccount), PropertiesUtil.getProperty("channels_api_request_url") + userAccount.getToken());
 
         }else {
-            FaceBookResponse response = (FaceBookResponse) faceBookConnector.sendRequest(faceBookUpdateHandler.getFaceBookRequest(userAccount));
+            request = faceBookUpdateHandler.getFaceBookRequest(userAccount);
+            FaceBookResponse response = (FaceBookResponse) faceBookConnector.sendRequest(request);
             faceBookUpdateHandler.analyseFaceBookResponse(response, userAccount);
         }
 
-        return challenge;
+        return request;
     }
 
     @ExceptionHandler(UnresponsibleException.class)

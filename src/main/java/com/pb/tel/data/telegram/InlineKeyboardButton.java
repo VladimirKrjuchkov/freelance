@@ -1,8 +1,14 @@
 package com.pb.tel.data.telegram;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 /**
  * Created by vladimir on 06.03.18.
  */
+
+@JsonIgnoreProperties(ignoreUnknown=true)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class InlineKeyboardButton {
 
     public InlineKeyboardButton(){};

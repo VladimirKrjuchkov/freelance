@@ -35,6 +35,12 @@ public class ManagingRequestController {
         return telegramConnector.webHook(oper);
     }
 
+    @RequestMapping(value = "/telegram/flush/{id}")
+    @ResponseBody
+    public Mes flushUserById(@PathVariable(value="id") String id) throws Exception {
+        return messageHandler.flushById(id);
+    }
+
     @RequestMapping(value = "/reinit", method=RequestMethod.GET)
     @ResponseBody
     public Mes reinitStaticData() throws Exception {

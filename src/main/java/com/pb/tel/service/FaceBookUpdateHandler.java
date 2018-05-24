@@ -231,7 +231,7 @@ public class FaceBookUpdateHandler extends AbstractUpdateHandler{
     }
 
     public void analyseFaceBookResponse(FaceBookResponse faceBookResponse, UserAccount userAccount){
-        if(userAccount.getId().equals(faceBookResponse.getRecipient_id()) && faceBookResponse.getMessage_id() != null) {
+        if((userAccount.getId().equals(faceBookResponse.getRecipient_id()) && faceBookResponse.getMessage_id() != null) || "test".equals(userAccount.getMode())) {
             updateUserState(userAccount);
         }
     }

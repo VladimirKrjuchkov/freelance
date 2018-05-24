@@ -3,6 +3,7 @@ package com.pb.tel.data.telegram;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -12,13 +13,13 @@ import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class InlineKeyboardMarkup implements KeyboardMarkup{
+public class InlineKeyboardMarkup extends KeyboardMarkup{
 
     public InlineKeyboardMarkup(){};
 
-    List<List<InlineKeyboardButton>> inline_keyboard;
+    ArrayList<ArrayList<InlineKeyboardButton>> inline_keyboard;
 
-    List<List<KeyboardButton>> keyboard;
+    ArrayList<ArrayList<KeyboardButton>> keyboard;
 
 
 
@@ -26,19 +27,19 @@ public class InlineKeyboardMarkup implements KeyboardMarkup{
 
     Boolean one_time_keyboard = true;
 
-    public List<List<InlineKeyboardButton>> getInline_keyboard() {
+    public ArrayList<ArrayList<InlineKeyboardButton>> getInline_keyboard() {
         return inline_keyboard;
     }
 
-    public void setInline_keyboard(List<List<InlineKeyboardButton>> inline_keyboard) {
+    public void setInline_keyboard(ArrayList<ArrayList<InlineKeyboardButton>> inline_keyboard) {
         this.inline_keyboard = inline_keyboard;
     }
 
-    public List<List<KeyboardButton>> getKeyboard() {
+    public ArrayList<ArrayList<KeyboardButton>> getKeyboard() {
         return keyboard;
     }
 
-    public void setKeyboard(List<List<KeyboardButton>> keyboard) {
+    public void setKeyboard(ArrayList<ArrayList<KeyboardButton>> keyboard) {
         this.keyboard = keyboard;
     }
 

@@ -69,6 +69,8 @@ public class UserAccount {
 
     private MessageContent messageContent;
 
+    private String mode;
+
     public String getId() {
         return id;
     }
@@ -277,6 +279,14 @@ public class UserAccount {
         this.messageContent = messageContent;
     }
 
+    public String getMode() {
+        return mode;
+    }
+
+    public void setMode(String mode) {
+        this.mode = mode;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -311,7 +321,8 @@ public class UserAccount {
         if (contactId != null ? !contactId.equals(that.contactId) : that.contactId != null) return false;
         if (locale != that.locale) return false;
         if (file != null ? !file.equals(that.file) : that.file != null) return false;
-        return messageContent == that.messageContent;
+        if (messageContent != that.messageContent) return false;
+        return mode != null ? mode.equals(that.mode) : that.mode == null;
     }
 
     @Override
@@ -342,6 +353,7 @@ public class UserAccount {
         result = 31 * result + (locale != null ? locale.hashCode() : 0);
         result = 31 * result + (file != null ? file.hashCode() : 0);
         result = 31 * result + (messageContent != null ? messageContent.hashCode() : 0);
+        result = 31 * result + (mode != null ? mode.hashCode() : 0);
         return result;
     }
 
@@ -374,6 +386,7 @@ public class UserAccount {
                 ", locale=" + locale +
                 ", file=" + file +
                 ", messageContent=" + messageContent +
+                ", mode='" + mode + '\'' +
                 '}';
     }
 }

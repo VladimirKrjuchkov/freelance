@@ -38,14 +38,14 @@ public class TelegramUpdateHandler extends AbstractUpdateHandler {
                 userAccount.getUserState() == UserState.SEND_WRONG_CONTACT ||
                 userAccount.getUserState() == UserState.WAITING_USER_LOCALE) {
                     InlineKeyboardMarkup reply_markup = new InlineKeyboardMarkup();
-                    List<List<KeyboardButton>> keyboardButtons = new ArrayList<List<KeyboardButton>>();
+                    ArrayList<ArrayList<KeyboardButton>> keyboardButtons = new ArrayList<ArrayList<KeyboardButton>>();
                     if(userAccount.getLocale() == null){
                         KeyboardButton ua = new KeyboardButton(TelegramButtons.ua.getButton());
                         KeyboardButton ru = new KeyboardButton(TelegramButtons.ru.getButton());
 
-                        List<KeyboardButton> uas = new ArrayList<KeyboardButton>();
+                        ArrayList<KeyboardButton> uas = new ArrayList<KeyboardButton>();
                         uas.add(ua);
-                        List<KeyboardButton> rus = new ArrayList<KeyboardButton>();
+                        ArrayList<KeyboardButton> rus = new ArrayList<KeyboardButton>();
                         rus.add(ru);
 
                         keyboardButtons.add(uas);
@@ -55,9 +55,9 @@ public class TelegramUpdateHandler extends AbstractUpdateHandler {
                         KeyboardButton tracking = new KeyboardButton(TelegramButtons.tracking.getButton());
                         KeyboardButton callOper = new KeyboardButton(TelegramButtons.callOper.getButton());
 
-                        List<KeyboardButton> trackings = new ArrayList<KeyboardButton>();
+                        ArrayList<KeyboardButton> trackings = new ArrayList<KeyboardButton>();
                         trackings.add(tracking);
-                        List<KeyboardButton> callOpers = new ArrayList<KeyboardButton>();
+                        ArrayList<KeyboardButton> callOpers = new ArrayList<KeyboardButton>();
                         callOpers.add(callOper);
 
                         keyboardButtons.add(trackings);
@@ -66,7 +66,7 @@ public class TelegramUpdateHandler extends AbstractUpdateHandler {
                     }else{
                         KeyboardButton register = new KeyboardButton(TelegramButtons.register.getButton());
                         register.setRequest_contact(true);
-                        List<KeyboardButton> registers = new ArrayList<KeyboardButton>();
+                        ArrayList<KeyboardButton> registers = new ArrayList<KeyboardButton>();
                         registers.add(register);
                         keyboardButtons.add(registers);
                     }
@@ -82,9 +82,9 @@ public class TelegramUpdateHandler extends AbstractUpdateHandler {
             }
         }catch (LogicException e){
             InlineKeyboardMarkup reply_markup = new InlineKeyboardMarkup();
-            List<List<KeyboardButton>> keyboardButtons = new ArrayList<List<KeyboardButton>>();
+            ArrayList<ArrayList<KeyboardButton>> keyboardButtons = new ArrayList<ArrayList<KeyboardButton>>();
             KeyboardButton callOper = new KeyboardButton(TelegramButtons.callOper.getButton());
-            List<KeyboardButton> callOpers = new ArrayList<KeyboardButton>();
+            ArrayList<KeyboardButton> callOpers = new ArrayList<KeyboardButton>();
             callOpers.add(callOper);
             keyboardButtons.add(callOpers);
             reply_markup.setKeyboard(keyboardButtons);
@@ -100,7 +100,7 @@ public class TelegramUpdateHandler extends AbstractUpdateHandler {
     }
 
     public void analyseTelegramResponse(TelegramResponse telegramResponse, UserAccount userAccount){
-        if(telegramResponse.getOk()) {
+        if(telegramResponse.getOk() || "test".equals(userAccount.getMode())) {
             updateUserState(userAccount);
         }
     }
@@ -223,13 +223,13 @@ public class TelegramUpdateHandler extends AbstractUpdateHandler {
     public TelegramRequest leaveDialog(UserAccount userAccount) throws UnresponsibleException {
         TelegramRequest message = new TelegramRequest(userAccount.getId(), MessageHandler.getMessage(userAccount.getLocale(),"after_oper_leave_dialog"));
         InlineKeyboardMarkup reply_markup = new InlineKeyboardMarkup();
-        List<List<KeyboardButton>> keyboardButtons = new ArrayList<List<KeyboardButton>>();
+        ArrayList<ArrayList<KeyboardButton>> keyboardButtons = new ArrayList<ArrayList<KeyboardButton>>();
         KeyboardButton yes = new KeyboardButton(TelegramButtons.yes.getButton());
         KeyboardButton no = new KeyboardButton(TelegramButtons.no.getButton());
 
-        List<KeyboardButton> yeses = new ArrayList<KeyboardButton>();
+        ArrayList<KeyboardButton> yeses = new ArrayList<KeyboardButton>();
         yeses.add(yes);
-        List<KeyboardButton> nos = new ArrayList<KeyboardButton>();
+        ArrayList<KeyboardButton> nos = new ArrayList<KeyboardButton>();
         nos.add(no);
 
         keyboardButtons.add(yeses);

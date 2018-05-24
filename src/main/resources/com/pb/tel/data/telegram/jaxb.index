@@ -2,3 +2,14 @@ Update
 Message
 Chat
 User
+CallbackQuery
+Contact
+InlineKeyboardButton
+InlineKeyboardMarkup
+InputFile
+KeyboardButton
+ReplyKeyboardHide
+SimpleTelegramResponse
+TelegramRequest
+TelegramResponse
+KeyboardMarkup
