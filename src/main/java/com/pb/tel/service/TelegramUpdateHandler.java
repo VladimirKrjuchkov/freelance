@@ -180,6 +180,10 @@ public class TelegramUpdateHandler extends AbstractUpdateHandler {
             user.setCall_back_data(update.getCallback_query().getData());
             user.setText(update.getCallback_query().getMessage().getText());
             user.setBot_id(update.getCallback_query().getMessage().getFrom().getId());
+        }else if(update.getInline_query() != null){
+            user = update.getInline_query().getFrom();
+            user.setText(update.getInline_query().getQuery());
+            user.setBot_id(update.getInline_query().getFrom().getId());
         }
         user.setMessenger("Telegram");
         return user;

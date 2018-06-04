@@ -97,6 +97,12 @@ public class FunctionalTest {
             TelegramRequest telegramRequest11 = jacksonObjectMapper.readValue(answer11.getBody().getBytes(), TelegramRequest.class);
             Assert.assertEquals(getTelegramResponse("stage6"), telegramRequest11);
             System.out.println("****************************** TELEGRAM STAGE 11 SUCCESS ******************************");
+
+            DetailedAnswer answer20 = requestHTTP.performQueryDetailedResponse(jacksonObjectMapper.writeValueAsString(getTelegramRequest("stage7")), urlForTelegram);
+            TelegramRequest telegramRequest20 = jacksonObjectMapper.readValue(answer20.getBody().getBytes(), TelegramRequest.class);
+            Assert.assertEquals(getTelegramResponse("stage2"), telegramRequest20);
+            System.out.println("****************************** TELEGRAM STAGE 12 SUCCESS ******************************");
+
             System.out.println("****************************** TELEGRAM OK! ******************************");
 
             requestHTTP.performQueryDetailedResponse(jacksonObjectMapper.writeValueAsString(null), urlForFlushFaceBook);
@@ -397,6 +403,8 @@ public class FunctionalTest {
         chat.setType("private");
         message.setChat(chat);
         message.setDate(new Date().getSeconds());
+        InlineQuery inline_query = new InlineQuery();
+        inline_query.setFrom(user);
         if("stage1".equals(stage)){
             message.setText("Yo!");
 
@@ -423,8 +431,16 @@ public class FunctionalTest {
 
         }else if("stage6".equals(stage)){
             message.setText("59");
+        }else if("stage7".equals(stage)){
+            inline_query.setId("1650003269082000005");
+            inline_query.setQuery("");
+            inline_query.setOffset("");
         }
-        update.setMessage(message);
+        if(!"stage7".equals(stage)) {
+            update.setMessage(message);
+        }else{
+            update.setInline_query(inline_query);
+        }
         return update;
     }
 
