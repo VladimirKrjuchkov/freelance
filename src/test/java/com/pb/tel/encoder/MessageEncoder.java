@@ -13,7 +13,7 @@ public class MessageEncoder {
 
     @Test
     public void encodeMessage(){
-        String message = "И еще одна мелочь! \uD83D\uDE00 Жми на кнопку '✅ Регистрация \"под полем для ввода и начнем!";
+        String message = "Номер не знайдено";
         String encodedUrl =null;
         try {
             encodedUrl = URLEncoder.encode(message, "UTF-8");

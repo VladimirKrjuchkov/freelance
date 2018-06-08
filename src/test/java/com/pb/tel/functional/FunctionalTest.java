@@ -212,7 +212,7 @@ public class FunctionalTest {
             message.setText("Вкажіть, будь ласка, номер вашого відправлення ✏");
 
         }else if("stage4".equals(stage)){
-            message.setText("Шановний користувач, статус Вашого відправлення 59: Номер не знайдено");
+            message.setText("Шановний користувач, статус Вашого відправлення 000000000: Номер не знайдено");
 
         }else if("stage5".equals(stage)){
             message.setText("Шановний користувач, на жаль я не зрозумів вашу відповідь \uD83D\uDE14");
@@ -266,7 +266,7 @@ public class FunctionalTest {
             com.pb.tel.data.facebook.Message message = new com.pb.tel.data.facebook.Message();
             message.setMid("mid.$cAAC6KSZcpUxpwlt-bFjkRfyYodHy");
             message.setSeq("0000");
-            message.setText("59");
+            message.setText("000000000");
             messaging.setMessage(message);
             messagings.add(messaging);
         }else if("stage5".equals(stage)){
@@ -376,7 +376,7 @@ public class FunctionalTest {
             response.setText("Вкажіть, будь ласка, номер вашого відправлення ✏");
 
         }else if("stage8".equals(stage)) {
-            response.setText("Test, статус Вашого відправлення 59: Номер не знайдено");
+            response.setText("Test, статус Вашого відправлення 000000000: Номер не знайдено");
             InlineKeyboardMarkup reply_markup = new InlineKeyboardMarkup();
             response.setReply_markup(reply_markup);
         }
@@ -430,7 +430,7 @@ public class FunctionalTest {
             message.setText("\ud83d\ude9a \u0417\u043d\u0430\u0439\u0442\u0438 \u043f\u043e\u0441\u0438\u043b\u043a\u0443");
 
         }else if("stage6".equals(stage)){
-            message.setText("59");
+            message.setText("000000000");
         }else if("stage7".equals(stage)){
             inline_query.setId("1650003269082000005");
             inline_query.setQuery("");

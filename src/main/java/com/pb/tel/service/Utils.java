@@ -8,6 +8,7 @@ import com.pb.util.zvv.PropertiesUtil;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
@@ -27,6 +28,9 @@ public class Utils {
     private static final Logger log = Logger.getLogger(Utils.class.getCanonicalName());
 
     public static final String encode = "UTF-8";
+
+    public static SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+    public static SimpleDateFormat dateFormat2 = new SimpleDateFormat("HH:mm:ss");
 
     public static int getSecondsToDate(Date date){
         int ttlValue = (int)(date.getTime() - System.currentTimeMillis())/1000;

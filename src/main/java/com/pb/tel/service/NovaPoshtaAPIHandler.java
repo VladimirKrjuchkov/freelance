@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  */
 
 @Service("novaPoshtaAPIHandler")
-public class NovaPoshtaAPIHandler {
+public class NovaPoshtaAPIHandler implements Tracker{
 
     private final Logger log = Logger.getLogger(NovaPoshtaAPIHandler.class.getCanonicalName());
 
@@ -39,44 +39,46 @@ public class NovaPoshtaAPIHandler {
         methodPropertie.setDocuments(documents);
         request.setMethodProperties(methodPropertie);
         NovaPoshtaResponse response = novaPoshtaConnector.sendRequest(request);
-        String message = null;
+        String message = "(Нова пошта), ";
         if(response.getSuccess() && userAccount.getUserText().equals(response.getData().get(0).getNumber())){
             if("1".equals(response.getData().get(0).getStatusCode())) {
-                message = "Нова пошта очікує надходження від відправника";
+                message += "Нова пошта очікує надходження від відправника";
             }else if("2".equals(response.getData().get(0).getStatusCode())) {
-                message = "Видалено";
+                message += "Видалено";
             }else if("3".equals(response.getData().get(0).getStatusCode())){
-                message = "Номер не знайдено";
+                message += "Номер не знайдено";
+                throw new LogicException("not_found", message);
+
             }else if("4".equals(response.getData().get(0).getStatusCode())) {
-                message = "Відправлення у місті " + response.getData().get(0).getCitySender() + ". Орієнтовна дата доставки у місто " + response.getData().get(0).getCityRecipient() + " " + response.getData().get(0).getScheduledDeliveryDate();
+                message += "Відправлення у місті " + response.getData().get(0).getCitySender() + ". Орієнтовна дата доставки у місто " + response.getData().get(0).getCityRecipient() + " " + response.getData().get(0).getScheduledDeliveryDate();
             }else if("41".equals(response.getData().get(0).getStatusCode())){
-                message = "Відправлення у місті " + response.getData().get(0).getCitySender() + ". Орієнтовна дата доставки " + response.getData().get(0).getScheduledDeliveryDate();
+                message += "Відправлення у місті " + response.getData().get(0).getCitySender() + ". Орієнтовна дата доставки " + response.getData().get(0).getScheduledDeliveryDate();
             }else if("5".equals(response.getData().get(0).getStatusCode())){
-                message = "Відправлення прямує до міста " + response.getData().get(0).getCityRecipient() + ". Орієнтовна дата доставки " + response.getData().get(0).getScheduledDeliveryDate();
+                message += "Відправлення прямує до міста " + response.getData().get(0).getCityRecipient() + ". Орієнтовна дата доставки " + response.getData().get(0).getScheduledDeliveryDate();
             }else if("6".equals(response.getData().get(0).getStatusCode())){
-                message = "Відправлення у місті " + response.getData().get(0).getCityRecipient() + ", орієнтовна дата доставки до ВІДДІЛЕННЯ " + response.getData().get(0).getWarehouseRecipientNumber() + " " + response.getData().get(0).getScheduledDeliveryDate();
+                message += "Відправлення у місті " + response.getData().get(0).getCityRecipient() + ", орієнтовна дата доставки до ВІДДІЛЕННЯ " + response.getData().get(0).getWarehouseRecipientNumber() + " " + response.getData().get(0).getScheduledDeliveryDate();
             }else if("7".equals(response.getData().get(0).getStatusCode()) || "8".equals(response.getData().get(0).getStatusCode())){
-                message = "Відправлення прибуло у відділення, запрошуємо отримати";
+                message += "Відправлення прибуло у відділення, запрошуємо отримати";
             }else if("9".equals(response.getData().get(0).getStatusCode())){
-                message = "Відправлення отримано";
+                message += "Відправлення отримано";
             }else if("10".equals(response.getData().get(0).getStatusCode())){
-                message = "Відправлення отримано " + response.getData().get(0).getRecipientDateTime() + ". Протягом доби ви одержите SMS-повідомлення про надходження грошового переказу та зможете отримати його в касі відділення «Нова пошта».";
+                message += "Відправлення отримано " + response.getData().get(0).getRecipientDateTime() + ". Протягом доби ви одержите SMS-повідомлення про надходження грошового переказу та зможете отримати його в касі відділення «Нова пошта».";
             }else if("11".equals(response.getData().get(0).getStatusCode())){
-                message = "Відправлення отримано " + response.getData().get(0).getRecipientDateTime() + ". Грошовий переказ видано одержувачу.";
+                message += "Відправлення отримано " + response.getData().get(0).getRecipientDateTime() + ". Грошовий переказ видано одержувачу.";
             }else if("14".equals(response.getData().get(0).getStatusCode())){
-                message = "Відправлення передано до огляду отримувачу";
+                message += "Відправлення передано до огляду отримувачу";
             }else if("101".equals(response.getData().get(0).getStatusCode())){
-                message = "На шляху до одержувача";
+                message += "На шляху до одержувача";
             }else if("102".equals(response.getData().get(0).getStatusCode()) || "103".equals(response.getData().get(0).getStatusCode()) || "108".equals(response.getData().get(0).getStatusCode())){
-                message = "Відмова одержувача";
+                message += "Відмова одержувача";
             }else if("104".equals(response.getData().get(0).getStatusCode())){
-                message = "Змінено адресу";
+                message += "Змінено адресу";
             }else if("105".equals(response.getData().get(0).getStatusCode())){
-                message = "Припинено зберігання";
+                message += "Припинено зберігання";
             }else if("106".equals(response.getData().get(0).getStatusCode())){
-                message = "Одержано і є ТТН грошовий переказ";
+                message += "Одержано і є ТТН грошовий переказ";
             }else if("107".equals(response.getData().get(0).getStatusCode())){
-                message = "Нараховується плата за зберігання";
+                message += "Нараховується плата за зберігання";
             }
         }else{
             if(PropertiesUtil.getProperty("bad_ttn").equals(response.getErrorCodes().get(0))){

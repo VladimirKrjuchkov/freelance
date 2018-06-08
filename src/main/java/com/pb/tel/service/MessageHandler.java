@@ -33,6 +33,9 @@ public class MessageHandler extends AbstractUpdateHandler{
     private NovaPoshtaAPIHandler novaPoshtaAPIHandler;
 
     @Autowired
+    private MeestAPIHandler meestAPIHandler;
+
+    @Autowired
     private ChannelsAPIHandler channelsAPIHandler;
 
     @Autowired ChatOnlineHandler chatOnlineHandler;
@@ -120,7 +123,7 @@ public class MessageHandler extends AbstractUpdateHandler{
                 channelsAPIHandler.callOper(userAccount);
                 return getMessage(userAccount.getLocale(), "user_call_oper");
             }else {
-                String message = novaPoshtaAPIHandler.getTrackingByTTN(userAccount);
+                String message = getCascadeTracking(userAccount);
                 return getMessage(userAccount.getLocale(), "tracking_response_from_novaposhta") + " " + userAccount.getUserText() + ": " + message;
             }
         }
@@ -185,5 +188,18 @@ public class MessageHandler extends AbstractUpdateHandler{
     public Mes flushById(String id){
         userAccountStore.removeValue(id);
         return new Mes(Mes.MesState.ok, "Flush by id=" + id + " success!");
+    }
+
+    private String getCascadeTracking(UserAccount userAccount) throws Exception {
+        String message = null;
+        try {
+            log.log(Level.INFO, "START FINDE IN NOVA POSHTA");
+            message = novaPoshtaAPIHandler.getTrackingByTTN(userAccount);
+
+        } catch (Exception e) {
+            log.log(Level.INFO, "START FINDE IN MEEST EXPRESS");
+            message = meestAPIHandler.getTrackingByTTN(userAccount);
+        }
+        return message;
     }
 }

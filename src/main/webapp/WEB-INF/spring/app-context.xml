@@ -25,7 +25,7 @@
 						</util:list>
 					</property>
 				</bean>
-				<ref bean="marshallingHttpMessageConverter"/>
+				<!--ref bean="marshallingHttpMessageConverter"/-->
 				<ref bean="jsonMessageConverter"/>
 			</util:list>
 		</property>
@@ -40,7 +40,7 @@
 
 	<bean id="jacksonObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper" xmlns="http://www.springframework.org/schema/beans"/>
 
-	<bean id="marshallingHttpMessageConverter"  class="org.springframework.http.converter.xml.MarshallingHttpMessageConverter" xmlns="http://www.springframework.org/schema/beans" >
+	<!--bean id="marshallingHttpMessageConverter"  class="org.springframework.http.converter.xml.MarshallingHttpMessageConverter" xmlns="http://www.springframework.org/schema/beans" >
 		<property name="marshaller" ref="jaxbMarshaller" />
 		<property name="unmarshaller" ref="jaxbMarshaller" />
 		<property name="supportedMediaTypes">
@@ -69,7 +69,7 @@
 				<entry key="jaxb.encoding" value="UTF-8"/>
 			</map>
 		</property>
-	</bean>
+	</bean-->
 
 
 	<!-- DataBase Configs -->
@@ -223,5 +223,18 @@
 		<constructor-arg name="login" value="${auth_login}"/>
 		<constructor-arg name="authSys" value="${auth_system}"/>
 		<constructor-arg name="password" value="${auth_pass}"/>
+	</bean>
+
+	<bean id="jaxbMarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller" xmlns="http://www.springframework.org/schema/beans">
+		<property name="contextPaths">
+			<list>
+				<value>com.pb.tel.data.meest</value>
+			</list>
+		</property>
+		<property name="marshallerProperties">
+			<map>
+				<entry key="jaxb.encoding" value="UTF-8"/>
+			</map>
+		</property>
 	</bean>
 </beans>
