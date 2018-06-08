@@ -32,8 +32,8 @@ public class MeestAPIHandler implements Tracker{
         MeestRequest meestRequest = new MeestRequest();
         meestRequest.setLogin(PropertiesUtil.getProperty("meest_login"));
         meestRequest.setFunction(PropertiesUtil.getProperty("meest_function"));
-        meestRequest.setWhere(userAccount.getUserText());
-        meestRequest.setSign(DigestUtils.md5Hex(PropertiesUtil.getProperty("meest_login")+PropertiesUtil.getProperty("meest_password")+PropertiesUtil.getProperty("meest_function")+userAccount.getUserText()));
+        meestRequest.setWhere("\"" + userAccount.getUserText() + "\"");
+        meestRequest.setSign(DigestUtils.md5Hex(PropertiesUtil.getProperty("meest_login")+PropertiesUtil.getProperty("meest_password")+PropertiesUtil.getProperty("meest_function")+"\"" + userAccount.getUserText() + "\""));
         MeestResponse meestResponse = meestConnector.sendRequest(meestRequest);
         String message = null;
         if("000".equals(meestResponse.getErrors().getCode()) && meestResponse.getResult_table().getItems() != null) {
