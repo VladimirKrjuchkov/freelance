@@ -20,16 +20,16 @@ import java.util.*;
 public class FunctionalTest {
 
     /************************ ПОЛЕГОН **************************/
-    private static String urlForTelegram = "https://bankid.privatbank.ua/TelegramBot/update?token=578758997:AAEzBN2LK3O1sHyaFFRdekBXh3tgUN3EYMQ&mode=test";
-    private static String urlForFaceBook = "https://bankid.privatbank.ua/TelegramBot/facebook/update?testMode=true";
-    private static String urlForFlushTelegram = "https://bankid.privatbank.ua/TelegramBot/telegram/flush/000000000";
-    private static String urlForFlushFaceBook = "https://bankid.privatbank.ua/TelegramBot/telegram/flush/0000000000000000";
+//    private static String urlForTelegram = "https://bankid.privatbank.ua/TelegramBot/update?token=578758997:AAEzBN2LK3O1sHyaFFRdekBXh3tgUN3EYMQ&mode=test";
+//    private static String urlForFaceBook = "https://bankid.privatbank.ua/TelegramBot/facebook/update?testMode=true";
+//    private static String urlForFlushTelegram = "https://bankid.privatbank.ua/TelegramBot/telegram/flush/000000000";
+//    private static String urlForFlushFaceBook = "https://bankid.privatbank.ua/TelegramBot/telegram/flush/0000000000000000";
 
     /************************ БОЕВОЙ **************************/
-//    private static String urlForTelegram = "https://bankid.org.ua/TelegramBot/update?token=471826174:AAEAcBIp-yqoMcHMu4Yg-0TrVKWWAkjmOEY&mode=test";
-//    private static String urlForFaceBook = "https://bankid.org.ua/TelegramBot/facebook/update?testMode=true";
-//    private static String urlForFlushTelegram = "https://bankid.org.ua/TelegramBot/telegram/flush/000000000";
-//    private static String urlForFlushFaceBook = "https://bankid.org.ua/TelegramBot/telegram/flush/0000000000000000";
+    private static String urlForTelegram = "https://bankid.org.ua/TelegramBot/update?token=471826174:AAEAcBIp-yqoMcHMu4Yg-0TrVKWWAkjmOEY&mode=test";
+    private static String urlForFaceBook = "https://bankid.org.ua/TelegramBot/facebook/update?testMode=true";
+    private static String urlForFlushTelegram = "https://bankid.org.ua/TelegramBot/telegram/flush/000000000";
+    private static String urlForFlushFaceBook = "https://bankid.org.ua/TelegramBot/telegram/flush/0000000000000000";
     private static ObjectMapper jacksonObjectMapper = new ObjectMapper();
 
     @Test
