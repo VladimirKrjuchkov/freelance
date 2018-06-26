@@ -2,6 +2,7 @@ package com.pb.tel.service;
 
 import com.pb.tel.data.UserAccount;
 import com.pb.tel.data.channels.Operator;
+import com.pb.tel.data.enums.Action;
 import com.pb.tel.data.meest.Items;
 import com.pb.tel.data.meest.MeestRequest;
 import com.pb.tel.data.meest.MeestResponse;
@@ -25,6 +26,9 @@ public class MeestAPIHandler implements Tracker{
     @Autowired
     private MeestConnector meestConnector;
 
+    @Autowired
+    protected EventHandler eventHandler;
+
     private final Logger log = Logger.getLogger(MeestAPIHandler.class.getCanonicalName());
 
 
@@ -47,8 +51,10 @@ public class MeestAPIHandler implements Tracker{
                     "\n" + "Місто: " + item.getCityByLocale(userAccount.getLocale()) +
                     "\n" + "Кількість місць: " + item.getDetailPlacesAction() +
                     "\n" + "Детальне повідомлення: " + item.getActionByLocale(userAccount.getLocale()));
+            eventHandler.addEvent(userAccount, Action.trackSuccess);
         }else{
             message = MessageHandler.getMessage(userAccount.getLocale(), "not_found");
+            eventHandler.addEvent(userAccount, Action.trackError);
         }
         return message;
     }

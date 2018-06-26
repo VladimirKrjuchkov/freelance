@@ -2,6 +2,7 @@ package com.pb.tel.service;
 
 import com.pb.tel.data.UserAccount;
 import com.pb.tel.data.channels.*;
+import com.pb.tel.data.enums.Action;
 import com.pb.tel.service.exception.LogicException;
 import com.pb.tel.service.exception.UnresponsibleException;
 import com.pb.util.zvv.PropertiesUtil;
@@ -31,6 +32,9 @@ public class ChannelsAPIHandler {
 
     @Autowired
     private MessageHandler messageHandler;
+
+    @Autowired
+    protected EventHandler eventHandler;
 
     @Resource(name="channelIdByUserIdStore")
     private Storage<String, String> channelIdByUserIdStore;
@@ -97,6 +101,7 @@ public class ChannelsAPIHandler {
             telegramUpdateHandler.flushUserState(userAccount.getId());
             throw new LogicException("channels_create_token_error", message);
         }
+        eventHandler.addEvent(userAccount, Action.chatOnline);
         return channelsResponse.getData().getChannelId();
     }
 

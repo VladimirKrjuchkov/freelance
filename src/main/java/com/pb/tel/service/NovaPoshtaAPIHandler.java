@@ -1,6 +1,7 @@
 package com.pb.tel.service;
 
 import com.pb.tel.data.UserAccount;
+import com.pb.tel.data.enums.Action;
 import com.pb.tel.data.novaposhta.Document;
 import com.pb.tel.data.novaposhta.MethodPropertie;
 import com.pb.tel.data.novaposhta.NovaPoshtaRequest;
@@ -25,6 +26,9 @@ public class NovaPoshtaAPIHandler implements Tracker{
 
     @Autowired
     private NovaPoshtaConnector novaPoshtaConnector;
+
+    @Autowired
+    protected EventHandler eventHandler;
 
     public String getTrackingByTTN(UserAccount userAccount) throws Exception {
         NovaPoshtaRequest request = new NovaPoshtaRequest();
@@ -80,6 +84,7 @@ public class NovaPoshtaAPIHandler implements Tracker{
             }else if("107".equals(response.getData().get(0).getStatusCode())){
                 message += "Нараховується плата за зберігання";
             }
+            eventHandler.addEvent(userAccount, Action.trackSuccess);
         }else{
             if(PropertiesUtil.getProperty("bad_ttn").equals(response.getErrorCodes().get(0))){
                 throw new LogicException("bad_ttn_error", MessageHandler.getMessage(userAccount.getLocale(), "bad_ttn_error"));

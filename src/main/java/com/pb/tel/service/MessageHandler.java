@@ -8,6 +8,7 @@ import com.pb.tel.data.enums.Locale;
 import com.pb.tel.data.enums.TelegramButtons;
 import com.pb.tel.data.enums.UserState;
 import com.pb.tel.data.privatmarket.BotMessage;
+import com.pb.tel.host.EventScheduler;
 import com.pb.tel.service.exception.UnresponsibleException;
 import com.pb.util.zvv.PropertiesUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,8 @@ public class MessageHandler extends AbstractUpdateHandler{
     @Autowired
     private ChannelsAPIHandler channelsAPIHandler;
 
-    @Autowired ChatOnlineHandler chatOnlineHandler;
+    @Autowired
+    private ChatOnlineHandler chatOnlineHandler;
 
     @Autowired
     private MessageDao messageDaoImpl;

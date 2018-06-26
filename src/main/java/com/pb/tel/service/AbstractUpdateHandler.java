@@ -2,6 +2,7 @@ package com.pb.tel.service;
 
 import com.pb.tel.dao.CustomerDao;
 import com.pb.tel.data.UserAccount;
+import com.pb.tel.data.enums.Action;
 import com.pb.tel.data.enums.Locale;
 import com.pb.tel.data.enums.TelegramButtons;
 import com.pb.tel.data.enums.UserState;
@@ -40,6 +41,9 @@ public abstract class AbstractUpdateHandler implements UpdateHandler{
 
     @Autowired
     protected MessageHandler messageHandler;
+
+    @Autowired
+    protected EventHandler eventHandler;
 
     @Autowired
     protected TelegramConnector telegramConnector;
@@ -142,9 +146,12 @@ public abstract class AbstractUpdateHandler implements UpdateHandler{
                         customer.setIdEkb(idEkb);
                         customerDaoImpl.updateCustomer(customer);
                     }
-                    log.info(com.pb.util.zvv.logging.MessageHandler.finishMarker);
+
                 }catch (Exception e){
                     log.log(Level.SEVERE, "ERROR WHILE TRY TO SET ID EKB : ", e);
+
+                }finally {
+                    log.info(com.pb.util.zvv.logging.MessageHandler.finishMarker);
                 }
             }
         }).start();
@@ -159,9 +166,12 @@ public abstract class AbstractUpdateHandler implements UpdateHandler{
                         customer.setLocale(userAccount.getLocale().getCode());
                         customerDaoImpl.updateCustomer(customer);
                     }
-                    log.info(com.pb.util.zvv.logging.MessageHandler.finishMarker);
+
                 }catch (Exception e){
                     log.log(Level.SEVERE, "ERROR WHILE SET LOCALE : ", e);
+
+                }finally {
+                    log.info(com.pb.util.zvv.logging.MessageHandler.finishMarker);
                 }
             }
         }).start();
@@ -179,13 +189,17 @@ public abstract class AbstractUpdateHandler implements UpdateHandler{
                         }
                         userAccount.setIdEkb((idEkb == null) ? null : Integer.toString(idEkb));
                         customerDaoImpl.addCustomer(getCustomerFromUserAccount(userAccount));
-                        log.info(com.pb.util.zvv.logging.MessageHandler.finishMarker);
+
                     } catch (Exception e) {
                         log.log(Level.SEVERE, "ERROR WHILE REGISER NEW CUSTOMER : ", e);
+
+                    }finally{
+                        log.info(com.pb.util.zvv.logging.MessageHandler.finishMarker);
                     }
                 }
             }).start();
         }
+        eventHandler.addEvent(userAccount, Action.newUser);
         return true;
     }
 
