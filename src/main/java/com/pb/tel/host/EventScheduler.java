@@ -5,6 +5,7 @@ import com.pb.tel.data.analytics.Event;
 import com.pb.tel.data.enums.Action;
 import com.pb.tel.service.EventConnector;
 import com.pb.tel.service.FaceBookConnector;
+import com.pb.util.zvv.PropertiesUtil;
 import com.pb.util.zvv.logging.MessageHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -35,12 +36,16 @@ public class EventScheduler {
         log.log(Level.INFO, "init scheduler...");
     }
 
-    @Scheduled(cron = "0 10 00 ? * *")
+    @Scheduled(cron = "${send.statistic.event}")
     public void sendEvent(){
         log.log(Level.INFO, "START EXECUTE EVENTS"+ MessageHandler.startMarker);
         try {
             List<Event> events = eventDaoIml.getByDay();
             log.log(Level.INFO, "event count : " + events.size());
+            if(events.size() > Integer.parseInt(PropertiesUtil.getProperty("max_event_count"))){
+                log.log(Level.INFO, "max event limit exceeded!");
+                return;
+            }
             for(Event event : events) {
                 if(Action.trackError != Action.getByCode(event.getAction())){
                     event.setDescription(null);
