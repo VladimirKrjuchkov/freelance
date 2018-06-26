@@ -39,6 +39,10 @@ public class EventScheduler {
     @Scheduled(cron = "${send.statistic.event}")
     public void sendEvent(){
         log.log(Level.INFO, "START EXECUTE EVENTS"+ MessageHandler.startMarker);
+        if(Boolean.valueOf(PropertiesUtil.getProperty("is_test"))){
+            log.log(Level.INFO, "test!");
+            return;
+        }
         try {
             List<Event> events = eventDaoIml.getByDay();
             log.log(Level.INFO, "event count : " + events.size());
