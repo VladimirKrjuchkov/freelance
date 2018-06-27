@@ -4,12 +4,9 @@ import com.pb.tel.dao.EventDao;
 import com.pb.tel.data.analytics.Event;
 import com.pb.tel.data.enums.Action;
 import com.pb.tel.service.EventConnector;
-import com.pb.tel.service.FaceBookConnector;
 import com.pb.util.zvv.PropertiesUtil;
 import com.pb.util.zvv.logging.MessageHandler;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -50,14 +47,14 @@ public class EventScheduler {
                 log.log(Level.INFO, "max event limit exceeded!");
                 return;
             }
-            for(Event event : events) {
-                if(Action.trackError != Action.getByCode(event.getAction())){
-                    event.setDescription(null);
+            events.stream().forEach(s -> {
+                try {
+                    eventConnector.sendRequest(s);
+                } catch (Exception e) {
+                    log.log(Level.SEVERE, "error while send event", e);
                 }
-                eventConnector.sendRequest(event);
-            }
-        } catch (Exception e) {
-               log.log(Level.SEVERE, "error while send event", e);
+            });
+
         }finally {
             log.log(Level.INFO, MessageHandler.finishMarker);
         }

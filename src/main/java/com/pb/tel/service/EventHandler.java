@@ -51,7 +51,9 @@ public class EventHandler {
         event.setChannel(userAccount.getMessenger());
         event.setExtId(userAccount.getId());
         event.setDate(new Date());
-        event.setDescription(userAccount.getUserText());
+        if(Action.trackError == action) {
+            event.setDescription(userAccount.getUserText());
+        }
         return event;
     }
 }
