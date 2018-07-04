@@ -35,6 +35,6 @@ public enum TelegramButtons {
     }
 
     public static TelegramButtons getByCode(String code){
-        return Arrays.stream(TelegramButtons.values()).filter(telegramButtons -> code.equalsIgnoreCase(telegramButtons.getCode())).findFirst().orElse(null);
+        return Arrays.stream(TelegramButtons.values()).filter(telegramButtons -> telegramButtons.getCode().equalsIgnoreCase(code)).findFirst().orElse(null);
     }
 }

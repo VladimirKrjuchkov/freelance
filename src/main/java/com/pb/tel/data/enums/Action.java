@@ -23,6 +23,6 @@ public enum Action {
     }
 
     public static Action getByCode(String code){
-        return Arrays.stream(Action.values()).filter(action -> code.equalsIgnoreCase(action.getCode())).findFirst().orElse(null);
+        return Arrays.stream(Action.values()).filter(action -> action.getCode().equalsIgnoreCase(code)).findFirst().orElse(null);
     }
 }

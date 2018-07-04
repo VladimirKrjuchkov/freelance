@@ -20,6 +20,6 @@ public enum MessageContent {
     }
 
     public static MessageContent getByDescr(String descr){
-        return Arrays.stream(MessageContent.values()).filter(messageContent -> descr.equalsIgnoreCase(messageContent.getDescr())).findFirst().orElse(null);
+        return Arrays.stream(MessageContent.values()).filter(messageContent -> messageContent.getDescr().equalsIgnoreCase(descr)).findFirst().orElse(null);
     }
 }

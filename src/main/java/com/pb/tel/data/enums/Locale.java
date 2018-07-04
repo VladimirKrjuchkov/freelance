@@ -20,7 +20,7 @@ public enum Locale {
     }
 
     public static Locale getByCode(String code){
-        return Arrays.stream(Locale.values()).filter(locale -> code.equalsIgnoreCase(locale.getCode())).findFirst().orElse(null);
+        return Arrays.stream(Locale.values()).filter(locale -> locale.getCode().equalsIgnoreCase(code)).findFirst().orElse(null);
     }
 
 }

@@ -38,6 +38,6 @@ public enum UserState {
     };
 
     public static UserState getByCode(String code){
-        return Arrays.stream(UserState.values()).filter(userState -> code.equalsIgnoreCase(userState.getCode())).findFirst().orElse(null);
+        return Arrays.stream(UserState.values()).filter(userState -> userState.getCode().equalsIgnoreCase(code)).findFirst().orElse(null);
     }
 }
