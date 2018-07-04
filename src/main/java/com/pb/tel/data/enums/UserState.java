@@ -1,5 +1,7 @@
 package com.pb.tel.data.enums;
 
+import java.util.Arrays;
+
 /**
  * Created by vladimir on 05.03.18.
  */
@@ -36,10 +38,6 @@ public enum UserState {
     };
 
     public static UserState getByCode(String code){
-        for(UserState userState : UserState.values()){
-            if(userState.code.equalsIgnoreCase(code))
-                return userState;
-        }
-        return null;
+        return Arrays.stream(UserState.values()).filter(userState -> code.equalsIgnoreCase(userState.getCode())).findFirst().orElse(null);
     }
 }

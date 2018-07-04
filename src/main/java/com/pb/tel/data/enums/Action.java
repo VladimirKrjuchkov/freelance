@@ -1,5 +1,7 @@
 package com.pb.tel.data.enums;
 
+import java.util.Arrays;
+
 /**
  * Created by vladimir on 11.06.18.
  */
@@ -21,10 +23,6 @@ public enum Action {
     }
 
     public static Action getByCode(String code){
-        for(Action action : Action.values()){
-            if(action.code.equalsIgnoreCase(code))
-                return action;
-        }
-        return null;
+        return Arrays.stream(Action.values()).filter(action -> code.equalsIgnoreCase(action.getCode())).findFirst().orElse(null);
     }
 }

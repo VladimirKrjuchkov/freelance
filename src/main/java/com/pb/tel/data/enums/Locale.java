@@ -1,5 +1,7 @@
 package com.pb.tel.data.enums;
 
+import java.util.Arrays;
+
 /**
  * Created by vladimir on 24.04.18.
  */
@@ -18,10 +20,7 @@ public enum Locale {
     }
 
     public static Locale getByCode(String code){
-        for(Locale locale : Locale.values()){
-            if(locale.code.equalsIgnoreCase(code))
-                return locale;
-        }
-        return null;
+        return Arrays.stream(Locale.values()).filter(locale -> code.equalsIgnoreCase(locale.getCode())).findFirst().orElse(null);
     }
+
 }

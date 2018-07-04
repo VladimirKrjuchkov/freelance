@@ -1,5 +1,7 @@
 package com.pb.tel.data.enums;
 
+import java.util.Arrays;
+
 /**
  * Created by vladimir on 16.05.18.
  */
@@ -18,10 +20,6 @@ public enum MessageContent {
     }
 
     public static MessageContent getByDescr(String descr){
-        for(MessageContent messageContent : MessageContent.values()){
-            if(messageContent.descr.equalsIgnoreCase(descr))
-                return messageContent;
-        }
-        return null;
+        return Arrays.stream(MessageContent.values()).filter(messageContent -> descr.equalsIgnoreCase(messageContent.getDescr())).findFirst().orElse(null);
     }
 }

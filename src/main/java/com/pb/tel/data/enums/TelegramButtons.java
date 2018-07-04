@@ -2,6 +2,8 @@ package com.pb.tel.data.enums;
 
 import com.pb.util.zvv.PropertiesUtil;
 
+import java.util.Arrays;
+
 /**
  * Created by vladimir on 13.03.18.
  */
@@ -33,10 +35,6 @@ public enum TelegramButtons {
     }
 
     public static TelegramButtons getByCode(String code){
-        for(TelegramButtons telegramButtons : TelegramButtons.values()){
-            if(telegramButtons.code.equalsIgnoreCase(code))
-                return telegramButtons;
-        }
-        return null;
+        return Arrays.stream(TelegramButtons.values()).filter(telegramButtons -> code.equalsIgnoreCase(telegramButtons.getCode())).findFirst().orElse(null);
     }
 }
