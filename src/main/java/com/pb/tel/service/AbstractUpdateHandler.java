@@ -223,8 +223,10 @@ public abstract class AbstractUpdateHandler implements UpdateHandler{
                 }
             }
 
-            if(Arrays.asList(TelegramButtons.values()).contains(TelegramButtons.getByCode(userAccount.getCallBackData()))){
+            for(TelegramButtons telegramButton : TelegramButtons.values()){
+                if(telegramButton.getButton().equals(userAccount.getCallBackData())){
                     return;
+                }
             }
             userAccount.setUserState((userState == UserState.WAITING_PRESS_BUTTON || userState == UserState.WAITING_USER_LOCALE) ? UserState.WRONG_ANSWER : UserState.ANONIM_USER);
 
