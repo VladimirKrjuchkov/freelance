@@ -60,15 +60,11 @@ public class MessageHandler extends AbstractUpdateHandler{
         botMessagesRu.clear();
         List<BotMessage> listBotMessagesUa = messageDaoImpl.getByLang("ua");
         List<BotMessage> listBotMessagesRu = messageDaoImpl.getByLang("ru");
+        listBotMessagesUa.stream().forEach(botMessage -> botMessagesUa.put(botMessage.getCode(), botMessage));
+        listBotMessagesRu.stream().forEach(botMessage -> botMessagesRu.put(botMessage.getCode(), botMessage));
+        log.log(Level.INFO, "------ FINISH INIT MESSAGES OBJECTS ------");
         log.log(Level.INFO, "listBotMessagesUa length : " + listBotMessagesUa.size());
         log.log(Level.INFO, "listBotMessagesRu length : " + listBotMessagesRu.size());
-        for(BotMessage botMessage : listBotMessagesUa){
-            botMessagesUa.put(botMessage.getCode(), botMessage);
-        }
-        for(BotMessage botMessage : listBotMessagesRu){
-            botMessagesRu.put(botMessage.getCode(), botMessage);
-        }
-        log.log(Level.INFO, "------ FINISH INIT MESSAGES OBJECTS ------");
     }
 
     public String getMessage(UserAccount userAccount) throws Exception{
