@@ -120,9 +120,7 @@ public class TelegramUpdateHandler extends AbstractUpdateHandler {
                 List<InputFile> photos = update.getMessage().getPhoto();
                 Comparator<InputFile> ocomp = new PhotoComporator();
                 TreeSet<InputFile> files = new TreeSet(ocomp);
-                for(InputFile photo: photos){
-                    files.add(photo);
-                }
+                photos.stream().forEach(photo -> files.add(photo));
                 InputFile file = files.first();
                 user.setFile_id(file.getFile_id());
                 user.setFileSize(file.getFile_size());
