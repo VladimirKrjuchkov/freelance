@@ -146,11 +146,7 @@ public class ChannelsAPIHandler {
     private String analyseAndGetOperId(List<Operator> opers, UserAccount userAccount) throws LogicException, UnresponsibleException {
         Comparator<Operator> ocomp = new OpersComporator();
         TreeSet<Operator> freeOpers = new TreeSet(ocomp);
-        for(Operator oper: opers){
-            if("online".equals(oper.getStatus())){
-                freeOpers.add(oper);
-            }
-        }
+        opers.stream().filter(oper -> "online".equals(oper.getStatus())).forEach(oper -> freeOpers.add(oper));
         if(freeOpers.size() <= 0){
             String message = messageHandler.fillInMessageByUserData(MessageHandler.getMessage(userAccount.getLocale(), "channels_call_oper_error"), userAccount);
             telegramUpdateHandler.flushUserState(userAccount.getId());
