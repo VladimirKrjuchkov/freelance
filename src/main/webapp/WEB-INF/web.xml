@@ -28,6 +28,15 @@
     </filter-mapping>
 
     <filter>
+        <filter-name>ChannelsRequestFilter</filter-name>
+        <filter-class>com.pb.tel.filter.ChannelsRequestFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>ChannelsRequestFilter</filter-name>
+        <url-pattern>/channels/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
         <filter-name>LoggingRequestResponseFilter</filter-name>
         <filter-class>com.pb.util.bpn.ws.logging.HttpServletRequestResponseLoggingFilter</filter-class>
         <init-param>
