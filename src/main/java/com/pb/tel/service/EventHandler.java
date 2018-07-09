@@ -29,19 +29,19 @@ public class EventHandler {
     private EventDao eventDaoIml;
 
     public void addEvent(UserAccount userAccount, Action action){
-            new Thread(new Runnable() {
-                public void run() {
-                    try{
-                        log.info("\n========================== ADD EVENT, ACTION: " + action.getCode() +" ==========================" + com.pb.util.zvv.logging.MessageHandler.startMarker);
-                        eventDaoIml.addEvent(getEventFromUserAccount(userAccount, action));
-                        log.info(com.pb.util.zvv.logging.MessageHandler.finishMarker);
+        Runnable r = () -> {
+            try{
+                    log.info("\n========================== ADD EVENT, ACTION: " + action.getCode() +" ==========================" + com.pb.util.zvv.logging.MessageHandler.startMarker);
+                    eventDaoIml.addEvent(getEventFromUserAccount(userAccount, action));
 
-                    }catch (Exception e){
-                        log.log(Level.SEVERE, "Error while add new event ", e);
-                        log.info(com.pb.util.zvv.logging.MessageHandler.finishMarker);
-                    }
+                }catch (Exception e){
+                    log.log(Level.SEVERE, "Error while add new event ", e);
+
+                }finally {
+                    log.info(com.pb.util.zvv.logging.MessageHandler.finishMarker);
                 }
-            }).start();
+        };
+        new Thread(r).start();
     }
 
     private Event getEventFromUserAccount(UserAccount userAccount, Action action){

@@ -137,9 +137,8 @@ public abstract class AbstractUpdateHandler implements UpdateHandler{
     }
 
     private void tryToSetIdEkb(UserAccount userAccount, Customer customer){
-        new Thread(new Runnable() {
-            public void run() {
-                try{
+        Runnable r = () -> {
+            try{
                     log.info("\n==========================   START GET DATA FOR: " + userAccount.getPhone() + "    ==========================" + com.pb.util.zvv.logging.MessageHandler.startMarker);
                     Integer idEkb = ekbDataHandler.getEkbIdByPhone(userAccount.getPhone());
                     if(idEkb != null){
@@ -154,14 +153,13 @@ public abstract class AbstractUpdateHandler implements UpdateHandler{
                 }finally {
                     log.info(com.pb.util.zvv.logging.MessageHandler.finishMarker);
                 }
-            }
-        }).start();
+        };
+        new Thread(r).start();
     }
 
     private void setLocale(UserAccount userAccount, Customer customer){
-        new Thread(new Runnable() {
-            public void run() {
-                try{
+        Runnable r = () -> {
+            try{
                     log.info("\n==========================   START SET LOCALE FOR: " + userAccount.getPhone() + "    ==========================" + com.pb.util.zvv.logging.MessageHandler.startMarker);
                     if(userAccount.getLocale() != null) {
                         customer.setLocale(userAccount.getLocale().getCode());
@@ -174,15 +172,14 @@ public abstract class AbstractUpdateHandler implements UpdateHandler{
                 }finally {
                     log.info(com.pb.util.zvv.logging.MessageHandler.finishMarker);
                 }
-            }
-        }).start();
+        };
+        new Thread(r).start();
     }
 
     protected boolean registerNewCustomer(UserAccount userAccount){
         if(!"test".equals(userAccount.getMode())) {
-            new Thread(new Runnable() {
-                public void run() {
-                    try {
+            Runnable r = () -> {
+                try {
                         log.info("\n==========================   START GET DATA FOR: " + userAccount.getPhone() + "    ==========================" + com.pb.util.zvv.logging.MessageHandler.startMarker);
                         Integer idEkb = null;
                         if (userAccount.getPhone() != null) {
@@ -197,8 +194,8 @@ public abstract class AbstractUpdateHandler implements UpdateHandler{
                     }finally{
                         log.info(com.pb.util.zvv.logging.MessageHandler.finishMarker);
                     }
-                }
-            }).start();
+            };
+            new Thread(r).start();
         }
         eventHandler.addEvent(userAccount, Action.newUser);
         return true;

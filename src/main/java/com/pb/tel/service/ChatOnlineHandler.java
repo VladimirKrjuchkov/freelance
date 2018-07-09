@@ -24,33 +24,29 @@ public class ChatOnlineHandler{
     ChatOnlineConnector chatOnlineConnector;
 
     public void sendStatistic(UserAccount userAccount){
-        new Thread(new Runnable() {
-            public void run() {
-            try {
-                log.info("\n==========================   START SEND STATISTIK FOR: " + userAccount.getId() + "    ==========================" + com.pb.util.zvv.logging.MessageHandler.startMarker);
-                ChatRequest chatRequest = new ChatRequest();
-                chatRequest.setMark(userAccount.getMark());
-                chatRequest.setAction("channelSessionAnalytics");
-                chatRequest.setChannelId(userAccount.getChannelId());
-                chatRequest.setSessionId(userAccount.getSessionId());
-                chatRequest.setSessionStartTime(userAccount.getSessionStartTime());
-                chatRequest.setSessionEndTime(userAccount.getSessionEndTime());
-                ChatResponse chatResponse = chatOnlineConnector.sendRequest(chatRequest);
-                if(!"success".equals(chatResponse.getResult())){
-                    throw new UnresponsibleException("CO01", PropertiesUtil.getProperty("CO01"));
+        Runnable r = () -> {
+                try {
+                    log.info("\n==========================   START SEND STATISTIK FOR: " + userAccount.getId() + "    ==========================" + com.pb.util.zvv.logging.MessageHandler.startMarker);
+                    ChatRequest chatRequest = new ChatRequest();
+                    chatRequest.setMark(userAccount.getMark());
+                    chatRequest.setAction("channelSessionAnalytics");
+                    chatRequest.setChannelId(userAccount.getChannelId());
+                    chatRequest.setSessionId(userAccount.getSessionId());
+                    chatRequest.setSessionStartTime(userAccount.getSessionStartTime());
+                    chatRequest.setSessionEndTime(userAccount.getSessionEndTime());
+                    ChatResponse chatResponse = chatOnlineConnector.sendRequest(chatRequest);
+                    if(!"success".equals(chatResponse.getResult())){
+                        throw new UnresponsibleException("CO01", PropertiesUtil.getProperty("CO01"));
+                    }
+
+                } catch (UnresponsibleException e) {
+                    log.log(Level.SEVERE, e.getDescription(), e);
+                } catch (Exception e) {
+                    log.log(Level.SEVERE, "ERROR WHILE SEND STATISTIK TO CHAT ONLINE :: ", e);
+                }finally {
+                    log.info(com.pb.util.zvv.logging.MessageHandler.finishMarker);
                 }
-
-                log.info(com.pb.util.zvv.logging.MessageHandler.finishMarker);
-
-            } catch (UnresponsibleException e) {
-                log.log(Level.SEVERE, e.getDescription(), e);
-                log.info(com.pb.util.zvv.logging.MessageHandler.finishMarker);
-
-            } catch (Exception e) {
-                log.log(Level.SEVERE, "ERROR WHILE SEND STATISTIK TO CHAT ONLINE :: ", e);
-                log.info(com.pb.util.zvv.logging.MessageHandler.finishMarker);
-            }
-          }
-        }).start();
+            };
+        new Thread(r).start();
     }
 }
