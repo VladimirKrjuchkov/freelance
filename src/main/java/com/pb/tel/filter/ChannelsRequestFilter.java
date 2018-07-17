@@ -21,7 +21,7 @@ public class ChannelsRequestFilter implements Filter {
     public void init(FilterConfig arg0) throws ServletException {}
 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        ChannelsRequest channelsRequest = jacksonObjectMapper.readValue(request.getReader(), ChannelsRequest.class);
+        ChannelsRequest channelsRequest = jacksonObjectMapper.readValue(request.getInputStream(), ChannelsRequest.class);
         HttpServletResponse httpResponse = (HttpServletResponse)response;
         if("operatorStatus".equalsIgnoreCase(channelsRequest.getAction())){
             httpResponse.sendError(405);
