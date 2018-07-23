@@ -130,7 +130,8 @@ public class ChannelsAPIHandler {
         tokenCreate.setUdid(userAccount.getUdid());
         tokenCreate.setSsoToken(Utils.createJWT(userAccount));
         DeviceInfo deviceInfo = new DeviceInfo();
-        deviceInfo.setType("web");
+//        deviceInfo.setType("web");
+        deviceInfo.setType("android");
         deviceInfo.setLang("ru");
         tokenCreate.setDeviceInfo(deviceInfo);
         channelsRequest.setData(tokenCreate);

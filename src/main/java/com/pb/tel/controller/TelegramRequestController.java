@@ -116,7 +116,12 @@ public class TelegramRequestController {
             }
             if("Telegram".equals(userAccount.getMessenger())) {
                 if("msg".equals(channelsRequest.getAction())) {
-                    telegramConnector.sendRequest(telegramUpdateHandler.deligateMessage(userAccount), "sendMessage");
+                    if(channelsRequest.getData().getTo() != null && !channelsRequest.getData().getTo().getSend()){
+                        log.log(Level.INFO, userAccount.getUserText() + " This message not for User, only for Operator!");
+                        return;
+                    }else {
+                        telegramConnector.sendRequest(telegramUpdateHandler.deligateMessage(userAccount), "sendMessage");
+                    }
                 }else if("msgFile".equals(channelsRequest.getAction())){
                     if(userAccount.getMessageContent() == MessageContent.PICTURE) {
                         telegramConnector.sendRequest(telegramUpdateHandler.deligateMessage(userAccount), "sendPhoto");

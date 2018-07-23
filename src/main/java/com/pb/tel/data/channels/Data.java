@@ -45,6 +45,8 @@ public class Data{
 
     private List<File> files;
 
+    private Recipient to;
+
     public User getUser() {
         return user;
     }
@@ -165,6 +167,14 @@ public class Data{
         this.files = files;
     }
 
+    public Recipient getTo() {
+        return to;
+    }
+
+    public void setTo(Recipient to) {
+        this.to = to;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -186,7 +196,8 @@ public class Data{
         if (ssoToken != null ? !ssoToken.equals(data.ssoToken) : data.ssoToken != null) return false;
         if (deviceInfo != null ? !deviceInfo.equals(data.deviceInfo) : data.deviceInfo != null) return false;
         if (sessionId != null ? !sessionId.equals(data.sessionId) : data.sessionId != null) return false;
-        return files != null ? files.equals(data.files) : data.files == null;
+        if (files != null ? !files.equals(data.files) : data.files != null) return false;
+        return to != null ? to.equals(data.to) : data.to == null;
     }
 
     @Override
@@ -206,6 +217,7 @@ public class Data{
         result = 31 * result + (deviceInfo != null ? deviceInfo.hashCode() : 0);
         result = 31 * result + (sessionId != null ? sessionId.hashCode() : 0);
         result = 31 * result + (files != null ? files.hashCode() : 0);
+        result = 31 * result + (to != null ? to.hashCode() : 0);
         return result;
     }
 
@@ -227,6 +239,7 @@ public class Data{
                 ", deviceInfo=" + deviceInfo +
                 ", sessionId='" + sessionId + '\'' +
                 ", files=" + files +
+                ", to=" + to +
                 '}';
     }
 }

@@ -3,7 +3,6 @@ package com.pb.tel.data.facebook;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.pb.tel.data.Request;
-import com.sun.org.apache.regexp.internal.RE;
 
 /**
  * Created by vladimir on 12.04.18.
