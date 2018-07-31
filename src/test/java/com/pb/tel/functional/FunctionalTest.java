@@ -20,16 +20,17 @@ import java.util.*;
 public class FunctionalTest {
 
     /************************ ПОЛЕГОН **************************/
-//    private static String urlForTelegram = "https://bankid.privatbank.ua/TelegramBot/update?token=578758997:AAEzBN2LK3O1sHyaFFRdekBXh3tgUN3EYMQ&mode=test";
-//    private static String urlForFaceBook = "https://bankid.privatbank.ua/TelegramBot/facebook/update?testMode=true";
-//    private static String urlForFlushTelegram = "https://bankid.privatbank.ua/TelegramBot/telegram/flush/000000000";
-//    private static String urlForFlushFaceBook = "https://bankid.privatbank.ua/TelegramBot/telegram/flush/0000000000000000";
+    private static String urlForTelegram = "https://bankid.privatbank.ua/TelegramBot/update?token=578758997:AAEzBN2LK3O1sHyaFFRdekBXh3tgUN3EYMQ&mode=test";
+    private static String urlForFaceBook = "https://bankid.privatbank.ua/TelegramBot/facebook/update?testMode=true";
+    private static String urlForFlushTelegram = "https://bankid.privatbank.ua/TelegramBot/telegram/flush/000000000";
+    private static String urlForFlushFaceBook = "https://bankid.privatbank.ua/TelegramBot/telegram/flush/0000000000000000";
 
     /************************ БОЕВОЙ **************************/
-    private static String urlForTelegram = "https://bankid.org.ua/TelegramBot/update?token=471826174:AAEAcBIp-yqoMcHMu4Yg-0TrVKWWAkjmOEY&mode=test";
-    private static String urlForFaceBook = "https://bankid.org.ua/TelegramBot/facebook/update?testMode=true";
-    private static String urlForFlushTelegram = "https://bankid.org.ua/TelegramBot/telegram/flush/000000000";
-    private static String urlForFlushFaceBook = "https://bankid.org.ua/TelegramBot/telegram/flush/0000000000000000";
+//    private static String urlForTelegram = "https://bankid.org.ua/TelegramBot/update?token=471826174:AAEAcBIp-yqoMcHMu4Yg-0TrVKWWAkjmOEY&mode=test";
+//    private static String urlForFaceBook = "https://bankid.org.ua/TelegramBot/facebook/update?testMode=true";
+//    private static String urlForFlushTelegram = "https://bankid.org.ua/TelegramBot/telegram/flush/000000000";
+//    private static String urlForFlushFaceBook = "https://bankid.org.ua/TelegramBot/telegram/flush/0000000000000000";
+
     private static ObjectMapper jacksonObjectMapper = new ObjectMapper();
 
     @Test
@@ -146,6 +147,12 @@ public class FunctionalTest {
             Messaging faceBookRequest19 = jacksonObjectMapper.readValue(answer19.getBody().getBytes(), Messaging.class);
             Assert.assertEquals(getFaceBookResponse("stage4"), faceBookRequest19);
             System.out.println("****************************** FACEBOOK STAGE 8 SUCCESS ******************************");
+
+            DetailedAnswer answer21 = requestHTTP.performQueryDetailedResponse(jacksonObjectMapper.writeValueAsString(getFaceBookRequest("stage7")), urlForFaceBook);
+            Messaging faceBookRequest21 = jacksonObjectMapper.readValue(answer21.getBody().getBytes(), Messaging.class);
+            Assert.assertEquals(getFaceBookResponse("stage2"), faceBookRequest21);
+            System.out.println("****************************** FACEBOOK STAGE 9 SUCCESS ******************************");
+
             System.out.println("****************************** FACEBOOK OK! ******************************");
 
         } catch (Exception e) {
@@ -281,6 +288,21 @@ public class FunctionalTest {
             message.setMid("mid.$cAAC6KSZcpUxpwlt-bFjkRfyYodHy");
             message.setSeq("0000");
             message.setText("Y");
+            messaging.setMessage(message);
+            messagings.add(messaging);
+        }else if("stage7".equals(stage)){
+            com.pb.tel.data.facebook.Message message = new com.pb.tel.data.facebook.Message();
+            message.setMid("mid.$cAAC6KSZcpUxpwlt-bFjkRfyYodHy");
+            message.setSeq("0000");
+            message.setText("\\u0417\\u0434\\u0440\\u0430\\u0432\\u0441\\u0442\\u0432\\u0443\\u0439\\u0442\\u0435! \\u041c\\u0435\\u043d\\u044f \\u0437\\u043e\\u0432\\u0443\\u0442 \\u041c\\u0430\\u043a\\u0441, \\u044f \\u0430\\u0434\\u043c\\u0438\\u043d\\u0438\\u0441\\u0442\\u0440\\u0430\\u0442\\u043e\\u0440 \\u0440\\u0435\\u043a\\u043b\\u0430\\u043c\\u043d\\u044b\\u0445 \\u0441\\u0442\\u0440\\u0430\\u043d\\u0438\\u0446:\\n\\u2022 fb.com\\/besplatnoua (28 000 \\u043f\\u043e\\u0434\\u043f\\u0438\\u0441\\u0447\\u0438\\u043a\\u043e\\u0432);\\n\\u2022 fb.com\\/freemobua \\n\\u0425\\u043e\\u0447\\u0443 \\u043f\\u0440\\u0435\\u0434\\u043b\\u043e\\u0436\\u0438\\u0442\\u044c \\u0440\\u0435\\u043a\\u043b\\u0430\\u043c\\u0443 \\u0434\\u043b\\u044f \\u0432\\u0430\\u0448\\u0435\\u0439 \\u0441\\u0442\\u0440\\u0430\\u043d\\u0438\\u0446\\u044b \\u0432 \\u0432\\u0438\\u0434\\u0435 \\u0440\\u043e\\u0437\\u044b\\u0433\\u0440\\u044b\\u0448\\u0430 (\\u043a\\u043e\\u043d\\u043a\\u0443\\u0440\\u0441\\u0430) \\u0432 \\u043d\\u0430\\u0448\\u0438\\u0445 \\u0433\\u0440\\u0443\\u043f\\u043f\\u0430\\u0445. \\u0415\\u0441\\u043b\\u0438 \\u0443 \\u0432\\u0430\\u0441 \\u0435\\u0441\\u0442\\u044c \\u0443\\u0436\\u0435 \\u0433\\u043e\\u0442\\u043e\\u0432\\u044b\\u0439 \\u043a\\u043e\\u043d\\u043a\\u0443\\u0440\\u0441, \\u043c\\u044b \\u043c\\u043e\\u0436\\u0435\\u043c \\u0441\\u0434\\u0435\\u043b\\u0430\\u0442\\u044c \\u0435\\u0433\\u043e \\u0440\\u0435\\u043f\\u043e\\u0441\\u0442. \\n\\u042f \\u0434\\u0443\\u043c\\u0430\\u044e, \\u0447\\u0442\\u043e \\u0412\\u0430\\u043c \\u043c\\u043e\\u0436\\u0435\\u0442 \\u0431\\u044b\\u0442\\u044c \\u0438\\u043d\\u0442\\u0435\\u0440\\u0435\\u0441\\u043d\\u043e \\u0434\\u0430\\u043d\\u043d\\u043e\\u0435 \\u043f\\u0440\\u0435\\u0434\\u043b\\u043e\\u0436\\u0435\\u043d\\u0438\\u0435. \\u0411\\u043b\\u0430\\u0433\\u043e\\u0434\\u0430\\u0440\\u044f \\u0441\\u043e\\u0442\\u0440\\u0443\\u0434\\u043d\\u0438\\u0447\\u0435\\u0441\\u0442\\u0432\\u0443 \\u0441 \\u043d\\u0430\\u043c\\u0438 \\u0412\\u044b \\u043f\\u043e\\u0432\\u044b\\u0441\\u0438\\u0442\\u0435 \\u0430\\u043a\\u0442\\u0438\\u0432\\u043d\\u043e\\u0441\\u0442\\u044c \\u0441\\u0442\\u0440\\u0430\\u043d\\u0438\\u0446\\u044b \\u0438 \\u043e\\u0431\\u044a\\u0435\\u043c\\u044b \\u043f\\u0440\\u043e\\u0434\\u0430\\u0436.\\u0427\\u0442\\u043e \\u0434\\u0443\\u043c\\u0430\\u0435\\u0442\\u0435 \\u043f\\u043e \\u044d\\u0442\\u043e\\u043c \\u043f\\u043e\\u0432\\u043e\\u0434\\u0443?");
+            List<Attachment> attachments = new ArrayList<>();
+            Attachment attachment = new Attachment();
+            attachment.setUrl("http:\\/\\/l.facebook.com\\/l.php?u=http\\u00253A\\u00252F\\u00252Ffb.com\\u00252Fbesplatnoua&h=AT12scbJJtkYOBFTcyQva8iT1_Lw20rwN7zQ7eBQuB64dT8i9LIKsS7sA5Mo8Zrw6ztNkOFA-swAlnitxffM8Inh9Y9JKX79D-vUF-HNPb9JehSsa5XtfWFOlQJqgftavdkzKB04cAZD&s=1");
+            attachment.setType("fallback");
+            attachment.setPayload(null);
+            attachment.setTitle("fb.com");
+            attachments.add(attachment);
+            message.setAttachments(attachments);
             messaging.setMessage(message);
             messagings.add(messaging);
         }

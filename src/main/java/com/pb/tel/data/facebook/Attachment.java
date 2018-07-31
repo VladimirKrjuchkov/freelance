@@ -17,6 +17,10 @@ public class Attachment {
 
     private Payload payload;
 
+    private String url;
+
+    private String title;
+
     public String getType() {
         return type;
     }
@@ -33,6 +37,32 @@ public class Attachment {
         this.payload = payload;
     }
 
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    @Override
+    public String toString() {
+        return "Attachment{" +
+                "type='" + type + '\'' +
+                ", payload=" + payload +
+                ", url='" + url + '\'' +
+                ", title='" + title + '\'' +
+                '}';
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -41,21 +71,17 @@ public class Attachment {
         Attachment that = (Attachment) o;
 
         if (type != null ? !type.equals(that.type) : that.type != null) return false;
-        return payload != null ? payload.equals(that.payload) : that.payload == null;
+        if (payload != null ? !payload.equals(that.payload) : that.payload != null) return false;
+        if (url != null ? !url.equals(that.url) : that.url != null) return false;
+        return title != null ? title.equals(that.title) : that.title == null;
     }
 
     @Override
     public int hashCode() {
         int result = type != null ? type.hashCode() : 0;
         result = 31 * result + (payload != null ? payload.hashCode() : 0);
+        result = 31 * result + (url != null ? url.hashCode() : 0);
+        result = 31 * result + (title != null ? title.hashCode() : 0);
         return result;
-    }
-
-    @Override
-    public String toString() {
-        return "Attachment{" +
-                "type='" + type + '\'' +
-                ", payload=" + payload +
-                '}';
     }
 }

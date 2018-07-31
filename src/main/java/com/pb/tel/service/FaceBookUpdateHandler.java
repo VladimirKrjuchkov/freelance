@@ -77,12 +77,17 @@ public class FaceBookUpdateHandler extends AbstractUpdateHandler{
             if(faceBookRequest.getEntry().get(0).getMessaging().get(0).getMessage().getAttachments() != null &&
                faceBookRequest.getEntry().get(0).getMessaging().get(0).getMessage().getAttachments().size() > 0){
                 File file = new File();
-                file.setUrl(faceBookRequest.getEntry().get(0).getMessaging().get(0).getMessage().getAttachments().get(0).getPayload().getUrl());
+                if(faceBookRequest.getEntry().get(0).getMessaging().get(0).getMessage().getAttachments().get(0).getPayload() != null) {
+                    file.setUrl(faceBookRequest.getEntry().get(0).getMessaging().get(0).getMessage().getAttachments().get(0).getPayload().getUrl());
+                }else{
+                    file.setUrl(faceBookRequest.getEntry().get(0).getMessaging().get(0).getMessage().getAttachments().get(0).getUrl());
+                }
                 if("image".equals(faceBookRequest.getEntry().get(0).getMessaging().get(0).getMessage().getAttachments().get(0).getType())){
                     userAccount.setMessageContent(MessageContent.PICTURE);
                     file.setType("image");
                 }
-                if("file".equals(faceBookRequest.getEntry().get(0).getMessaging().get(0).getMessage().getAttachments().get(0).getType())){
+                if("file".equals(faceBookRequest.getEntry().get(0).getMessaging().get(0).getMessage().getAttachments().get(0).getType()) ||
+                   "fallback".equals(faceBookRequest.getEntry().get(0).getMessaging().get(0).getMessage().getAttachments().get(0).getType())){
                     userAccount.setMessageContent(MessageContent.DOCUMENT);
                     file.setType("application");
                 }
