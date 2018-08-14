@@ -99,6 +99,10 @@ public class TelegramRequestController {
     @RequestMapping(value = "/channels/update")
     @ResponseBody
     public void channelsUpdate(@RequestBody ChannelsRequest channelsRequest) throws Exception{
+        if(channelsRequest.getData().getTo() != null && !channelsRequest.getData().getTo().getSend()){
+            log.log(Level.INFO, channelsRequest.getData().getText() + " This message not for User, only for Operator!");
+            return;
+        }
         UserAccount userAccount = channelsUpdateHandler.getUserAccountByChannelId(((Data)channelsRequest.getData()).getChannelId());
         if(("msg".equals(channelsRequest.getAction()) || "msgFile".equals(channelsRequest.getAction())) && "o".equals(channelsRequest.getData().getUser().getType()) && userAccount.getUserState()==UserState.JOIN_TO_DIALOG) {
             userAccount.setUserText(channelsRequest.getData().getText());
@@ -116,12 +120,8 @@ public class TelegramRequestController {
             }
             if("Telegram".equals(userAccount.getMessenger())) {
                 if("msg".equals(channelsRequest.getAction())) {
-                    if(channelsRequest.getData().getTo() != null && !channelsRequest.getData().getTo().getSend()){
-                        log.log(Level.INFO, userAccount.getUserText() + " This message not for User, only for Operator!");
-                        return;
-                    }else {
-                        telegramConnector.sendRequest(telegramUpdateHandler.deligateMessage(userAccount), "sendMessage");
-                    }
+                    telegramConnector.sendRequest(telegramUpdateHandler.deligateMessage(userAccount), "sendMessage");
+
                 }else if("msgFile".equals(channelsRequest.getAction())){
                     if(userAccount.getMessageContent() == MessageContent.PICTURE) {
                         telegramConnector.sendRequest(telegramUpdateHandler.deligateMessage(userAccount), "sendPhoto");
