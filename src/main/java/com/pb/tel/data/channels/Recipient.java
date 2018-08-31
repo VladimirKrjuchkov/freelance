@@ -17,6 +17,8 @@ public class Recipient {
 
     private String id;
 
+    private String type;
+
     public Boolean getSend() {
         return send;
     }
@@ -33,6 +35,14 @@ public class Recipient {
         this.id = id;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -41,13 +51,15 @@ public class Recipient {
         Recipient recipient = (Recipient) o;
 
         if (send != null ? !send.equals(recipient.send) : recipient.send != null) return false;
-        return id != null ? id.equals(recipient.id) : recipient.id == null;
+        if (id != null ? !id.equals(recipient.id) : recipient.id != null) return false;
+        return type != null ? type.equals(recipient.type) : recipient.type == null;
     }
 
     @Override
     public int hashCode() {
         int result = send != null ? send.hashCode() : 0;
         result = 31 * result + (id != null ? id.hashCode() : 0);
+        result = 31 * result + (type != null ? type.hashCode() : 0);
         return result;
     }
 
@@ -56,6 +68,7 @@ public class Recipient {
         return "Recipient{" +
                 "send=" + send +
                 ", id='" + id + '\'' +
+                ", type='" + type + '\'' +
                 '}';
     }
 }

@@ -99,7 +99,8 @@ public class TelegramRequestController {
     @RequestMapping(value = "/channels/update")
     @ResponseBody
     public void channelsUpdate(@RequestBody ChannelsRequest channelsRequest) throws Exception{
-        if(channelsRequest.getData().getTo() != null && !channelsRequest.getData().getTo().getSend()){
+//        if(channelsRequest.getData().getTo() != null && !channelsRequest.getData().getTo().getSend()){
+        if(channelsRequest.getData().getTo() != null && "o".equals(channelsRequest.getData().getTo().getType())){
             log.log(Level.INFO, channelsRequest.getData().getText() + " This message not for User, only for Operator!");
             return;
         }
