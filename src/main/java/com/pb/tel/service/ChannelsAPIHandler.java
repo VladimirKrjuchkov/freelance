@@ -11,8 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.*;
-import java.util.logging.Level;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.TreeSet;
 import java.util.logging.Logger;
 
 /**
@@ -153,8 +155,14 @@ public class ChannelsAPIHandler {
             telegramUpdateHandler.flushUserState(userAccount.getId());
             throw new LogicException("channels_call_oper_error", message);
         }
+        TreeSet<Operator> roleOpers = new TreeSet(ocomp);
+        freeOpers.stream().filter(freeOper -> "operator".equals(freeOper.getRole())).forEach(freeOper -> roleOpers.add(freeOper));
+        if(roleOpers.size() <= 0){
+            return freeOpers.first().getId();
 
-        return freeOpers.first().getId();
+        }else{
+            return roleOpers.first().getId();
+        }
     }
 
     class OpersComporator implements Comparator<Operator> {
