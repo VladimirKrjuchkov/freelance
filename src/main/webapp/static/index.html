@@ -1,0 +1,124 @@
+<html>
+  <head>
+    <title></title> 
+    <script src="js/sockjs.js"></script>
+    <script src="js/webstomp.js"></script>    
+    <script>
+   // document.getElementById(photo).click()
+   var stompClient;
+   
+   function connectHandler(){
+	   console.log("stompClient connect Succesfull !!!");
+		console.log("try to  connect subscribe !!!");
+		var user;
+		stompClient.subscribe("/method/getUser", function (message){
+			console.log("subscribe to /app/getUser answer: ", message);
+			var mes = JSON.parse(message.body)
+			user = mes.user;
+			document.getElementById("errMes").innerHTML="user: "+mes.user;
+		});
+		
+		var errSubscribeResult = stompClient.subscribe("/user/queue/errors", function (message){
+			console.log("subscribe to /user/queue/errors answer: ", message);
+			var errMes = JSON.parse(message.body)
+			document.getElementById("errMes").innerHTML="code: "+errMes.code+"   desc: "+errMes.desc;
+		});
+		
+		console.log("errSubscribeResult (/user/queue/errors): ", errSubscribeResult);
+		
+		window.setTimeout(function(){
+			stompClient.send("/method/trade", JSON.stringify(user), {});	
+		}, 5000)
+		
+		
+		stompClient.subscribe("/topic/trade", function (message){
+			console.log("subscribe to /topic/trade   answer: ", message);
+			var mes = JSON.parse(message.body)
+			user = mes.user;
+			document.getElementById("errMes").innerHTML="mes body: "+message.body;
+		});
+   }
+   
+   
+   function connectErrorHandler(error){
+	   		
+			console.log("Error stompClient connect: ", error);
+			console.log("try to reconnect stompClient");
+			start();
+			console.log("Finish connectErrorHandler ");
+			//stompClient.connect({}, connectHandler, connectErrorHandler);
+   }
+   
+   
+   function start(){
+   	console.log("START !!! ");   
+   	var socket = new SockJS("/PplsService/checked/wss");
+	//var socket = new WebSocket(link+"/wss");
+	stompClient = webstomp.over(socket);
+	
+	stompClient.connect({}, connectHandler
+//			function(){
+//		console.log("stompClient connect Succesfull !!!");
+//		console.log("try to  connect subscribe !!!");
+//		var user;
+//		stompClient.subscribe("/app/getUser", function (message){
+//			console.log("subscribe to /app/getUser answer: ", message);
+//			var mes = JSON.parse(message.body)
+//			user = mes.user;
+//			document.getElementById("errMes").innerHTML="user: "+mes.user;
+//		});
+//		
+//		var errSubscribeResult = stompClient.subscribe("/user/queue/errors", function (message){
+//			console.log("subscribe to /user/queue/errors answer: ", message);
+//			var errMes = JSON.parse(message.body)
+//			document.getElementById("errMes").innerHTML="code: "+errMes.code+"   desc: "+errMes.desc;
+//		});
+//		
+//		console.log("errSubscribeResult (/user/queue/errors): ", errSubscribeResult);
+//		
+//		window.setTimeout(function(){
+//			stompClient.send("/app/trade", JSON.stringify(user), {});	
+//		}, 5000)
+//		
+//		
+//		stompClient.subscribe("/topic/trade", function (message){
+//			console.log("subscribe to /app/trade   answer: ", message);
+//			var mes = JSON.parse(message.body)
+//			user = mes.user;
+//			document.getElementById("errMes").innerHTML="mes body: "+message.body;
+//		});
+//		
+//		
+//		}
+	, connectErrorHandler
+//		function (error) {
+//			console.log("Error stompClient connect: ", error);
+//    }
+	);
+	
+	
+	
+	//<!-- stompClient.subscribe("/app/getUser", function (message){
+	//	console.log("subscribe answer: ", message);
+	//}); -->
+	        	
+	console.log("Finish Create webSocket !!!");
+	
+   }
+   
+   var aClick = function(){
+        console.log("aClick", " 1");
+        alert('Hi');
+    }
+    
+    //window.setTimeout(document.getElementById("photo").click(), 3000)
+        
+    
+    </script>
+  </head>
+  <body onload = "start()">
+        <h1>Mama mila ramu</h1>
+        <div id=errMes></div>
+  </body>
+</html>
+
