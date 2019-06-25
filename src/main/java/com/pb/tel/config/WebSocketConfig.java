@@ -1,19 +1,16 @@
 package com.pb.tel.config;
 
-import java.util.logging.Logger;
-
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
+import java.util.logging.Logger;
+
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
-
-//	private AtomicInteger inInt = new AtomicInteger(0);
-//	private AtomicInteger outInt = new AtomicInteger(0);
 	
 	private final Logger log = Logger.getLogger(WebSocketConfig.class.getCanonicalName());	
 	

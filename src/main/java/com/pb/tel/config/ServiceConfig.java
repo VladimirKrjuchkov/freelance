@@ -2,12 +2,7 @@ package com.pb.tel.config;
 
 import com.datastax.driver.core.*;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
-import com.pb.ppls.data.UserAccount;
-import com.pb.ppls.utils.DataStorageRedis;
-import com.pb.ppls.utils.SessionStorageRedis;
-import com.pb.util.zvv.storage.Storage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
@@ -16,25 +11,21 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.data.cassandra.core.CassandraOperations;
-import org.springframework.data.cassandra.core.CassandraTemplate;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
 
 @Configuration
 @EnableTransactionManagement
 @EnableCaching
+//@EnableWebSocket
 public class ServiceConfig {
 	
 	private static final Logger log = Logger.getLogger(ServiceConfig.class.getCanonicalName());
