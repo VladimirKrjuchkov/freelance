@@ -1,0 +1,87 @@
+plugins {
+    id 'war'
+    id 'org.akhikhl.gretty' version '2.0.0'
+}
+
+dependencies {
+    compile "org.hibernate:hibernate-entitymanager:5.2.10.Final"
+    compile "org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final"
+    compile "org.hibernate:hibernate-validator:5.4.1.Final"
+    compile "org.hibernate:hibernate-ehcache:5.2.10.Final"
+
+    compile "org.springframework:spring-orm"
+    compile "org.springframework:spring-oxm"
+    compile "org.springframework:spring-context"
+    compile "org.springframework:spring-webmvc"
+    compile "org.springframework:spring-websocket"
+    compile "org.springframework:spring-context-support"
+    compile "org.springframework:spring-messaging"
+
+    compile "com.fasterxml.jackson.core:jackson-core:2.9.0.pr2"
+    compile "com.fasterxml.jackson.core:jackson-annotations:2.9.0.pr2"
+    compile "com.fasterxml.jackson.core:jackson-databind:2.9.0.pr2"
+
+    compile "net.sf.ehcache:ehcache:2.9.0"
+    compile "commons-io:commons-io:2.3"
+    compile "org.apache.httpcomponents:httpmime:4.5.3"
+    compile "io.jsonwebtoken:jjwt:0.9.0"
+    compile "com.auth0:java-jwt:3.3.0"
+    compile "junit:junit:4.12"
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.7'
+
+    compile group: 'org.apache.tomcat', name: 'juli', version: '6.0.26'
+
+    providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
+}
+
+war {
+    archiveName = project.name +".war"
+}
+
+remotes {
+    webPoligon {
+        //role 'masterNode'
+        host = '10.56.2.228'
+        user = 'sybase'
+        identity = file(getProperty('ssh.key.path'))
+        //password='Un1W1n123'
+    }
+}
+
+
+task deployToTomcat {
+    def tomcatHome = getProperty('tomcat.path')
+    def warName = project.name
+    doLast {
+        ssh.run {
+            session(remotes.webPoligon) {
+
+                def date = new Date().getTime()
+                def stop = "${tomcatHome}/bin/stop.sh"
+                def createFolders = "${tomcatHome}/bin/createFolders.sh"
+                def run = "${tomcatHome}/bin/startup.sh"
+                println "######################## Start uploading new war to Tomcat ########################"
+                execute stop
+                remove "${tomcatHome}/webapps/${warName}.war", "${tomcatHome}/webapps/${warName}", "${tomcatHome}/applogs", "${tomcatHome}/logs"
+                execute createFolders
+                put from: war.archivePath.absolutePath, into: "${tomcatHome}/webapps/${warName}.war"
+                execute run
+                println "######################## Finish uploading new war to Tomcat at "+(new Date().getTime() - date)+" ms ########################"
+            }
+        }
+    }
+}
+
+deployToTomcat.dependsOn.add(war)
+install.dependsOn.add(deployToTomcat)
+
+
+gretty {
+    // httpPort = 8081
+    // contextPath = '/MyWebApp'
+    servletContainer='tomcat8'
+    // httpsEnabled=true
+    // ... many more properties
+}
+
+

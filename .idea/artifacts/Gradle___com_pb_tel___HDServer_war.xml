@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="Gradle : com.pb.tel : HDServer.war">
+    <output-path>$PROJECT_DIR$/HDServer/build/libs</output-path>
+    <properties id="gradle-properties">
+      <options external-project-path="$PROJECT_DIR$" />
+    </properties>
+    <root id="archive" name="HDServer.war">
+      <element id="artifact" artifact-name="Gradle : com.pb.tel : HDServer.war (exploded)" />
+    </root>
+  </artifact>
+</component>

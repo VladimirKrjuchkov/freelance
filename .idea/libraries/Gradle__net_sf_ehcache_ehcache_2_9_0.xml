@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Gradle: net.sf.ehcache:ehcache:2.9.0">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/net/sf/ehcache/ehcache/2.9.0/ehcache-2.9.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
