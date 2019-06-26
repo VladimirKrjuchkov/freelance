@@ -35,12 +35,6 @@ package com.pb.tel.service.websocket.data;
 import java.io.Serializable;
 
 public class WebSocketRequest implements Serializable{
-    public String sessionid;
-
-    @Override
-    public String toString() {
-        return "WebSocketRequest{" +
-                "sessionid='" + sessionid + '\'' +
-                '}';
-    }
+    public String sessionId;
+    public String message;
 }

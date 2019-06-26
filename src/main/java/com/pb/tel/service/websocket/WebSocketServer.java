@@ -41,14 +41,8 @@ import com.pb.tel.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
 import java.util.Timer;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 
 public class WebSocketServer {
@@ -69,7 +63,7 @@ public class WebSocketServer {
     public WebSocketServer(SimpMessagingTemplate template) {
     	this.template = template;
     	templateStatic = template;
-        historyControlTime = Long.valueOf(Utils.property.getProperty("historyControlTime", "1477312984000"));
+        historyControlTime = Long.valueOf(Utils.property.getProperty("history.control.time", "1477312984000"));
     }
 
 
@@ -107,11 +101,11 @@ public class WebSocketServer {
     public static void sendReset(String event, String userLogin, Long companyId){
         log.info("sendReset for login: "+userLogin);
         WebSocketResponse response = new WebSocketResponse();
-        response.method = WebSocketResponse.Method.RESET;
-        response.timestamp = new Date().getTime();
-        response.data = ResourceDAO.getInstance().search(null, userLogin, null, companyId);
-        response.userLogin = userLogin;
-        response.eventType = event;
+//        response.method = WebSocketResponse.Method.RESET;
+//        response.timestamp = new Date().getTime();
+//        response.data = ResourceDAO.getInstance().search(null, userLogin, null, companyId);
+//        response.userLogin = userLogin;
+//        response.eventType = event;
         sendMessage(userLogin, gson.toJson(response));
     }
 
@@ -124,30 +118,27 @@ public class WebSocketServer {
     }
 
     public static void sendMassReset() {
-        List<String> allUsers = UserDAO.getInstance().list();
-        allUsers.forEach(u->{
-            UserDTO user = UserDTO.load(u);
-            if(user!=null){
-                sendReset("RESET",user.getLogin(),user.getCompanyId());
-                try {
-                    TimeUnit.MILLISECONDS.sleep(500);
-                } catch (InterruptedException e) {
-                	log.log(Level.WARNING, "interrupted exception : ", e);
-                }
-            }
-        });
+//        List<String> allUsers = UserDAO.getInstance().list();
+//        allUsers.forEach(u->{
+//            UserDTO user = UserDTO.load(u);
+//            if(user!=null){
+//                sendReset("RESET",user.getLogin(),user.getCompanyId());
+//                try {
+//                    TimeUnit.MILLISECONDS.sleep(500);
+//                } catch (InterruptedException e) {
+//                	log.log(Level.WARNING, "interrupted exception : ", e);
+//                }
+//            }
+//        });
     }
 
-    public static void sendDeleteMessage(String userLogin, ResourcesChangeEvent notifierMsg) {
+    public static void sendDeleteMessage(String userLogin) {
         WebSocketResponse response = new WebSocketResponse();
-        response.resourceId = notifierMsg.getDocID();
-        response.timestamp = notifierMsg.getTime();
-        response.method = WebSocketResponse.Method.DELETE;
         sendMessage(userLogin, gson.toJson(response));
     }
 
     
-    public static void logoutUser(Session session){
+    public static void logoutUser(String sessionId){
 //        String sessionId = session.getSessionId();
 //        String userLogin = session.getUser().getLogin();
 //        List<WebSocket> sessionSockets = userSessionSockets

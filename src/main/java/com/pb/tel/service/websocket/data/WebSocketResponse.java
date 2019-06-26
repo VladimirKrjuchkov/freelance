@@ -37,16 +37,5 @@ import java.io.Serializable;
 
 public class WebSocketResponse implements Serializable{
     public String sessionId;
-
-    public static WebSocketResponse parseEvent(String event) {
-        WebSocketResponse response = new WebSocketResponse();
-        return response;
-    }
-
-    @Override
-    public String toString() {
-        return "WebSocketResponse{" +
-                "sessionId='" + sessionId + '\'' +
-                '}';
-    }
+    public String message;
 }
