@@ -1,0 +1,16 @@
+{
+  "name": "samopal",
+  "version": "0.0.0",
+  "description": "builder",
+  "private": true,
+  "dependencies": {
+    "html-minify": ">=0.3.2",
+    "nib": ">=1.1.0",
+    "sockjs": "^0.3.19",
+    "stompjs": "^2.3.3",
+    "stylus": ">=0.54.5",
+    "uglify-js": ">=2.7.0",
+    "webstomp-client": "^1.2.6",
+    "uglify-es": ">=3.3.9"
+  }
+}

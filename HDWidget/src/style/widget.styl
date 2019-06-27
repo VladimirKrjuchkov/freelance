@@ -1,0 +1,81 @@
+/*
+ * Copyright (c) 2017. iDoc LLC
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ *     (1) Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ *
+ *     (2) Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in
+ *     the documentation and/or other materials provided with the
+ *     distribution.
+ *
+ *     (3)The name of the author may not be used to
+ *     endorse or promote products derived from this software without
+ *     specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+ * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ */
+
+@charset "UTF-8"
+#messageBG
+  left: 0
+  right: 0
+  top: 0
+  bottom: 0
+  background: rgba(0, 0, 0, 0) none repeat scroll 0 0
+  cursor: pointer
+  width: 0
+  height: 100%
+  position: fixed
+  transition: background 0.5s ease-in 0s
+  z-index 1001
+  &.active
+    height 100%
+    width 100%
+    background-color rgba(0, 22, 0, 0.2)
+    #message
+      display block
+  #message
+    left: 0
+    right: 0
+    bottom: 0
+    top: 0
+    height: 22px
+    width: 400px
+    display none
+    border-radius 5px
+    background-color: white
+    border: 1px solid alt1GrayColor
+    margin: auto
+    position: absolute
+    text-align: center
+    overflow hidden
+    .title
+      font-weight 200
+      text-align left
+      font-size 20px
+      margin 10px
+    .answer
+      font-size 18px
+      font-weight 100
+      margin-left: 50px;
+      text-align: justify;
+      margin-bottom 20px
+    .fa-exclamation-triangle
+      color red-A700
+    iframe
+      display inline-block

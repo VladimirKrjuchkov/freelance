@@ -18,7 +18,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
 		log.info("WebSocketConfig 1:   StompEndpointRegistry: "+registry);			
-		registry.addEndpoint("/checked/wss").setAllowedOrigins("*").withSockJS().setClientLibraryUrl(Utils.property.getProperty("main.domain")+"/js/sockjs.js");/*.setInterceptors(new HandshakeInterceptor() {  //Это просто опыт чтоб понять что тут можно поделать
+		registry.addEndpoint("/wss").setAllowedOrigins("*").withSockJS().setClientLibraryUrl(Utils.property.getProperty("main.domain")+"/js/sockjs.js");/*.setInterceptors(new HandshakeInterceptor() {  //Это просто опыт чтоб понять что тут можно поделать
 			
 			@Override
 			public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler,

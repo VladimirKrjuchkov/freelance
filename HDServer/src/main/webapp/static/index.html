@@ -52,7 +52,7 @@
    
    function start(){
    	console.log("START !!! ");   
-   	var socket = new SockJS("/PplsService/checked/wss");
+   	var socket = new SockJS("/PplsService/wss");
 	//var socket = new WebSocket(link+"/wss");
 	stompClient = webstomp.over(socket);
 	
