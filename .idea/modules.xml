@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/HDServer/HDServer_main.iml" filepath="$PROJECT_DIR$/.idea/modules/HDServer/HDServer_main.iml" group="HDServer" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/HDServer/HDServer_test.iml" filepath="$PROJECT_DIR$/.idea/modules/HDServer/HDServer_test.iml" group="HDServer" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/HDWidget/HDWidget.iml" filepath="$PROJECT_DIR$/.idea/modules/HDWidget/HDWidget.iml" group="HDWidget" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/HDWidget/HDWidget_main.iml" filepath="$PROJECT_DIR$/.idea/modules/HDWidget/HDWidget_main.iml" group="HDWidget" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/HDWidget/HDWidget_test.iml" filepath="$PROJECT_DIR$/.idea/modules/HDWidget/HDWidget_test.iml" group="HDWidget" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/HelpDeskChat.iml" filepath="$PROJECT_DIR$/.idea/modules/HelpDeskChat.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/HDServer/HelpDeskChat-HDServer.iml" filepath="$PROJECT_DIR$/.idea/modules/HDServer/HelpDeskChat-HDServer.iml" group="HDServer" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/HelpDeskChat_main.iml" filepath="$PROJECT_DIR$/.idea/modules/HelpDeskChat_main.iml" group="HelpDeskChat" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/HelpDeskChat_test.iml" filepath="$PROJECT_DIR$/.idea/modules/HelpDeskChat_test.iml" group="HelpDeskChat" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/freelance.iml" filepath="$PROJECT_DIR$/.idea/freelance.iml" />
+    </modules>
+  </component>
+</project>
