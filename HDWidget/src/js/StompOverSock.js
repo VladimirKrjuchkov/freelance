@@ -14,7 +14,7 @@ var StompOverSock = (function(){
 function initStompOverSock(debugParam){
 	var debug = debugParam;
 	if(debug)console.log("################ initStompOverSock method ! ###############");	
-	var endPoint = "/wss";//var endPoint = "http://10.56.2.228:9997/wss";
+	var endPoint = "http://localhost:8080/HDServer/wss";//var endPoint = "http://10.56.2.228:9997/wss";
 	var socket = new SockJS(endPoint);	
 	var stompClient = webstomp.over(socket);
 	//var wsoc = new WebSocket(endPoint);

@@ -11,7 +11,7 @@ var StompOverSock = function() {
 function initStompOverSock(debugParam) {
     var debug = debugParam;
     if (debug) console.log("################ initStompOverSock method ! ###############");
-    var endPoint = "/wss";
+    var endPoint = "http://localhost:8080/HDServer/wss";
     var socket = new SockJS(endPoint);
     var stompClient = webstomp.over(socket);
     if (!debug) stompClient.debug = (() => {});
@@ -4272,7 +4272,7 @@ function initStompOverSock(debugParam) {
 });
 
 addEvent(window, "load", function() {
-    StompOverSock();
+    StompOverSock.getInstance(true);
 });
 
 var WebSock = function(fullUrl, listener, closeCallback) {

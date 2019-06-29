@@ -1,4 +1,4 @@
 // Onload configuration
 addEvent(window, "load", function () {
-    StompOverSock();
+    StompOverSock.getInstance(true);
 });
