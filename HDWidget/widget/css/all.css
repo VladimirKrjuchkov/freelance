@@ -1,15 +1,15 @@
 
-/* line 81 : /home/vladimir/IdeaProjects/HelpDeskChat/HDWidget/src/style/widget.styl */
+/* line 81 : /home/user/IdeaProjects/HDChat/HDWidget/src/style/widget.styl */
 
-@media -stylus-debug-info{filename{font-family:file\:\/\/\/home\/vladimir\/IdeaProjects\/HelpDeskChat\/HDWidget\/src\/style\/widget\.styl}line{font-family:\0000381}}
+@media -stylus-debug-info{filename{font-family:file\:\/\/\/home\/user\/IdeaProjects\/HDChat\/HDWidget\/src\/style\/widget\.styl}line{font-family:\0000381}}
 
-/* line 1 : /home/vladimir/IdeaProjects/HelpDeskChat/HDWidget/node_modules/stylus/lib/functions/index.styl */
+/* line 1 : /home/user/IdeaProjects/HDChat/HDWidget/node_modules/stylus/lib/functions/index.styl */
 
-@media -stylus-debug-info{filename{font-family:file\:\/\/\/home\/vladimir\/IdeaProjects\/HelpDeskChat\/HDWidget\/node_modules\/stylus\/lib\/functions\/index\.styl}line{font-family:\000031}}
+@media -stylus-debug-info{filename{font-family:file\:\/\/\/home\/user\/IdeaProjects\/HDChat\/HDWidget\/node_modules\/stylus\/lib\/functions\/index\.styl}line{font-family:\000031}}
 
-/* line 1 : /home/vladimir/IdeaProjects/HelpDeskChat/HDWidget/src/style/widget.styl */
+/* line 1 : /home/user/IdeaProjects/HDChat/HDWidget/src/style/widget.styl */
 
-@media -stylus-debug-info{filename{font-family:file\:\/\/\/home\/vladimir\/IdeaProjects\/HelpDeskChat\/HDWidget\/src\/style\/widget\.styl}line{font-family:\000031}}
+@media -stylus-debug-info{filename{font-family:file\:\/\/\/home\/user\/IdeaProjects\/HDChat\/HDWidget\/src\/style\/widget\.styl}line{font-family:\000031}}
 /*
  * Copyright (c) 2017. iDoc LLC
  *
@@ -42,14 +42,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-/* line 33 : /home/vladimir/IdeaProjects/HelpDeskChat/HDWidget/src/style/widget.styl */
+/* line 33 : /home/user/IdeaProjects/HDChat/HDWidget/src/style/widget.styl */
 
-@media -stylus-debug-info{filename{font-family:file\:\/\/\/home\/vladimir\/IdeaProjects\/HelpDeskChat\/HDWidget\/src\/style\/widget\.styl}line{font-family:\0000333}}
+@media -stylus-debug-info{filename{font-family:file\:\/\/\/home\/user\/IdeaProjects\/HDChat\/HDWidget\/src\/style\/widget\.styl}line{font-family:\0000333}}
 @charset "UTF-8";
 
-/* line 34 : /home/vladimir/IdeaProjects/HelpDeskChat/HDWidget/src/style/widget.styl */
+/* line 34 : /home/user/IdeaProjects/HDChat/HDWidget/src/style/widget.styl */
 
-@media -stylus-debug-info{filename{font-family:file\:\/\/\/home\/vladimir\/IdeaProjects\/HelpDeskChat\/HDWidget\/src\/style\/widget\.styl}line{font-family:\0000334}}
+@media -stylus-debug-info{filename{font-family:file\:\/\/\/home\/user\/IdeaProjects\/HDChat\/HDWidget\/src\/style\/widget\.styl}line{font-family:\0000334}}
 #messageBG {
   left: 0;
   right: 0;
@@ -64,25 +64,25 @@
   z-index: 1001;
 }
 
-/* line 46 : /home/vladimir/IdeaProjects/HelpDeskChat/HDWidget/src/style/widget.styl */
+/* line 46 : /home/user/IdeaProjects/HDChat/HDWidget/src/style/widget.styl */
 
-@media -stylus-debug-info{filename{font-family:file\:\/\/\/home\/vladimir\/IdeaProjects\/HelpDeskChat\/HDWidget\/src\/style\/widget\.styl}line{font-family:\0000346}}
+@media -stylus-debug-info{filename{font-family:file\:\/\/\/home\/user\/IdeaProjects\/HDChat\/HDWidget\/src\/style\/widget\.styl}line{font-family:\0000346}}
 #messageBG.active {
   height: 100%;
   width: 100%;
   background-color: rgba(0,22,0,0.2);
 }
 
-/* line 50 : /home/vladimir/IdeaProjects/HelpDeskChat/HDWidget/src/style/widget.styl */
+/* line 50 : /home/user/IdeaProjects/HDChat/HDWidget/src/style/widget.styl */
 
-@media -stylus-debug-info{filename{font-family:file\:\/\/\/home\/vladimir\/IdeaProjects\/HelpDeskChat\/HDWidget\/src\/style\/widget\.styl}line{font-family:\0000350}}
+@media -stylus-debug-info{filename{font-family:file\:\/\/\/home\/user\/IdeaProjects\/HDChat\/HDWidget\/src\/style\/widget\.styl}line{font-family:\0000350}}
 #messageBG.active #message {
   display: block;
 }
 
-/* line 52 : /home/vladimir/IdeaProjects/HelpDeskChat/HDWidget/src/style/widget.styl */
+/* line 52 : /home/user/IdeaProjects/HDChat/HDWidget/src/style/widget.styl */
 
-@media -stylus-debug-info{filename{font-family:file\:\/\/\/home\/vladimir\/IdeaProjects\/HelpDeskChat\/HDWidget\/src\/style\/widget\.styl}line{font-family:\0000352}}
+@media -stylus-debug-info{filename{font-family:file\:\/\/\/home\/user\/IdeaProjects\/HDChat\/HDWidget\/src\/style\/widget\.styl}line{font-family:\0000352}}
 #messageBG #message {
   left: 0;
   right: 0;
@@ -100,9 +100,9 @@
   overflow: hidden;
 }
 
-/* line 67 : /home/vladimir/IdeaProjects/HelpDeskChat/HDWidget/src/style/widget.styl */
+/* line 67 : /home/user/IdeaProjects/HDChat/HDWidget/src/style/widget.styl */
 
-@media -stylus-debug-info{filename{font-family:file\:\/\/\/home\/vladimir\/IdeaProjects\/HelpDeskChat\/HDWidget\/src\/style\/widget\.styl}line{font-family:\0000367}}
+@media -stylus-debug-info{filename{font-family:file\:\/\/\/home\/user\/IdeaProjects\/HDChat\/HDWidget\/src\/style\/widget\.styl}line{font-family:\0000367}}
 #messageBG #message .title {
   font-weight: 200;
   text-align: left;
@@ -110,9 +110,9 @@
   margin: 10px;
 }
 
-/* line 72 : /home/vladimir/IdeaProjects/HelpDeskChat/HDWidget/src/style/widget.styl */
+/* line 72 : /home/user/IdeaProjects/HDChat/HDWidget/src/style/widget.styl */
 
-@media -stylus-debug-info{filename{font-family:file\:\/\/\/home\/vladimir\/IdeaProjects\/HelpDeskChat\/HDWidget\/src\/style\/widget\.styl}line{font-family:\0000372}}
+@media -stylus-debug-info{filename{font-family:file\:\/\/\/home\/user\/IdeaProjects\/HDChat\/HDWidget\/src\/style\/widget\.styl}line{font-family:\0000372}}
 #messageBG #message .answer {
   font-size: 18px;
   font-weight: 100;
@@ -121,16 +121,16 @@
   margin-bottom: 20px;
 }
 
-/* line 78 : /home/vladimir/IdeaProjects/HelpDeskChat/HDWidget/src/style/widget.styl */
+/* line 78 : /home/user/IdeaProjects/HDChat/HDWidget/src/style/widget.styl */
 
-@media -stylus-debug-info{filename{font-family:file\:\/\/\/home\/vladimir\/IdeaProjects\/HelpDeskChat\/HDWidget\/src\/style\/widget\.styl}line{font-family:\0000378}}
+@media -stylus-debug-info{filename{font-family:file\:\/\/\/home\/user\/IdeaProjects\/HDChat\/HDWidget\/src\/style\/widget\.styl}line{font-family:\0000378}}
 #messageBG #message .fa-exclamation-triangle {
   color: red-A700;
 }
 
-/* line 80 : /home/vladimir/IdeaProjects/HelpDeskChat/HDWidget/src/style/widget.styl */
+/* line 80 : /home/user/IdeaProjects/HDChat/HDWidget/src/style/widget.styl */
 
-@media -stylus-debug-info{filename{font-family:file\:\/\/\/home\/vladimir\/IdeaProjects\/HelpDeskChat\/HDWidget\/src\/style\/widget\.styl}line{font-family:\0000380}}
+@media -stylus-debug-info{filename{font-family:file\:\/\/\/home\/user\/IdeaProjects\/HDChat\/HDWidget\/src\/style\/widget\.styl}line{font-family:\0000380}}
 #messageBG #message iframe {
   display: inline-block;
 }

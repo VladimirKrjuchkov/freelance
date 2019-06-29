@@ -17,8 +17,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 	
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
-		log.info("WebSocketConfig 1:   StompEndpointRegistry: "+registry);			
-		registry.addEndpoint("/wss").setAllowedOrigins("*").withSockJS().setClientLibraryUrl(Utils.property.getProperty("main.domain")+"/js/sockjs.js");/*.setInterceptors(new HandshakeInterceptor() {  //Это просто опыт чтоб понять что тут можно поделать
+		log.info("WebSocketConfig 1:   StompEndpointRegistry: "+registry);
+		registry.addEndpoint("/wss").setAllowedOrigins("*").withSockJS();/*.setClientLibraryUrl(Utils.property.getProperty("main.domain")+"/js/sockjs.js");.setInterceptors(new HandshakeInterceptor() {  //Это просто опыт чтоб понять что тут можно поделать
 			
 			@Override
 			public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler,
@@ -75,11 +75,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 //	}
 
 	@Override
-	public void configureMessageBroker(MessageBrokerRegistry registry) {  //Можно еще тут через registry поконфигурить brokerChanel для того чтоб не в один поток с брокером общалось апп это через registry.configureBrokerChannel();		
+	public void configureMessageBroker(MessageBrokerRegistry registry) {  //Можно еще тут через registry поконфигурить brokerChanel для того чтоб не в один поток с брокером общалось апп это через registry.configureBrokerChannel();
 		log.info("WebSocketConfig 2:   MessageBrokerRegistry: "+registry);
 		registry.setApplicationDestinationPrefixes("/method");///app
-		registry.enableSimpleBroker("/queue/", "/topic/");		
-//		registry.enableStompBrokerRelay("/queue/", "/topic/");		
+		registry.enableSimpleBroker("/queue/", "/topic/");
+//		registry.enableStompBrokerRelay("/queue/", "/topic/");
 //		registry.setPreservePublishOrder(true);
 	}
 	

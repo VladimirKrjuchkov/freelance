@@ -1,52 +1,51 @@
-//package com.pb.tel.config;
-//
-//import com.mchange.v2.c3p0.ComboPooledDataSource;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.cache.CacheManager;
-//import org.springframework.cache.annotation.EnableCaching;
-//import org.springframework.cache.ehcache.EhCacheCacheManager;
-//import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
-//import org.springframework.context.annotation.Bean;
-//import org.springframework.context.annotation.Configuration;
-//import org.springframework.core.env.Environment;
-//import org.springframework.core.io.ClassPathResource;
-//import org.springframework.orm.jpa.JpaTransactionManager;
-//import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-//import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
-//import org.springframework.transaction.annotation.EnableTransactionManagement;
-//import org.springframework.web.socket.config.annotation.EnableWebSocket;
-//
-//import javax.persistence.EntityManagerFactory;
-//import javax.sql.DataSource;
-//import java.util.Properties;
-//import java.util.logging.Logger;
-//
-//@Configuration
-//@EnableTransactionManagement
+package com.pb.tel.config;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.ehcache.EhCacheCacheManager;
+import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
+
+import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
+import java.util.Properties;
+import java.util.logging.Logger;
+
+@Configuration
+@EnableTransactionManagement
 //@EnableCaching
-//@EnableWebSocket
-//public class ServiceConfig {
+@EnableWebSocket
+public class ServiceConfig {
+
+	private static final Logger log = Logger.getLogger(ServiceConfig.class.getCanonicalName());
+
+	@Autowired
+	Environment environment;
+
+
+//	@Bean(name = "dataStorage")
+//	public Storage<?, ?> getDataStorage(){
+//		Storage<?, ?> dataStorage = new DataStorageRedis<>();
+//		//Storage<?, ?> dataStorage = new StorageExpiry<>();
+//		return dataStorage;
+//	}
 //
-//	private static final Logger log = Logger.getLogger(ServiceConfig.class.getCanonicalName());
-//
-//	@Autowired
-//	Environment environment;
-//
-//
-////	@Bean(name = "dataStorage")
-////	public Storage<?, ?> getDataStorage(){
-////		Storage<?, ?> dataStorage = new DataStorageRedis<>();
-////		//Storage<?, ?> dataStorage = new StorageExpiry<>();
-////		return dataStorage;
-////	}
-////
-////	@Bean(name = "sessionStorage")
-////	public Storage<String, UserAccount> getSesionStorage(){
-////		Storage<String, UserAccount> storage = new SessionStorageRedis();
-////		//Storage<String, UserAccount> storage = new StorageExpiry<>();
-////		return storage;
-////	}
-//
+//	@Bean(name = "sessionStorage")
+//	public Storage<String, UserAccount> getSesionStorage(){
+//		Storage<String, UserAccount> storage = new SessionStorageRedis();
+//		//Storage<String, UserAccount> storage = new StorageExpiry<>();
+//		return storage;
+//	}
+
 //	@Bean(name = "dataSource")
 //	public DataSource getDataSource()throws Exception{
 //		ComboPooledDataSource dataSource = new ComboPooledDataSource();
@@ -70,7 +69,7 @@
 //		return dataSource;
 //
 //	}
-//
+
 //	@Bean(name = "emf")
 //	public LocalContainerEntityManagerFactoryBean getLocalContainerEntityManagerFactoryBean()throws Exception{
 //		LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
@@ -97,14 +96,14 @@
 //		emf.setJpaProperties(prop);
 //		return emf;
 //	}
-//
+
 //	@Bean
 //	public JpaTransactionManager getTransactionManager(EntityManagerFactory emf){
 //		JpaTransactionManager transactionManager = new JpaTransactionManager(emf);
 //		return transactionManager;
 //	}
-//
-//
+
+
 //	@Bean
 //	public EhCacheManagerFactoryBean ehcacheFactoryBean(){
 //		EhCacheManagerFactoryBean ehCacheManagerFactoryBean = new EhCacheManagerFactoryBean();
@@ -112,11 +111,11 @@
 //		ehCacheManagerFactoryBean.setShared(true);
 //		return ehCacheManagerFactoryBean;
 //	}
-//
+
 //	@Bean
 //	public CacheManager cacheManager(EhCacheManagerFactoryBean ehcacheFactoryBean){
 //		EhCacheCacheManager cacheManager = new EhCacheCacheManager(ehcacheFactoryBean.getObject());
 //		return cacheManager;
 //	}
-//
-//}
+
+}

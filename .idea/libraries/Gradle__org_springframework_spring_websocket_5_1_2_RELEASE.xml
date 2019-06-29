@@ -2,8 +2,11 @@
   <library name="Gradle: org.springframework:spring-websocket:5.1.2.RELEASE">
     <CLASSES>
       <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-websocket/5.1.2.RELEASE/spring-websocket-5.1.2.RELEASE.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework/spring-websocket/5.1.2.RELEASE/59a3ceb9c9e06653a9be380021d14c26e9001da4/spring-websocket-5.1.2.RELEASE.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework/spring-websocket/5.1.2.RELEASE/9b08a8fea4a8f7b7fc0d17858dec6b166f1b010f/spring-websocket-5.1.2.RELEASE-sources.jar!/" />
+    </SOURCES>
   </library>
 </component>

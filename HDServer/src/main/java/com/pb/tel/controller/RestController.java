@@ -3,6 +3,7 @@ package com.pb.tel.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.logging.Level;
@@ -15,9 +16,11 @@ public class RestController {
     private final Logger log = Logger.getLogger(RestController.class.getCanonicalName());
 
 
-    @RequestMapping(value = "/simple")
+    @RequestMapping(value = "/simple", method = RequestMethod.GET)
     @ResponseBody
-    public void simple(){}
+    public void simple(){
+        log.info("*** *** *** INSIDE SIMPLE *** *** ***");
+    }
 
     @ExceptionHandler(Exception.class)
     @ResponseBody

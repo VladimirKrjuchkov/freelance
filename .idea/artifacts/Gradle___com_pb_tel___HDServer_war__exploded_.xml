@@ -1,15 +1,10 @@
 <component name="ArtifactManager">
   <artifact type="exploded-war" name="Gradle : com.pb.tel : HDServer.war (exploded)">
-    <output-path>$PROJECT_DIR$/HDServer/build/libs/exploded/HDServer.war</output-path>
+    <output-path>$PROJECT_DIR$/out/artifacts/HDServer/exploded/HDServer.war</output-path>
     <properties id="gradle-properties">
-      <options external-project-path="$PROJECT_DIR$">
-        <manifest>TWFuaWZlc3QtVmVyc2lvbjogMS4wDQoNCg==</manifest>
-      </options>
+      <options external-project-path="$PROJECT_DIR$" />
     </properties>
     <root id="root">
-      <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/HDServer/build/libs/exploded/HDServer.war/META-INF/MANIFEST.MF" />
-      </element>
       <element id="javaee-facet-resources" facet="HDServer_main/web/Web Gradle : HDServer.war" />
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
@@ -67,6 +62,9 @@
           <element id="library" level="project" name="Gradle: org.javassist:javassist:3.23.1-GA" />
           <element id="library" level="project" name="Gradle: net.bytebuddy:byte-buddy:1.8.17" />
         </element>
+      </element>
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/out/artifacts/HDServer/exploded/HDServer.war/META-INF/MANIFEST.MF" />
       </element>
     </root>
   </artifact>

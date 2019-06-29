@@ -50,26 +50,26 @@ remotes {
 
 
 task deployToTomcat {
-    def tomcatHome = getProperty('tomcat.path')
-    def warName = project.name
-    doLast {
-        ssh.run {
-            session(remotes.webPoligon) {
-
-                def date = new Date().getTime()
-                def stop = "${tomcatHome}/bin/stop.sh"
-                def createFolders = "${tomcatHome}/bin/createFolders.sh"
-                def run = "${tomcatHome}/bin/startup.sh"
-                println "######################## Start uploading new war to Tomcat ########################"
-                execute stop
-                remove "${tomcatHome}/webapps/${warName}.war", "${tomcatHome}/webapps/${warName}", "${tomcatHome}/applogs", "${tomcatHome}/logs"
-                execute createFolders
-                put from: war.archivePath.absolutePath, into: "${tomcatHome}/webapps/${warName}.war"
-                execute run
-                println "######################## Finish uploading new war to Tomcat at "+(new Date().getTime() - date)+" ms ########################"
-            }
-        }
-    }
+//    def tomcatHome = getProperty('tomcat.path')
+//    def warName = project.name
+//    doLast {
+//        ssh.run {
+//            session(remotes.webPoligon) {
+//
+//                def date = new Date().getTime()
+//                def stop = "${tomcatHome}/bin/stop.sh"
+//                def createFolders = "${tomcatHome}/bin/createFolders.sh"
+//                def run = "${tomcatHome}/bin/startup.sh"
+//                println "######################## Start uploading new war to Tomcat ########################"
+//                execute stop
+//                remove "${tomcatHome}/webapps/${warName}.war", "${tomcatHome}/webapps/${warName}", "${tomcatHome}/applogs", "${tomcatHome}/logs"
+//                execute createFolders
+//                put from: war.archivePath.absolutePath, into: "${tomcatHome}/webapps/${warName}.war"
+//                execute run
+//                println "######################## Finish uploading new war to Tomcat at "+(new Date().getTime() - date)+" ms ########################"
+//            }
+//        }
+//    }
 }
 
 deployToTomcat.dependsOn.add(war)

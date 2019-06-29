@@ -65,9 +65,12 @@ node {
 deploy.enabled=false
 
 def allJsModules = [
-		project.prDir+"/src/js/widget.js",
 		project.prDir+"/src/js/StompOverSock.js",
 		project.prDir+"/src/js/sockjs.js",
+		project.prDir+"/src/js/main.js",
+		project.prDir+"/src/js/WebSock.js",
+		project.prDir+"/src/js/webstomp.js",
+		project.prDir+"/src/js/utils.js"
 ]
 
 npm_update {
@@ -239,20 +242,20 @@ remotes {
 
 install {
 	it.dependsOn build
-	def staticHome =  project.hasProperty('static.home') ? getProperty('static.home'):'/sybase/www/helpdesk.widget.test'
-	doLast {
-		ssh.run {
-			session(remotes.webPoligon) {
-				def date = new Date().getTime()
-				println "######################## Start uploading new static data ########################"
-				def mkDir = "mkdir ${staticHome}"
-				remove "${staticHome}"
-				execute mkDir
-				put from: project.tmpDir, into: "${staticHome}"
-				println "######################## Finish uploading new static data at "+(new Date().getTime() - date)+" ms ########################"
-			}
-		}
-	}
+//	def staticHome =  project.hasProperty('static.home') ? getProperty('static.home'):'/sybase/www/helpdesk.widget.test'
+//	doLast {
+//		ssh.run {
+//			session(remotes.webPoligon) {
+//				def date = new Date().getTime()
+//				println "######################## Start uploading new static data ########################"
+//				def mkDir = "mkdir ${staticHome}"
+//				remove "${staticHome}"
+//				execute mkDir
+//				put from: project.tmpDir, into: "${staticHome}"
+//				println "######################## Finish uploading new static data at "+(new Date().getTime() - date)+" ms ########################"
+//			}
+//		}
+//	}
 }
 
 
