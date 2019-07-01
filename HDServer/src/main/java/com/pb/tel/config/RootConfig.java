@@ -1,16 +1,12 @@
 package com.pb.tel.config;
 
-import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 
 @Configuration
-@PropertySources({@PropertySource(value="classpath:com/pb/tel/config/app.properties", encoding="UTF-8")//,
-	  //@PropertySource(value="classpath:com/pb/ppls/config/generic_messages.txt", encoding="UTF-8"),
+@PropertySources({@PropertySource(value="classpath:com/pb/tel/config/app.properties", encoding="UTF-8"),
 	  /*@PropertySource(value="classpath:com/pb/ppls/config/messages.txt", encoding="UTF-8")*/})
 @ComponentScan(basePackages = "com.pb.tel")
 //,

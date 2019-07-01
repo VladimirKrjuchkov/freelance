@@ -1,4 +1,4 @@
 // Onload configuration
 addEvent(window, "load", function () {
-    StompOverSock.getInstance(true);
+    var wssConnector = StompOverSock.getInstance(true).send("/method/allWssReq", JSON.stringify("{Hello Vova!!!))}"), {});
 });

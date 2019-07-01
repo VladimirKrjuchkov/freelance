@@ -1,7 +1,8 @@
 package com.pb.tel.config;
 
-import com.pb.tel.utils.Utils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
@@ -13,12 +14,17 @@ import java.util.logging.Logger;
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 	
-	private final Logger log = Logger.getLogger(WebSocketConfig.class.getCanonicalName());	
-	
+	private final Logger log = Logger.getLogger(WebSocketConfig.class.getCanonicalName());
+
+	@Autowired
+	private Environment environment;
+
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
 		log.info("WebSocketConfig 1:   StompEndpointRegistry: "+registry);
-		registry.addEndpoint("/wss").setAllowedOrigins("*").withSockJS();/*.setClientLibraryUrl(Utils.property.getProperty("main.domain")+"/js/sockjs.js");.setInterceptors(new HandshakeInterceptor() {  //Это просто опыт чтоб понять что тут можно поделать
+		log.info("*** *** *** environment = " + environment);
+		log.info("*** *** *** environment.getProperty(\"main.domain\") = " + environment.getProperty("main.domain"));
+		registry.addEndpoint("/wss").setAllowedOrigins("*").withSockJS().setClientLibraryUrl(environment.getProperty("main.domain")+"/js/sockjs.js");/*.setInterceptors(new HandshakeInterceptor() {  //Это просто опыт чтоб понять что тут можно поделать
 			
 			@Override
 			public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler,
