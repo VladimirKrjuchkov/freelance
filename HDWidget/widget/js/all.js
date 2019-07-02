@@ -4271,27 +4271,33 @@ function initStompOverSock(debugParam) {
     }, {}, [ 1 ])(1);
 });
 
-var chatHistory;
+var adminHistory;
 
 var wssConnector;
 
 addEvent(window, "load", function() {
     wssConnector = StompOverSock.getInstance(true);
     window.setTimeout(function() {
-        wssConnector.subscribe("/user/queue/answer/allWssResponse", this.webSocketListener);
-        chatHistory = localStorage.getItem("chatHistory") == null ? [] : localStorage.getItem("chatHistory").split(",");
-        byClass(byId("firstPage"), "chat")[0].innerHTML = chatHistory.join("\n");
+        adminHistory = localStorage.getItem("adminHistory") == null ? [] : localStorage.getItem("adminHistory").split(",");
+        byClass(byId("firstPage"), "chat")[0].innerHTML = adminHistory.join("\n");
     }, 100);
 });
 
+function adminListener(message) {
+    var text = JSON.parse(message).message;
+    adminHistory.push(text);
+    localStorage.setItem("adminHistory", adminHistory);
+    byClass(byId("firstPage"), "chat")[0].innerHTML = adminHistory.join("\n");
+}
+
 function sendMessage(message) {
     console.log("message to send : " + message);
-    wssConnector.send("/method/allWssReq", JSON.stringify({
+    wssConnector.send("/method/fromAdmin", JSON.stringify({
         message: message
     }), {});
-    chatHistory.push(message);
-    localStorage.setItem("chatHistory", chatHistory);
-    byClass(byId("firstPage"), "chat")[0].innerHTML = chatHistory.join("\n");
+    adminHistory.push(message);
+    localStorage.setItem("adminHistory", adminHistory);
+    byClass(byId("firstPage"), "chat")[0].innerHTML = adminHistory.join("\n");
     byClass(byId("firstPage"), "message")[0].value = "";
 }
 

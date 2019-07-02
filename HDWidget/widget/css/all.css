@@ -1,136 +1,15 @@
 
-/* line 81 : /home/vladimir/IdeaProjects/HelpDeskChat/HDWidget/src/style/widget.styl */
+/* line 2 : /home/vladimir/IdeaProjects/HelpDeskChat/HDWidget/src/style/main.styl */
 
-@media -stylus-debug-info{filename{font-family:file\:\/\/\/home\/vladimir\/IdeaProjects\/HelpDeskChat\/HDWidget\/src\/style\/widget\.styl}line{font-family:\0000381}}
+@media -stylus-debug-info{filename{font-family:file\:\/\/\/home\/vladimir\/IdeaProjects\/HelpDeskChat\/HDWidget\/src\/style\/main\.styl}line{font-family:\000032}}
 
 /* line 1 : /home/vladimir/IdeaProjects/HelpDeskChat/HDWidget/node_modules/stylus/lib/functions/index.styl */
 
 @media -stylus-debug-info{filename{font-family:file\:\/\/\/home\/vladimir\/IdeaProjects\/HelpDeskChat\/HDWidget\/node_modules\/stylus\/lib\/functions\/index\.styl}line{font-family:\000031}}
 
-/* line 1 : /home/vladimir/IdeaProjects/HelpDeskChat/HDWidget/src/style/widget.styl */
+/* line 1 : /home/vladimir/IdeaProjects/HelpDeskChat/HDWidget/src/style/main.styl */
 
-@media -stylus-debug-info{filename{font-family:file\:\/\/\/home\/vladimir\/IdeaProjects\/HelpDeskChat\/HDWidget\/src\/style\/widget\.styl}line{font-family:\000031}}
-/*
- * Copyright (c) 2017. iDoc LLC
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are
- * met:
- *
- *     (1) Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *
- *     (2) Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in
- *     the documentation and/or other materials provided with the
- *     distribution.
- *
- *     (3)The name of the author may not be used to
- *     endorse or promote products derived from this software without
- *     specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
- * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
- * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- */
-
-/* line 33 : /home/vladimir/IdeaProjects/HelpDeskChat/HDWidget/src/style/widget.styl */
-
-@media -stylus-debug-info{filename{font-family:file\:\/\/\/home\/vladimir\/IdeaProjects\/HelpDeskChat\/HDWidget\/src\/style\/widget\.styl}line{font-family:\0000333}}
-@charset "UTF-8";
-
-/* line 34 : /home/vladimir/IdeaProjects/HelpDeskChat/HDWidget/src/style/widget.styl */
-
-@media -stylus-debug-info{filename{font-family:file\:\/\/\/home\/vladimir\/IdeaProjects\/HelpDeskChat\/HDWidget\/src\/style\/widget\.styl}line{font-family:\0000334}}
-#messageBG {
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  background: rgba(0,0,0,0) none repeat scroll 0 0;
-  cursor: pointer;
-  width: 0;
-  height: 100%;
-  position: fixed;
-  transition: background 0.5s ease-in 0s;
-  z-index: 1001;
-}
-
-/* line 46 : /home/vladimir/IdeaProjects/HelpDeskChat/HDWidget/src/style/widget.styl */
-
-@media -stylus-debug-info{filename{font-family:file\:\/\/\/home\/vladimir\/IdeaProjects\/HelpDeskChat\/HDWidget\/src\/style\/widget\.styl}line{font-family:\0000346}}
-#messageBG.active {
-  height: 100%;
-  width: 100%;
-  background-color: rgba(0,22,0,0.2);
-}
-
-/* line 50 : /home/vladimir/IdeaProjects/HelpDeskChat/HDWidget/src/style/widget.styl */
-
-@media -stylus-debug-info{filename{font-family:file\:\/\/\/home\/vladimir\/IdeaProjects\/HelpDeskChat\/HDWidget\/src\/style\/widget\.styl}line{font-family:\0000350}}
-#messageBG.active #message {
-  display: block;
-}
-
-/* line 52 : /home/vladimir/IdeaProjects/HelpDeskChat/HDWidget/src/style/widget.styl */
-
-@media -stylus-debug-info{filename{font-family:file\:\/\/\/home\/vladimir\/IdeaProjects\/HelpDeskChat\/HDWidget\/src\/style\/widget\.styl}line{font-family:\0000352}}
-#messageBG #message {
-  left: 0;
-  right: 0;
-  bottom: 0;
-  top: 0;
-  height: 22px;
-  width: 400px;
-  display: none;
-  border-radius: 5px;
-  background-color: #fff;
-  border: 1px solid alt1GrayColor;
-  margin: auto;
-  position: absolute;
-  text-align: center;
-  overflow: hidden;
-}
-
-/* line 67 : /home/vladimir/IdeaProjects/HelpDeskChat/HDWidget/src/style/widget.styl */
-
-@media -stylus-debug-info{filename{font-family:file\:\/\/\/home\/vladimir\/IdeaProjects\/HelpDeskChat\/HDWidget\/src\/style\/widget\.styl}line{font-family:\0000367}}
-#messageBG #message .title {
-  font-weight: 200;
-  text-align: left;
-  font-size: 20px;
-  margin: 10px;
-}
-
-/* line 72 : /home/vladimir/IdeaProjects/HelpDeskChat/HDWidget/src/style/widget.styl */
-
-@media -stylus-debug-info{filename{font-family:file\:\/\/\/home\/vladimir\/IdeaProjects\/HelpDeskChat\/HDWidget\/src\/style\/widget\.styl}line{font-family:\0000372}}
-#messageBG #message .answer {
-  font-size: 18px;
-  font-weight: 100;
-  margin-left: 50px;
-  text-align: justify;
-  margin-bottom: 20px;
-}
-
-/* line 78 : /home/vladimir/IdeaProjects/HelpDeskChat/HDWidget/src/style/widget.styl */
-
-@media -stylus-debug-info{filename{font-family:file\:\/\/\/home\/vladimir\/IdeaProjects\/HelpDeskChat\/HDWidget\/src\/style\/widget\.styl}line{font-family:\0000378}}
-#messageBG #message .fa-exclamation-triangle {
-  color: red-A700;
-}
-
-/* line 80 : /home/vladimir/IdeaProjects/HelpDeskChat/HDWidget/src/style/widget.styl */
-
-@media -stylus-debug-info{filename{font-family:file\:\/\/\/home\/vladimir\/IdeaProjects\/HelpDeskChat\/HDWidget\/src\/style\/widget\.styl}line{font-family:\0000380}}
-#messageBG #message iframe {
-  display: inline-block;
+@media -stylus-debug-info{filename{font-family:file\:\/\/\/home\/vladimir\/IdeaProjects\/HelpDeskChat\/HDWidget\/src\/style\/main\.styl}line{font-family:\000031}}
+.hide {
+  display: none !important;
 }

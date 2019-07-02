@@ -1,23 +1,13 @@
 package com.pb.tel.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.cache.ehcache.EhCacheCacheManager;
-import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
+import com.pb.tel.data.AdminAccount;
+import com.pb.tel.storage.Storage;
+import com.pb.tel.storage.StorageExpiry;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 
-import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
-import java.util.Properties;
 import java.util.logging.Logger;
 
 @Configuration
@@ -28,16 +18,11 @@ public class ServiceConfig {
 
 	private static final Logger log = Logger.getLogger(ServiceConfig.class.getCanonicalName());
 
-	@Autowired
-	Environment environment;
-
-
-//	@Bean(name = "dataStorage")
-//	public Storage<?, ?> getDataStorage(){
-//		Storage<?, ?> dataStorage = new DataStorageRedis<>();
-//		//Storage<?, ?> dataStorage = new StorageExpiry<>();
-//		return dataStorage;
-//	}
+	@Bean(name = "dataStorage")
+	public Storage<String, AdminAccount> getSesionStorage(){
+		Storage<String, AdminAccount> storage = new StorageExpiry<>();
+		return storage;
+	}
 //
 //	@Bean(name = "sessionStorage")
 //	public Storage<String, UserAccount> getSesionStorage(){

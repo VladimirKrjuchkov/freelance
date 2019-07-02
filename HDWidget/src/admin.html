@@ -14,7 +14,7 @@
     <!--<meta property="og:image" content="https://paperless.com.ua/img/og_logo11.jpg"/>-->
     <meta property="og:title" content="Admin page for HelpDesk connection"/>
     <meta property="og:description" content="Admin page for HelpDesk connection"/>
-    <!--<link rel="stylesheet" href="/css/all.css"/>-->
+    <link rel="stylesheet" href="/css/all.css"/>
     <script src="js/admin.js"></script>
     <!--<script async src="https://www.googletagmanager.com/gtag/js?id=UA-110018670-1"></script>-->
     <!--<script>-->
@@ -32,7 +32,7 @@
 <div id="canvas" class="loginMode">
     <div id="header" class="pure-u card-0 pure-form">
     </div>
-    <div id="firstPage" class="pure-form">
+    <div id="firstPage" class="pure-form  hide">
         <div class="title">Админка:</div>
         <textarea class="chat"></textarea>
         <br>
@@ -41,6 +41,14 @@
         <br>
         <br>
         <button class="pure-u-1 pure-button card-0 primary" onclick="sendMessage(byClass(byId('firstPage'), 'message')[0].value)">Отправить</button>
+    </div>
+    <div id="regPage" class="pure-form">
+        <div class="title">Регистрация админа:</div>
+        <input class="login" type="text" autofocus="" placeholder="Логин"/>
+        <br>
+        <input class="password" type="password" autofocus="" placeholder="Пароль"/>
+        <br>
+        <button class="pure-u-1 pure-button card-0 primary" onclick="register()">Зарегистрироваться</button>
     </div>
     <div id="startPage" class="pure-form hide">
     </div>
