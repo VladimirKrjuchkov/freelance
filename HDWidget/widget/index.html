@@ -34,13 +34,13 @@
     </div>
     <div id="firstPage" class="pure-form">
         <div class="title">Чат:</div>
-        <textarea></textarea>
+        <textarea class="chat"></textarea>
         <br>
         <br>
-        <input class="chat" type="text" autofocus="" placeholder="Введите сообщение"/>
+        <input class="message" type="text" autofocus="" placeholder="Введите сообщение"/>
         <br>
         <br>
-        <button class="pure-u-1 pure-button card-0 primary">Отправить</button>
+        <button class="pure-u-1 pure-button card-0 primary" onclick="sendMessage(byClass(byId('firstPage'), 'message')[0].value)">Отправить</button>
     </div>
     <div id="startPage" class="pure-form hide">
     </div>

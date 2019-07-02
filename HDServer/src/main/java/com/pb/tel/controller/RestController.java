@@ -1,10 +1,7 @@
 package com.pb.tel.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,9 +13,9 @@ public class RestController {
     private final Logger log = Logger.getLogger(RestController.class.getCanonicalName());
 
 
-    @RequestMapping(value = "/simple", method = RequestMethod.GET)
+    @RequestMapping(value = "/admin/register", method = RequestMethod.POST)
     @ResponseBody
-    public void simple(){
+    public void adminRegister(@RequestBody  RegisterRequest registerRequest){
         log.info("*** *** *** INSIDE SIMPLE *** *** ***");
     }
 

@@ -22,8 +22,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
 		log.info("WebSocketConfig 1:   StompEndpointRegistry: "+registry);
-		log.info("*** *** *** environment = " + environment);
-		log.info("*** *** *** environment.getProperty(\"main.domain\") = " + environment.getProperty("main.domain"));
 		registry.addEndpoint("/wss").setAllowedOrigins("*").withSockJS().setClientLibraryUrl(environment.getProperty("main.domain")+"/js/sockjs.js");/*.setInterceptors(new HandshakeInterceptor() {  //Это просто опыт чтоб понять что тут можно поделать
 			
 			@Override
