@@ -1,6 +1,7 @@
 package com.pb.tel.data;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.pb.tel.data.enumerators.AdminStatus;
 
 import java.io.Serializable;
 import java.util.List;
@@ -23,9 +24,9 @@ public class AdminAccount implements Serializable {
 
     private String sessionId;
 
-    private List<String> clients;
+    private String login;
 
-    boolean online = false;
+    private List<String> clients;
 
     AdminStatus adminStatus = AdminStatus.FREE;
 
@@ -37,6 +38,14 @@ public class AdminAccount implements Serializable {
         this.sessionId = sessionId;
     }
 
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
     public List<String> getClients() {
         return clients;
     }
@@ -45,12 +54,12 @@ public class AdminAccount implements Serializable {
         this.clients = clients;
     }
 
-    public boolean isOnline() {
-        return online;
+    public AdminStatus getAdminStatus() {
+        return adminStatus;
     }
 
-    public void setOnline(boolean online) {
-        this.online = online;
+    public void setAdminStatus(AdminStatus adminStatus) {
+        this.adminStatus = adminStatus;
     }
 
     @Override
@@ -60,16 +69,18 @@ public class AdminAccount implements Serializable {
 
         AdminAccount that = (AdminAccount) o;
 
-        if (online != that.online) return false;
         if (sessionId != null ? !sessionId.equals(that.sessionId) : that.sessionId != null) return false;
-        return clients != null ? clients.equals(that.clients) : that.clients == null;
+        if (login != null ? !login.equals(that.login) : that.login != null) return false;
+        if (clients != null ? !clients.equals(that.clients) : that.clients != null) return false;
+        return adminStatus == that.adminStatus;
     }
 
     @Override
     public int hashCode() {
         int result = sessionId != null ? sessionId.hashCode() : 0;
+        result = 31 * result + (login != null ? login.hashCode() : 0);
         result = 31 * result + (clients != null ? clients.hashCode() : 0);
-        result = 31 * result + (online ? 1 : 0);
+        result = 31 * result + (adminStatus != null ? adminStatus.hashCode() : 0);
         return result;
     }
 
@@ -77,8 +88,9 @@ public class AdminAccount implements Serializable {
     public String toString() {
         return "AdminAccount{" +
                 "sessionId='" + sessionId + '\'' +
+                ", login='" + login + '\'' +
                 ", clients=" + clients +
-                ", online=" + online +
+                ", adminStatus=" + adminStatus +
                 '}';
     }
 }

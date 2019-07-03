@@ -82,9 +82,6 @@ function ajax(request, func, params, errorFunction, mode, contentType) {
     // if (localStorage.getItem("sessionId")) {
     //     ajaxRequest.setRequestHeader("sessionid", localStorage.getItem("sessionId"));
     // }
-    if (userConfig.company && userConfig.company.login && userConfig.company.login != userConfig.login ){
-        ajaxRequest.setRequestHeader("employee", userConfig.company.login);
-    }
     if(typeof version !== "undefined"){
         ajaxRequest.setRequestHeader("v", version);
     }

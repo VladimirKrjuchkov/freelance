@@ -3,34 +3,25 @@
 var adminHistory;
 var wssConnector;
 
-// addEvent(window, "load", function () {
-//     wssConnector = StompOverSock.getInstance(true);
-//     window.setTimeout(function(){
-//         // wssConnector.subscribe("/user/queue/answer/toAdmin", this.adminListener);
-//         adminHistory = (localStorage.getItem("adminHistory") == null)?[]:localStorage.getItem("adminHistory").split(",");
-//         byClass(byId('firstPage'), 'chat')[0].innerHTML = adminHistory.join("\n");
-//     }, 100);
-// });
-//
-// function adminListener(message){
-//     var text = JSON.parse(message).message;
-//     adminHistory.push(text);
-//     localStorage.setItem("adminHistory", adminHistory);
-//     byClass(byId('firstPage'), 'chat')[0].innerHTML = adminHistory.join("\n");
-// }
-//
-// function sendMessage(message){
-//     console.log("message to send : " + message);
-//     wssConnector.send("/method/fromAdmin", JSON.stringify({'message' : message}), {});
-//     adminHistory.push(message);
-//     localStorage.setItem("adminHistory", adminHistory);
-//     byClass(byId('firstPage'), 'chat')[0].innerHTML = adminHistory.join("\n");
-//     byClass(byId('firstPage'), 'message')[0].value = "";
-// }
-
 function register(){
     var req = {
         "login" : byClass(byId('regPage'), 'login')[0].value,
         "password" : byClass(byId('regPage'), 'password')[0].value
     }
+    ajax("/api/admin/register",function(){
+        alert("Вы успешно зарегестрировались!");
+        addClass(byId("regPage"), "hide");
+        rmClass(byId("firstPage"), "hide");
+        wssConnector = StompOverSock.getInstance(true);
+        window.setTimeout(function(){
+            wssConnector.subscribe("/queue/input/requests", this.inputRequestsHandler);
+        }, 100);
+    },JSON.stringify(req),function(e){
+        alert("Во время регистрации произошла ошибка!");
+        console.log(e);
+    },"POST", "application/json");
+}
+
+function inputRequestsHandler(){
+    confirm("принять входящее соединение?");
 }

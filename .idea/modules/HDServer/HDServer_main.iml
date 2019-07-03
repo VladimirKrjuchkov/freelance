@@ -68,5 +68,6 @@
     <orderEntry type="library" name="Gradle: commons-logging:commons-logging:1.2" level="project" />
     <orderEntry type="library" name="Gradle: org.javassist:javassist:3.23.1-GA" level="project" />
     <orderEntry type="library" name="Gradle: net.bytebuddy:byte-buddy:1.8.17" level="project" />
+    <orderEntry type="library" name="Maven: com.pb.util.bpn:com.pb.util.bpn:1.0.23-SNAPSHOT" level="project" />
   </component>
 </module>

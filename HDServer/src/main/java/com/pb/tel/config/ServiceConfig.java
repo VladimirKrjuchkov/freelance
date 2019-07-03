@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 @Configuration
@@ -18,10 +20,16 @@ public class ServiceConfig {
 
 	private static final Logger log = Logger.getLogger(ServiceConfig.class.getCanonicalName());
 
-	@Bean(name = "dataStorage")
+	@Bean(name = "adminStorage")
 	public Storage<String, AdminAccount> getSesionStorage(){
 		Storage<String, AdminAccount> storage = new StorageExpiry<>();
 		return storage;
+	}
+
+	@Bean(name = "freeOpers")
+	public List<String> getFreeOpers(){
+		List<String> opers = new ArrayList<String>();
+		return opers;
 	}
 //
 //	@Bean(name = "sessionStorage")

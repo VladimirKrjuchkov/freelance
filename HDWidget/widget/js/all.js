@@ -4271,34 +4271,47 @@ function initStompOverSock(debugParam) {
     }, {}, [ 1 ])(1);
 });
 
-var adminHistory;
+var chatHistory;
 
 var wssConnector;
 
 addEvent(window, "load", function() {
     wssConnector = StompOverSock.getInstance(true);
     window.setTimeout(function() {
-        adminHistory = localStorage.getItem("adminHistory") == null ? [] : localStorage.getItem("adminHistory").split(",");
-        byClass(byId("firstPage"), "chat")[0].innerHTML = adminHistory.join("\n");
-    }, 100);
+        wssConnector.subscribe("/user/queue/answer/sendResult", this.resultHandler);
+        chatHistory = localStorage.getItem("chatHistory") == null ? [] : localStorage.getItem("chatHistory").split(",");
+        byClass(byId("firstPage"), "chat")[0].innerHTML = chatHistory.join("\n");
+    }, 1e3);
 });
 
-function adminListener(message) {
-    var text = JSON.parse(message).message;
-    adminHistory.push(text);
-    localStorage.setItem("adminHistory", adminHistory);
-    byClass(byId("firstPage"), "chat")[0].innerHTML = adminHistory.join("\n");
+function sendMessage(message) {
+    if (!getCookie("operId")) {
+        if (confirm("Подключить оператора?")) {
+            wssConnector.send("/method/callOper", JSON.stringify({
+                message: message
+            }), {});
+        }
+    } else {
+        console.log("message to send : " + message);
+        wssConnector.send("/method/fromUser", JSON.stringify({
+            message: message
+        }), {});
+        chatHistory.push(message);
+        localStorage.setItem("chatHistory", chatHistory);
+        byClass(byId("firstPage"), "chat")[0].innerHTML = chatHistory.join("\n");
+        byClass(byId("firstPage"), "message")[0].value = "";
+    }
 }
 
-function sendMessage(message) {
-    console.log("message to send : " + message);
-    wssConnector.send("/method/fromAdmin", JSON.stringify({
-        message: message
-    }), {});
-    adminHistory.push(message);
-    localStorage.setItem("adminHistory", adminHistory);
-    byClass(byId("firstPage"), "chat")[0].innerHTML = adminHistory.join("\n");
-    byClass(byId("firstPage"), "message")[0].value = "";
+function resultHandler(message) {
+    var response = JSON.parse(message);
+    if (!response.ok) {
+        alert(response.message);
+    } else {
+        chatHistory.push(response.message);
+        localStorage.setItem("chatHistory", chatHistory);
+        byClass(byId("firstPage"), "chat")[0].innerHTML = chatHistory.join("\n");
+    }
 }
 
 var WebSock = function(fullUrl, listener, closeCallback) {
@@ -4958,9 +4971,6 @@ function ajax(request, func, params, errorFunction, mode, contentType) {
     }
     if (mode == "DELETE") {
         params = "";
-    }
-    if (userConfig.company && userConfig.company.login && userConfig.company.login != userConfig.login) {
-        ajaxRequest.setRequestHeader("employee", userConfig.company.login);
     }
     if (typeof version !== "undefined") {
         ajaxRequest.setRequestHeader("v", version);

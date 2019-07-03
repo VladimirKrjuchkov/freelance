@@ -1,4 +1,4 @@
-package com.pb.tel.data;
+package com.pb.tel.data.enumerators;
 
 /**
  * Created by vladimir on 02.07.19.

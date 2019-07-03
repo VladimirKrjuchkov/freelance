@@ -32,6 +32,8 @@
 
 package com.pb.tel.service.websocket.data;
 
+import com.pb.tel.data.enumerators.RequestType;
+
 import java.io.Serializable;
 
 
@@ -43,7 +45,33 @@ public class WebSocketResponse implements Serializable{
         this.message = message;
     }
 
+    public WebSocketResponse(boolean ok, String message, RequestType requestType){
+        this.ok = ok;
+        this.message = message;
+        this.requestType = requestType;
+    };
+
+    public boolean ok;
+
     public String message;
+
+    public RequestType requestType;
+
+    public static WebSocketResponse getErrorResponse(String message, RequestType requestType){
+        return new WebSocketResponse(false, message, requestType);
+    }
+
+    public static WebSocketResponse getSuccessResponse(String message, RequestType requestType){
+        return new WebSocketResponse(true, message, requestType);
+    }
+
+    public boolean isOk() {
+        return ok;
+    }
+
+    public void setOk(boolean ok) {
+        this.ok = ok;
+    }
 
     public String getMessage() {
         return message;
@@ -53,6 +81,14 @@ public class WebSocketResponse implements Serializable{
         this.message = message;
     }
 
+    public RequestType getRequestType() {
+        return requestType;
+    }
+
+    public void setRequestType(RequestType requestType) {
+        this.requestType = requestType;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -60,18 +96,25 @@ public class WebSocketResponse implements Serializable{
 
         WebSocketResponse that = (WebSocketResponse) o;
 
-        return message != null ? message.equals(that.message) : that.message == null;
+        if (ok != that.ok) return false;
+        if (message != null ? !message.equals(that.message) : that.message != null) return false;
+        return requestType == that.requestType;
     }
 
     @Override
     public int hashCode() {
-        return message != null ? message.hashCode() : 0;
+        int result = (ok ? 1 : 0);
+        result = 31 * result + (message != null ? message.hashCode() : 0);
+        result = 31 * result + (requestType != null ? requestType.hashCode() : 0);
+        return result;
     }
 
     @Override
     public String toString() {
         return "WebSocketResponse{" +
-                "message='" + message + '\'' +
+                "ok=" + ok +
+                ", message='" + message + '\'' +
+                ", requestType=" + requestType +
                 '}';
     }
 }

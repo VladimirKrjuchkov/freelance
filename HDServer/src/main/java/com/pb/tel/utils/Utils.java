@@ -7,6 +7,7 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -35,6 +36,12 @@ public class Utils {
         cookie.setHttpOnly(isHttpOnly);
         response.addCookie(cookie);
     }
+
+
+    public static Date getDateAfterSeconds(int afterSeconds){
+        return new Date(System.currentTimeMillis() + afterSeconds*1000);
+    }
+
 
     public static boolean isEmpty(Object data){
         if(data==null)
