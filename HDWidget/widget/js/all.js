@@ -4271,47 +4271,64 @@ function initStompOverSock(debugParam) {
     }, {}, [ 1 ])(1);
 });
 
-var chatHistory;
-
 var wssConnector;
 
 addEvent(window, "load", function() {
-    wssConnector = StompOverSock.getInstance(true);
-    window.setTimeout(function() {
-        wssConnector.subscribe("/user/queue/answer/sendResult", this.resultHandler);
-        chatHistory = localStorage.getItem("chatHistory") == null ? [] : localStorage.getItem("chatHistory").split(",");
-        byClass(byId("firstPage"), "chat")[0].innerHTML = chatHistory.join("\n");
-    }, 1e3);
+    if (!getCookie("sessionIdUser")) {
+        if (confirm("Войти в чат?")) {
+            registerUser();
+        }
+    } else {
+        rmClass(byId("firstPage"), "hide");
+    }
 });
+
+function registerUser() {
+    ajax("/api/user/register", function(result) {
+        var result = JSON.parse(result);
+        if (result.ok) {
+            rmClass(byId("firstPage"), "hide");
+        } else {
+            alert(result.message);
+        }
+    }, null, function(result) {
+        var result = JSON.parse(result);
+        alert("Во время регистрации произошла ошибка!");
+        console.log("Во время регистрации произошла ошибка!" + result);
+    }, "POST", "application/json");
+}
 
 function sendMessage(message) {
     if (!getCookie("operId")) {
         if (confirm("Подключить оператора?")) {
-            wssConnector.send("/method/callOper", JSON.stringify({
-                message: message
-            }), {});
+            callOper();
         }
     } else {
         console.log("message to send : " + message);
         wssConnector.send("/method/fromUser", JSON.stringify({
             message: message
         }), {});
-        chatHistory.push(message);
-        localStorage.setItem("chatHistory", chatHistory);
-        byClass(byId("firstPage"), "chat")[0].innerHTML = chatHistory.join("\n");
-        byClass(byId("firstPage"), "message")[0].value = "";
+        pushMessage(message);
     }
 }
 
-function resultHandler(message) {
-    var response = JSON.parse(message);
-    if (!response.ok) {
-        alert(response.message);
-    } else {
-        chatHistory.push(response.message);
-        localStorage.setItem("chatHistory", chatHistory);
-        byClass(byId("firstPage"), "chat")[0].innerHTML = chatHistory.join("\n");
-    }
+function callOper() {
+    ajax("/api/oper/call", function(result) {
+        result = JSON.parse(result);
+        if (!result.ok) {
+            alert(result.message);
+        } else {
+            wssConnector = StompOverSock.getInstance(true);
+            window.setTimeout(function() {
+                wssConnector.subscribe("/user/queue/answer/sendResult", Handlers.resultHandler);
+                pushMessage();
+            }, 1e3);
+        }
+    }, null, function(result) {
+        var result = JSON.parse(result);
+        alert("Во время вызова оператора произошлда ошибка!");
+        console.log("Во время вызова оператора произошлда ошибка!" + result);
+    }, "GET");
 }
 
 var WebSock = function(fullUrl, listener, closeCallback) {
@@ -4944,6 +4961,8 @@ var emailRegexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(
 
 var urlRegexp = /^(ftp|http|https):\/\/[^ "]+$/;
 
+var endMarker = "--endMesMark";
+
 function ajax(request, func, params, errorFunction, mode, contentType) {
     var ajaxRequest = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Msxml2.XMLHTTP");
     if (typeof mode === "string" && mode != "RAW") {
@@ -4980,6 +4999,29 @@ function ajax(request, func, params, errorFunction, mode, contentType) {
     }
     ajaxRequest.send(params);
     return ajaxRequest;
+}
+
+function getDateLable() {
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, "0");
+    var mm = String(today.getMonth() + 1).padStart(2, "0");
+    var hh = String(today.getHours()).padStart(2, "0");
+    var MM = String(today.getMinutes()).padStart(2, "0");
+    today = mm + "." + dd + " " + hh + ":" + MM;
+    return today;
+}
+
+function pushMessage(message) {
+    if (!message) {
+        message = "";
+    }
+    chatHistory = localStorage.getItem("chatHistory") == null ? [] : localStorage.getItem("chatHistory").split(endMarker);
+    if (message != "") {
+        chatHistory.push(getDateLable() + "   " + message);
+    }
+    localStorage.setItem("chatHistory", chatHistory.join(endMarker));
+    byClass(byId("firstPage"), "chat")[0].innerHTML = chatHistory.join("\n").replace(/--endMesMark/g, "");
+    byClass(byId("firstPage"), "message")[0].value = "";
 }
 
 function objectToMap(obj, key, value) {
@@ -5579,5 +5621,21 @@ var _ = {
         var argument = settings.variable || "obj";
         template.source = "function(" + argument + "){\n" + source + "}";
         return template;
+    }
+};
+
+Handlers = {
+    inputRequestsHandler: function() {
+        confirm("принять входящее соединение?");
+    },
+    resultHandler: function(message) {
+        var response = JSON.parse(message.body);
+        if (!response.ok) {
+            alert(response.message);
+        } else {
+            chatHistory.push(response.message);
+            localStorage.setItem("chatHistory", chatHistory);
+            byClass(byId("firstPage"), "chat")[0].innerHTML = chatHistory.join("\n");
+        }
     }
 };

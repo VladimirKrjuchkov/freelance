@@ -1,40 +1,59 @@
 // Onload configuration
 
-var chatHistory;
 var wssConnector;
 
 addEvent(window, "load", function () {
-    wssConnector = StompOverSock.getInstance(true);
-    window.setTimeout(function(){
-        wssConnector.subscribe("/user/queue/answer/sendResult", this.resultHandler);
-        chatHistory = (localStorage.getItem("chatHistory") == null)?[]:localStorage.getItem("chatHistory").split(",");
-        byClass(byId('firstPage'), 'chat')[0].innerHTML = chatHistory.join("\n");
-    }, 1000);
+    if(!getCookie("sessionIdUser")) {
+        if (confirm("Войти в чат?")) {
+            registerUser()
+        }
+    }else{
+        rmClass(byId("firstPage"), "hide");
+    }
 });
+
+function registerUser() {
+    ajax("/api/user/register",function(result){
+        var result = JSON.parse(result);
+        if(result.ok) {
+            rmClass(byId("firstPage"), "hide");
+        }else {
+            alert(result.message);
+        }
+    },null, function(result){
+        var result = JSON.parse(result);
+        alert("Во время регистрации произошла ошибка!");
+        console.log("Во время регистрации произошла ошибка!" + result);
+    },"POST", "application/json");
+}
 
 function sendMessage(message){
     if(!getCookie("operId")){
         if(confirm("Подключить оператора?")){
-            wssConnector.send("/method/callOper", JSON.stringify({'message' : message}), {});
+            callOper();
         }
     }else{
         console.log("message to send : " + message);
         wssConnector.send("/method/fromUser", JSON.stringify({'message' : message}), {});
-        chatHistory.push(message);
-        localStorage.setItem("chatHistory", chatHistory);
-        byClass(byId('firstPage'), 'chat')[0].innerHTML = chatHistory.join("\n");
-        byClass(byId('firstPage'), 'message')[0].value = "";
+        pushMessage(message);
     }
 }
 
-function resultHandler(message){
-    var response = JSON.parse(message);
-    if(!response.ok){
-        alert(response.message)
-    }else{
-        chatHistory.push(response.message);
-        localStorage.setItem("chatHistory", chatHistory);
-        byClass(byId('firstPage'), 'chat')[0].innerHTML = chatHistory.join("\n");
-    }
-    // сделать грамотный обработчик для неотправленных сообщений!!!
+function callOper(){
+    ajax("/api/oper/call",function(result){
+        result = JSON.parse(result);
+        if(!result.ok){
+            alert(result.message)
+        }else{
+            wssConnector = StompOverSock.getInstance(true);
+            window.setTimeout(function () {
+                wssConnector.subscribe("/user/queue/answer/sendResult", Handlers.resultHandler);
+                pushMessage();
+            }, 1000);
+        }
+    }, null, function(result){
+        var result = JSON.parse(result);
+        alert("Во время вызова оператора произошлда ошибка!");
+        console.log("Во время вызова оператора произошлда ошибка!" + result);
+    },"GET");
 }

@@ -1,7 +1,7 @@
 
-/* line 2 : /home/vladimir/IdeaProjects/HelpDeskChat/HDWidget/src/style/main.styl */
+/* line 6 : /home/vladimir/IdeaProjects/HelpDeskChat/HDWidget/src/style/main.styl */
 
-@media -stylus-debug-info{filename{font-family:file\:\/\/\/home\/vladimir\/IdeaProjects\/HelpDeskChat\/HDWidget\/src\/style\/main\.styl}line{font-family:\000032}}
+@media -stylus-debug-info{filename{font-family:file\:\/\/\/home\/vladimir\/IdeaProjects\/HelpDeskChat\/HDWidget\/src\/style\/main\.styl}line{font-family:\000036}}
 
 /* line 1 : /home/vladimir/IdeaProjects/HelpDeskChat/HDWidget/node_modules/stylus/lib/functions/index.styl */
 
@@ -12,4 +12,18 @@
 @media -stylus-debug-info{filename{font-family:file\:\/\/\/home\/vladimir\/IdeaProjects\/HelpDeskChat\/HDWidget\/src\/style\/main\.styl}line{font-family:\000031}}
 .hide {
   display: none !important;
+}
+
+/* line 3 : /home/vladimir/IdeaProjects/HelpDeskChat/HDWidget/src/style/main.styl */
+
+@media -stylus-debug-info{filename{font-family:file\:\/\/\/home\/vladimir\/IdeaProjects\/HelpDeskChat\/HDWidget\/src\/style\/main\.styl}line{font-family:\000033}}
+.chat-field {
+  min-width: 50%;
+}
+
+/* line 5 : /home/vladimir/IdeaProjects/HelpDeskChat/HDWidget/src/style/main.styl */
+
+@media -stylus-debug-info{filename{font-family:file\:\/\/\/home\/vladimir\/IdeaProjects\/HelpDeskChat\/HDWidget\/src\/style\/main\.styl}line{font-family:\000035}}
+.main-chat-field {
+  min-height: 300px;
 }

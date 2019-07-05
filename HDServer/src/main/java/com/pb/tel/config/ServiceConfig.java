@@ -21,7 +21,13 @@ public class ServiceConfig {
 	private static final Logger log = Logger.getLogger(ServiceConfig.class.getCanonicalName());
 
 	@Bean(name = "adminStorage")
-	public Storage<String, AdminAccount> getSesionStorage(){
+	public Storage<String, AdminAccount> getAdminStorage(){
+		Storage<String, AdminAccount> storage = new StorageExpiry<>();
+		return storage;
+	}
+
+	@Bean(name = "userStorage")
+	public Storage<String, AdminAccount> getUserStorage(){
 		Storage<String, AdminAccount> storage = new StorageExpiry<>();
 		return storage;
 	}

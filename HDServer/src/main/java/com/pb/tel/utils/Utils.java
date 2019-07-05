@@ -5,6 +5,7 @@ import org.springframework.core.env.Environment;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collection;
 import java.util.Date;
@@ -37,6 +38,16 @@ public class Utils {
         response.addCookie(cookie);
     }
 
+    public static String getCookie(HttpServletRequest request, String name){
+        String value = null;
+        Cookie [] cookies = request.getCookies();
+        for (Cookie cookie : cookies) {
+            if (name.equals(cookie.getName())) {
+                value = cookie.getValue();
+            }
+        }
+        return value;
+    }
 
     public static Date getDateAfterSeconds(int afterSeconds){
         return new Date(System.currentTimeMillis() + afterSeconds*1000);

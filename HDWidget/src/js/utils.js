@@ -33,6 +33,7 @@
 
 var emailRegexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 var urlRegexp = /^(ftp|http|https):\/\/[^ "]+$/;
+var endMarker = "--endMesMark";
 
 /**
  * Execute AJAX request
@@ -91,6 +92,29 @@ function ajax(request, func, params, errorFunction, mode, contentType) {
     ajaxRequest.send(params);
     return ajaxRequest;
 }
+
+function getDateLable(){
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var hh = String(today.getHours()).padStart(2, '0');
+    var MM = String(today.getMinutes()).padStart(2, '0');
+    today = mm + '.' + dd + " " + hh + ":" + MM;
+    return today;
+}
+
+function pushMessage(message){
+    if(!message){
+        message = "";
+    }
+    chatHistory = (localStorage.getItem("chatHistory") == null)?[]:localStorage.getItem("chatHistory").split(endMarker);
+    if(message != "") {
+        chatHistory.push(getDateLable() + "   " + message);
+    }
+    localStorage.setItem("chatHistory", chatHistory.join(endMarker));
+    byClass(byId('firstPage'), 'chat')[0].innerHTML = chatHistory.join("\n").replace(/--endMesMark/g, "");
+    byClass(byId('firstPage'), 'message')[0].value = "";
+};
 
 function objectToMap(obj, key, value){
     let result = {};
