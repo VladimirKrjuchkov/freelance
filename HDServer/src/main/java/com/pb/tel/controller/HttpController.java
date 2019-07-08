@@ -70,6 +70,7 @@ public class HttpController {
         String operSession = freeOpers.remove(0);
         AdminAccount adminAccount = adminStorage.getValue(operSession);
         UserAccount userAccount = userStorage.getValue(Utils.getCookie(request, "sessionIdUser"));
+        userAccount.setOperSocketId(adminAccount.getSocketId());
         userAccount.setOperSession(operSession);
         Utils.setCookie(response, "operId", operSession, null, environment.getProperty("main.domain"), false, Integer.valueOf(environment.getProperty("session.expiry")));
         return HttpResponse.getSuccessResponse("Здравствуйте, меня звать " + adminAccount.getLogin() + ", какой у вас вопрос?");

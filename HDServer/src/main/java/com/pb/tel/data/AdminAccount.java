@@ -30,6 +30,8 @@ public class AdminAccount implements Serializable {
 
     AdminStatus adminStatus = AdminStatus.FREE;
 
+    private String socketId;
+
     public String getSessionId() {
         return sessionId;
     }
@@ -62,6 +64,14 @@ public class AdminAccount implements Serializable {
         this.adminStatus = adminStatus;
     }
 
+    public String getSocketId() {
+        return socketId;
+    }
+
+    public void setSocketId(String socketId) {
+        this.socketId = socketId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -72,7 +82,8 @@ public class AdminAccount implements Serializable {
         if (sessionId != null ? !sessionId.equals(that.sessionId) : that.sessionId != null) return false;
         if (login != null ? !login.equals(that.login) : that.login != null) return false;
         if (clients != null ? !clients.equals(that.clients) : that.clients != null) return false;
-        return adminStatus == that.adminStatus;
+        if (adminStatus != that.adminStatus) return false;
+        return socketId != null ? socketId.equals(that.socketId) : that.socketId == null;
     }
 
     @Override
@@ -81,6 +92,7 @@ public class AdminAccount implements Serializable {
         result = 31 * result + (login != null ? login.hashCode() : 0);
         result = 31 * result + (clients != null ? clients.hashCode() : 0);
         result = 31 * result + (adminStatus != null ? adminStatus.hashCode() : 0);
+        result = 31 * result + (socketId != null ? socketId.hashCode() : 0);
         return result;
     }
 
@@ -91,6 +103,7 @@ public class AdminAccount implements Serializable {
                 ", login='" + login + '\'' +
                 ", clients=" + clients +
                 ", adminStatus=" + adminStatus +
+                ", socketId='" + socketId + '\'' +
                 '}';
     }
 }

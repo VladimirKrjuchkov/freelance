@@ -44,12 +44,22 @@ public class WebSocketRequest implements Serializable{
 
     public String message;
 
+    public String sessionId;
+
     public String getMessage() {
         return message;
     }
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
 
     @Override
@@ -59,18 +69,22 @@ public class WebSocketRequest implements Serializable{
 
         WebSocketRequest that = (WebSocketRequest) o;
 
-        return message != null ? message.equals(that.message) : that.message == null;
+        if (message != null ? !message.equals(that.message) : that.message != null) return false;
+        return sessionId != null ? sessionId.equals(that.sessionId) : that.sessionId == null;
     }
 
     @Override
     public int hashCode() {
-        return message != null ? message.hashCode() : 0;
+        int result = message != null ? message.hashCode() : 0;
+        result = 31 * result + (sessionId != null ? sessionId.hashCode() : 0);
+        return result;
     }
 
     @Override
     public String toString() {
         return "WebSocketRequest{" +
                 "message='" + message + '\'' +
+                ", sessionId='" + sessionId + '\'' +
                 '}';
     }
 }

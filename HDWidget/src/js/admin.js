@@ -22,6 +22,7 @@ function registerOper(){
             rmClass(byId("firstPage"), "hide");
             wssConnector = StompOverSock.getInstance(true);
             window.setTimeout(function () {
+                wssConnector.send("/method/createAccount", JSON.stringify({'message' : '', 'sessionId' : getCookie("sessionIdOper")}), {});
                 wssConnector.subscribe("/user/queue/input/requests", Handlers.inputRequestsHandler);
             }, 100);
         }

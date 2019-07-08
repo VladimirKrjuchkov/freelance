@@ -1,8 +1,12 @@
 package com.pb.tel.config;
 
+import com.pb.tel.service.websocket.CustomHandshakeHandler;
+import com.pb.tel.service.websocket.WebSocketServer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
@@ -22,7 +26,12 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
 		log.info("WebSocketConfig 1:   StompEndpointRegistry: "+registry);
-		registry.addEndpoint("/wss").setAllowedOrigins("*").withSockJS().setClientLibraryUrl(environment.getProperty("main.address")+"/js/sockjs.js");/*.setInterceptors(new HandshakeInterceptor() {  //Это просто опыт чтоб понять что тут можно поделать
+		registry
+				.addEndpoint("/wss")
+				.setHandshakeHandler(new CustomHandshakeHandler())
+				.setAllowedOrigins("*")
+				.withSockJS()
+				.setClientLibraryUrl(environment.getProperty("main.address")+"/js/sockjs.js");/*.setInterceptors(new HandshakeInterceptor() {  //Это просто опыт чтоб понять что тут можно поделать
 			
 			@Override
 			public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler,
@@ -77,6 +86,12 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 //			}
 //		});		
 //	}
+
+	@Bean
+	public WebSocketServer getWebSocketServer(SimpMessagingTemplate template){
+		WebSocketServer webSocketServer = new WebSocketServer(template);
+		return webSocketServer;
+	}
 
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry registry) {  //Можно еще тут через registry поконфигурить brokerChanel для того чтоб не в один поток с брокером общалось апп это через registry.configureBrokerChannel();

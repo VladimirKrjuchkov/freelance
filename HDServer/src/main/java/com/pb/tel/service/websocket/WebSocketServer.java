@@ -37,7 +37,6 @@ import com.pb.tel.service.exception.LogicException;
 import com.pb.tel.service.websocket.data.WebSocketRequest;
 import com.pb.tel.service.websocket.data.WebSocketResponse;
 import com.pb.tel.utils.DateTimeUtils;
-import com.pb.tel.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
@@ -52,8 +51,8 @@ public class WebSocketServer {
     private static final long ONE_WEEK = DateTimeUtils.ONE_WEEK;
     private static final Timer pingTimer = new Timer(true);
     private static final long PING_TIMER = DateTimeUtils.SECONDS_30;
-    private final boolean timerEnabled = Utils.property.getProperty("webSocket.timer","true").equals("true");
-    public static Long historyControlTime;
+//    private final boolean timerEnabled = Utils.property.getProperty("webSocket.timer","true").equals("true");
+//    public static Long historyControlTime;
     
     @Autowired
 	private SimpMessagingTemplate template;
@@ -63,7 +62,7 @@ public class WebSocketServer {
     public WebSocketServer(SimpMessagingTemplate template) {
     	this.template = template;
     	templateStatic = template;
-        historyControlTime = Long.valueOf(Utils.property.getProperty("history.control.time", "1477312984000"));
+//        historyControlTime = Long.valueOf(Utils.property.getProperty("history.control.time", "1477312984000"));
     }
 
 
@@ -113,7 +112,7 @@ public class WebSocketServer {
     	log.info("SEND WEBSOCKET MESSAGE  !");
     	log.info("Login: "+userLogin);
     	log.info("message: "+message);    	
-    	templateStatic.convertAndSendToUser(userLogin, "/queue/answer/allWssResponse", message);
+    	templateStatic.convertAndSendToUser(userLogin, "/queue/input/requests", message);
         return true;
     }
 

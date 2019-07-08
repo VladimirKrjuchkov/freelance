@@ -4306,7 +4306,8 @@ function sendMessage(message) {
     } else {
         console.log("message to send : " + message);
         wssConnector.send("/method/fromUser", JSON.stringify({
-            message: message
+            message: message,
+            sessionId: getCookie("sessionIdUser")
         }), {});
         pushMessage(message);
     }
@@ -4320,8 +4321,7 @@ function callOper() {
         } else {
             wssConnector = StompOverSock.getInstance(true);
             window.setTimeout(function() {
-                wssConnector.subscribe("/user/queue/answer/sendResult", Handlers.resultHandler);
-                pushMessage();
+                pushMessage(result.message);
             }, 1e3);
         }
     }, null, function(result) {
@@ -5625,8 +5625,12 @@ var _ = {
 };
 
 Handlers = {
-    inputRequestsHandler: function() {
-        confirm("принять входящее соединение?");
+    inputRequestsHandler: function(input) {
+        console.log(input);
+        var chatHistory = localStorage.getItem("chatHistory") == null ? [] : localStorage.getItem("chatHistory").split(endMarker);
+        chatHistory.push(input.body);
+        localStorage.setItem("chatHistory", chatHistory);
+        byClass(byId("firstPage"), "chat")[0].innerHTML = chatHistory.join("\n");
     },
     resultHandler: function(message) {
         var response = JSON.parse(message.body);

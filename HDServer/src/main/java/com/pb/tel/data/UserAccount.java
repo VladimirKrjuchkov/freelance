@@ -23,6 +23,8 @@ public class UserAccount implements Serializable {
 
     private String operSession;
 
+    private String operSocketId;
+
     public String getSessionId() {
         return sessionId;
     }
@@ -39,6 +41,14 @@ public class UserAccount implements Serializable {
         this.operSession = operSession;
     }
 
+    public String getOperSocketId() {
+        return operSocketId;
+    }
+
+    public void setOperSocketId(String operSocketId) {
+        this.operSocketId = operSocketId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -47,13 +57,15 @@ public class UserAccount implements Serializable {
         UserAccount that = (UserAccount) o;
 
         if (sessionId != null ? !sessionId.equals(that.sessionId) : that.sessionId != null) return false;
-        return operSession != null ? operSession.equals(that.operSession) : that.operSession == null;
+        if (operSession != null ? !operSession.equals(that.operSession) : that.operSession != null) return false;
+        return operSocketId != null ? operSocketId.equals(that.operSocketId) : that.operSocketId == null;
     }
 
     @Override
     public int hashCode() {
         int result = sessionId != null ? sessionId.hashCode() : 0;
         result = 31 * result + (operSession != null ? operSession.hashCode() : 0);
+        result = 31 * result + (operSocketId != null ? operSocketId.hashCode() : 0);
         return result;
     }
 
@@ -62,6 +74,7 @@ public class UserAccount implements Serializable {
         return "UserAccount{" +
                 "sessionId='" + sessionId + '\'' +
                 ", operSession='" + operSession + '\'' +
+                ", operSocketId='" + operSocketId + '\'' +
                 '}';
     }
 }

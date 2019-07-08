@@ -34,7 +34,7 @@ function sendMessage(message){
         }
     }else{
         console.log("message to send : " + message);
-        wssConnector.send("/method/fromUser", JSON.stringify({'message' : message}), {});
+        wssConnector.send("/method/fromUser", JSON.stringify({'message' : message, 'sessionId' : getCookie('sessionIdUser')}), {});
         pushMessage(message);
     }
 }
@@ -47,8 +47,8 @@ function callOper(){
         }else{
             wssConnector = StompOverSock.getInstance(true);
             window.setTimeout(function () {
-                wssConnector.subscribe("/user/queue/answer/sendResult", Handlers.resultHandler);
-                pushMessage();
+                // wssConnector.subscribe("/user/queue/answer/sendResult", Handlers.resultHandler);
+                pushMessage(result.message);
             }, 1000);
         }
     }, null, function(result){
