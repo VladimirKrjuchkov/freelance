@@ -4298,21 +4298,6 @@ function registerUser() {
     }, "POST", "application/json");
 }
 
-function sendMessage(message) {
-    if (!getCookie("operId")) {
-        if (confirm("Подключить оператора?")) {
-            callOper();
-        }
-    } else {
-        console.log("message to send : " + message);
-        wssConnector.send("/method/fromUser", JSON.stringify({
-            message: message,
-            sessionId: getCookie("sessionIdUser")
-        }), {});
-        pushMessage(message);
-    }
-}
-
 function callOper() {
     ajax("/api/oper/call", function(result) {
         result = JSON.parse(result);
@@ -5001,6 +4986,22 @@ function ajax(request, func, params, errorFunction, mode, contentType) {
     return ajaxRequest;
 }
 
+function sendMessage(id) {
+    var message = byClass(byId(id), "message")[0].value;
+    if (!getCookie("operId")) {
+        if (confirm("Подключить оператора?")) {
+            callOper();
+        }
+    } else {
+        console.log("message to send : " + message);
+        wssConnector.send("/method/fromUser", JSON.stringify({
+            message: message,
+            sessionId: getCookie("sessionIdUser")
+        }), {});
+        pushMessage(message);
+    }
+}
+
 function getDateLable() {
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, "0");
@@ -5022,6 +5023,18 @@ function pushMessage(message) {
     localStorage.setItem("chatHistory", chatHistory.join(endMarker));
     byClass(byId("firstPage"), "chat")[0].innerHTML = chatHistory.join("\n").replace(/--endMesMark/g, "");
     byClass(byId("firstPage"), "message")[0].value = "";
+}
+
+function pullMessage(message) {
+    if (!message) {
+        message = "";
+    }
+    chatHistory = localStorage.getItem("chatHistory") == null ? [] : localStorage.getItem("chatHistory").split(endMarker);
+    if (message != "") {
+        chatHistory.push(getDateLable() + "   " + message);
+    }
+    localStorage.setItem("chatHistory", chatHistory.join(endMarker));
+    byClass(byId("firstPage"), "chat")[0].innerHTML = chatHistory.join("\n").replace(/--endMesMark/g, "");
 }
 
 function objectToMap(obj, key, value) {
@@ -5627,10 +5640,26 @@ var _ = {
 Handlers = {
     inputRequestsHandler: function(input) {
         console.log(input);
-        var chatHistory = localStorage.getItem("chatHistory") == null ? [] : localStorage.getItem("chatHistory").split(endMarker);
-        chatHistory.push(input.body);
-        localStorage.setItem("chatHistory", chatHistory);
-        byClass(byId("firstPage"), "chat")[0].innerHTML = chatHistory.join("\n");
+        input = JSON.parse(input.body);
+        if (input.requestType == "CALL_OPER") {
+            dialogs.appendChild(buildNode("DIV", {
+                id: input.clientId,
+                className: "pure-form"
+            }, [ buildNode("TEXTAREA", {
+                className: "chat"
+            }), buildNode("BR"), buildNode("BR"), buildNode("INPUT", {
+                className: "message",
+                type: "text",
+                placeholder: "Введите сообщение"
+            }), buildNode("BR"), buildNode("BR"), buildNode("BUTTON", {
+                className: "pure-u-1 pure-button card-0 primary"
+            }, "Отправить", {
+                click: sendMessage(input.clientId)
+            }) ]));
+            rmClass(byId("dialogs"), "hide");
+        } else {
+            pullMessage(input.message);
+        }
     },
     resultHandler: function(message) {
         var response = JSON.parse(message.body);

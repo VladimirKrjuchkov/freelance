@@ -116,6 +116,14 @@ public class WebSocketServer {
         return true;
     }
 
+    public static boolean sendMessage(String userLogin, WebSocketRequest webSocketRequest) {
+        log.info("SEND WEBSOCKET MESSAGE  !");
+        log.info("Login: "+userLogin);
+        log.info("webSocketRequest: "+webSocketRequest);
+        templateStatic.convertAndSendToUser(userLogin, "/queue/input/requests", webSocketRequest);
+        return true;
+    }
+
     public static void sendMassReset() {
 //        List<String> allUsers = UserDAO.getInstance().list();
 //        allUsers.forEach(u->{

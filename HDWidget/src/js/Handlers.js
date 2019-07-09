@@ -2,10 +2,22 @@ Handlers = {
 
     inputRequestsHandler: function(input){
         console.log(input);
-        var chatHistory = (localStorage.getItem("chatHistory") == null)?[]:localStorage.getItem("chatHistory").split(endMarker);
-        chatHistory.push(input.body);
-        localStorage.setItem("chatHistory", chatHistory);
-        byClass(byId('firstPage'), 'chat')[0].innerHTML = chatHistory.join("\n");
+        input = JSON.parse(input.body);
+        if(input.requestType == "CALL_OPER"){
+            dialogs.appendChild(buildNode("DIV", {id: input.clientId, className: "pure-form"},
+                               [buildNode("TEXTAREA", {className: 'chat'}),
+                                buildNode("BR"),
+                                buildNode("BR"),
+                                buildNode("INPUT", {className: 'message', type: 'text', placeholder: "Введите сообщение"}),
+                                buildNode("BR"),
+                                buildNode("BR"),
+                                // buildNode("BUTTON", {className: 'pure-u-1 pure-button card-0 primary'}, "Отправить", {click:sendMessage(byClass(byId("firstPage"), "message")[0].value)})]))
+                                buildNode("BUTTON", {className: 'pure-u-1 pure-button card-0 primary'}, "Отправить", {click: sendMessage(input.clientId)})]))
+            rmClass(byId("dialogs"), "hide");
+
+        }else {
+            pullMessage(input.message);
+        }
     },
 
     resultHandler : function(message){

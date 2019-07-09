@@ -32,6 +32,8 @@
 
 package com.pb.tel.service.websocket.data;
 
+import com.pb.tel.data.enumerators.RequestType;
+
 import java.io.Serializable;
 
 public class WebSocketRequest implements Serializable{
@@ -42,9 +44,24 @@ public class WebSocketRequest implements Serializable{
         this.message = message;
     }
 
+    public WebSocketRequest(String message, RequestType requestType){
+        this.message = message;
+        this.requestType = requestType;
+    }
+
+    public WebSocketRequest(String message, RequestType requestType, String clientId){
+        this.message = message;
+        this.requestType = requestType;
+        this.clientId = clientId;
+    }
+
     public String message;
 
     public String sessionId;
+
+    public RequestType requestType;
+
+    public String clientId;
 
     public String getMessage() {
         return message;
@@ -62,6 +79,22 @@ public class WebSocketRequest implements Serializable{
         this.sessionId = sessionId;
     }
 
+    public RequestType getRequestType() {
+        return requestType;
+    }
+
+    public void setRequestType(RequestType requestType) {
+        this.requestType = requestType;
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -70,13 +103,17 @@ public class WebSocketRequest implements Serializable{
         WebSocketRequest that = (WebSocketRequest) o;
 
         if (message != null ? !message.equals(that.message) : that.message != null) return false;
-        return sessionId != null ? sessionId.equals(that.sessionId) : that.sessionId == null;
+        if (sessionId != null ? !sessionId.equals(that.sessionId) : that.sessionId != null) return false;
+        if (requestType != that.requestType) return false;
+        return clientId != null ? clientId.equals(that.clientId) : that.clientId == null;
     }
 
     @Override
     public int hashCode() {
         int result = message != null ? message.hashCode() : 0;
         result = 31 * result + (sessionId != null ? sessionId.hashCode() : 0);
+        result = 31 * result + (requestType != null ? requestType.hashCode() : 0);
+        result = 31 * result + (clientId != null ? clientId.hashCode() : 0);
         return result;
     }
 
@@ -85,6 +122,8 @@ public class WebSocketRequest implements Serializable{
         return "WebSocketRequest{" +
                 "message='" + message + '\'' +
                 ", sessionId='" + sessionId + '\'' +
+                ", requestType=" + requestType +
+                ", clientId='" + clientId + '\'' +
                 '}';
     }
 }

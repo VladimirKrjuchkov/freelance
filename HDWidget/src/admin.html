@@ -32,16 +32,20 @@
 <div id="canvas" class="loginMode">
     <div id="header" class="pure-u card-0 pure-form">
     </div>
-    <div id="firstPage" class="pure-form hide">
-        <div class="title">Админка:</div>
-        <textarea class="chat"></textarea>
-        <br>
-        <br>
-        <input class="message" type="text" autofocus="" placeholder="Введите сообщение"/>
-        <br>
-        <br>
-        <button class="pure-u-1 pure-button card-0 primary" onclick="sendMessage(byClass(byId('firstPage'), 'message')[0].value)">Отправить</button>
+    <div class="title" id="admin-name"></div>
+    <div id="dialogs" class="pure-form hide">
+
     </div>
+    <!--<div id="firstPage" class="pure-form hide">-->
+        <!--<textarea class="chat"></textarea>-->
+        <!--<br>-->
+        <!--<br>-->
+        <!--<input class="message" type="text" autofocus="" placeholder="Введите сообщение"/>-->
+        <!--<br>-->
+        <!--<br>-->
+        <!--<button class="pure-u-1 pure-button card-0 primary" onclick="sendMessage(byClass(byId('firstPage'), 'message')[0].value)">Отправить</button>-->
+        <!--<input class="client-id hide" type="text"/>-->
+    <!--</div>-->
     <div id="regPage" class="pure-form">
         <div class="title">Регистрация админа:</div>
         <input class="login" type="text" autofocus="" placeholder="Логин"/>

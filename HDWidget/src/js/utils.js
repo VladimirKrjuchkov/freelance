@@ -93,6 +93,19 @@ function ajax(request, func, params, errorFunction, mode, contentType) {
     return ajaxRequest;
 }
 
+function sendMessage(id){
+    var message = byClass(byId(id), "message")[0].value;
+    if(!getCookie("operId")){
+        if(confirm("Подключить оператора?")){
+            callOper();
+        }
+    }else{
+        console.log("message to send : " + message);
+        wssConnector.send("/method/fromUser", JSON.stringify({'message' : message, 'sessionId' : getCookie('sessionIdUser')}), {});
+        pushMessage(message);
+    }
+}
+
 function getDateLable(){
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
@@ -114,6 +127,18 @@ function pushMessage(message){
     localStorage.setItem("chatHistory", chatHistory.join(endMarker));
     byClass(byId('firstPage'), 'chat')[0].innerHTML = chatHistory.join("\n").replace(/--endMesMark/g, "");
     byClass(byId('firstPage'), 'message')[0].value = "";
+};
+
+function pullMessage(message){
+    if(!message){
+        message = "";
+    }
+    chatHistory = (localStorage.getItem("chatHistory") == null)?[]:localStorage.getItem("chatHistory").split(endMarker);
+    if(message != "") {
+        chatHistory.push(getDateLable() + "   " + message);
+    }
+    localStorage.setItem("chatHistory", chatHistory.join(endMarker));
+    byClass(byId('firstPage'), 'chat')[0].innerHTML = chatHistory.join("\n").replace(/--endMesMark/g, "");
 };
 
 function objectToMap(obj, key, value){

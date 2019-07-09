@@ -27,18 +27,6 @@ function registerUser() {
     },"POST", "application/json");
 }
 
-function sendMessage(message){
-    if(!getCookie("operId")){
-        if(confirm("Подключить оператора?")){
-            callOper();
-        }
-    }else{
-        console.log("message to send : " + message);
-        wssConnector.send("/method/fromUser", JSON.stringify({'message' : message, 'sessionId' : getCookie('sessionIdUser')}), {});
-        pushMessage(message);
-    }
-}
-
 function callOper(){
     ajax("/api/oper/call",function(result){
         result = JSON.parse(result);

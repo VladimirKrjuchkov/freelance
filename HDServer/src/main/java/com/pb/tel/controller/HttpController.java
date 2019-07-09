@@ -4,6 +4,9 @@ import com.pb.tel.data.AdminAccount;
 import com.pb.tel.data.HttpResponse;
 import com.pb.tel.data.RegisterRequest;
 import com.pb.tel.data.UserAccount;
+import com.pb.tel.data.enumerators.RequestType;
+import com.pb.tel.service.websocket.WebSocketServer;
+import com.pb.tel.service.websocket.data.WebSocketRequest;
 import com.pb.tel.storage.Storage;
 import com.pb.tel.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,6 +76,7 @@ public class HttpController {
         userAccount.setOperSocketId(adminAccount.getSocketId());
         userAccount.setOperSession(operSession);
         Utils.setCookie(response, "operId", operSession, null, environment.getProperty("main.domain"), false, Integer.valueOf(environment.getProperty("session.expiry")));
+        WebSocketServer.sendMessage(userAccount.getOperSocketId(), new WebSocketRequest("Вы подключены к пользователю " + userAccount.getSessionId(), RequestType.CALL_OPER, userAccount.getSessionId()));
         return HttpResponse.getSuccessResponse("Здравствуйте, меня звать " + adminAccount.getLogin() + ", какой у вас вопрос?");
     }
 

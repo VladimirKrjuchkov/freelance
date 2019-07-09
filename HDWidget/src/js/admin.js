@@ -18,6 +18,7 @@ function registerOper(){
     ajax("/api/oper/register",function(result){
         var result = JSON.parse(result);
         if(result.ok) {
+            byId("admin-name").innerHTML = "Вы вошли как " + byClass(byId('regPage'), 'login')[0].value;
             addClass(byId("regPage"), "hide");
             rmClass(byId("firstPage"), "hide");
             wssConnector = StompOverSock.getInstance(true);
