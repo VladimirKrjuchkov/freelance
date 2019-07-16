@@ -32,6 +32,7 @@
 <div id="canvas" class="loginMode">
     <div id="header" class="pure-u card-0 pure-form">
     </div>
+    <button class="pure-u-1 pure-button card-0 primary hide" id="call-oper-button" onclick="client.callOper()">Подключить оператора</button>
     <div id="firstPage" class="pure-form  hide">
         <div class="title">Чат:</div>
         <textarea class="chat chat-field main-chat-field"></textarea>
@@ -40,7 +41,7 @@
         <input class="message chat-field" type="text" autofocus="" placeholder="Введите сообщение"/>
         <br>
         <br>
-        <button class="pure-u-1 pure-button card-0 primary" onclick="sendMessage(byClass(byId('firstPage'), 'message')[0].value)">Отправить</button>
+        <button class="pure-u-1 pure-button card-0 primary" onclick="client.sendMessage(byClass(byId('firstPage'), 'message')[0].value)">Отправить</button>
     </div>
     <div id="startPage" class="pure-form hide">
     </div>

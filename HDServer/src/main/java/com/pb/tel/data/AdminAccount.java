@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.pb.tel.data.enumerators.AdminStatus;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -49,6 +50,9 @@ public class AdminAccount implements Serializable {
     }
 
     public List<String> getClients() {
+        if(clients == null){
+            clients = new ArrayList<String>();
+        }
         return clients;
     }
 

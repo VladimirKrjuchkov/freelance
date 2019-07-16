@@ -5,14 +5,14 @@ Handlers = {
         input = JSON.parse(input.body);
         if(input.requestType == "CALL_OPER"){
             dialogs.appendChild(buildNode("DIV", {id: input.clientId, className: "pure-form"},
-                               [buildNode("TEXTAREA", {className: 'chat'}),
+                               [buildNode("DIV", {className: 'pure-form'}, "Вы подключены к клиенту " + input.clientId),
+                                buildNode("TEXTAREA", {className: 'chat'}),
                                 buildNode("BR"),
                                 buildNode("BR"),
                                 buildNode("INPUT", {className: 'message', type: 'text', placeholder: "Введите сообщение"}),
                                 buildNode("BR"),
                                 buildNode("BR"),
-                                // buildNode("BUTTON", {className: 'pure-u-1 pure-button card-0 primary'}, "Отправить", {click:sendMessage(byClass(byId("firstPage"), "message")[0].value)})]))
-                                buildNode("BUTTON", {className: 'pure-u-1 pure-button card-0 primary'}, "Отправить", {click: sendMessage(input.clientId)})]))
+                                buildNode("BUTTON", {className: 'pure-u-1 pure-button card-0 primary'}, "Отправить", {click: function(){admin.sendMessage(input.clientId, byClass(byId(input.clientId), 'message')[0].value);}})]))
             rmClass(byId("dialogs"), "hide");
 
         }else {

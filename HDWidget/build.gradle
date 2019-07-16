@@ -67,6 +67,7 @@ deploy.enabled=false
 def allJsModules = [
 		project.prDir+"/src/js/StompOverSock.js",
 		project.prDir+"/src/js/sockjs.js",
+		project.prDir+"/src/js/client.js",
 		project.prDir+"/src/js/main.js",
 		project.prDir+"/src/js/WebSock.js",
 		project.prDir+"/src/js/webstomp.js",
@@ -78,6 +79,7 @@ def adminJsModules = [
 		project.prDir+"/src/js/StompOverSock.js",
 		project.prDir+"/src/js/sockjs.js",
 		project.prDir+"/src/js/admin.js",
+		project.prDir+"/src/js/adminMain.js",
 		project.prDir+"/src/js/WebSock.js",
 		project.prDir+"/src/js/webstomp.js",
 		project.prDir+"/src/js/utils.js",

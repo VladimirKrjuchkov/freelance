@@ -51,7 +51,8 @@ public class HttpController {
         adminStorage.putValue(adminAccount.getSessionId(), adminAccount, Utils.getDateAfterSeconds(Integer.valueOf(environment.getProperty("session.expiry"))));
         freeOpers.add(adminAccount.getSessionId());
         Utils.setCookie(response, "sessionIdOper", adminAccount.getSessionId(), null, environment.getProperty("main.domain"), false, Integer.valueOf(environment.getProperty("session.expiry")));
-        return HttpResponse.getSuccessResponse("Вы успешно зарегестрировались");
+        Utils.setCookie(response, "operName", request.getLogin(), null, environment.getProperty("main.domain"), false, Integer.valueOf(environment.getProperty("session.expiry")));
+        return HttpResponse.getSuccessResponse(request.getLogin());
     }
 
     @RequestMapping(value = "/user/register", method = RequestMethod.POST)
@@ -73,6 +74,7 @@ public class HttpController {
         String operSession = freeOpers.remove(0);
         AdminAccount adminAccount = adminStorage.getValue(operSession);
         UserAccount userAccount = userStorage.getValue(Utils.getCookie(request, "sessionIdUser"));
+        adminAccount.getClients().add(userAccount.getSessionId());
         userAccount.setOperSocketId(adminAccount.getSocketId());
         userAccount.setOperSession(operSession);
         Utils.setCookie(response, "operId", operSession, null, environment.getProperty("main.domain"), false, Integer.valueOf(environment.getProperty("session.expiry")));

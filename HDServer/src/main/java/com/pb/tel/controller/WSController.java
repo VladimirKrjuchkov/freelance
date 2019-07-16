@@ -40,25 +40,43 @@ public class WSController {
     private List<String> freeOpers;
 
     @MessageMapping("/fromUser")
-    @SendToUser("/queue/answer/sendResult")
-    public void allWssReq(SimpMessageHeaderAccessor sha, WebSocketRequest request) throws LogicException {
-        log.info("*** *** *** request: " + request);
-        log.info("*** *** *** request.getSessionId(): " + request.getSessionId());
+    @SendToUser("/queue/answer/sendUserResult")
+    public void fromUser(SimpMessageHeaderAccessor sha, WebSocketRequest request) throws LogicException {
+        log.info("from user request: " + request);
         UserAccount userAccount = userStorage.getValue(request.getSessionId());
-        WebSocketServer.sendMessage(userAccount.getOperSocketId(), request.message);
+        WebSocketServer.sendMessage(userAccount.getOperSocketId(), request);
+    }
+
+    @MessageMapping("/fromAdmin")
+    @SendToUser("/queue/answer/sendAdminResult")
+    public void fromAdmin(SimpMessageHeaderAccessor sha, WebSocketRequest request) throws LogicException {
+        log.info("from admin request: " + request);
+        AdminAccount adminAccount = adminStorage.getValue(request.getSessionId());
+        log.info("*** *** *** adminAccount.getClients() = " + adminAccount.getClients());
+        if(adminAccount.getClients().contains(request.clientId)){
+            UserAccount userAccount = userStorage.getValue(request.clientId);
+            log.info("*** *** *** !important: send message to user with socket: " + userAccount.getSocketId());
+            WebSocketServer.sendMessage(userAccount.getSocketId(), request);
+        }else{
+            log.info("Message not send!");
+        }
     }
 
     @MessageMapping("/createAccount")
     @SendToUser("/queue/answer/sendResult")
     public void createAccount(SimpMessageHeaderAccessor sha, WebSocketRequest request) throws LogicException {
-        log.info("*** *** *** request = " + request);
-        log.info("*** *** *** adminStorage = " + adminStorage);
-        log.info("*** *** *** request.getMessage() = " + request.getMessage());
-        log.info("*** *** *** request.getSessionId() = " + request.getSessionId());
         AdminAccount adminAccount = adminStorage.getValue(request.getSessionId());
-        log.info("*** *** *** adminAccount: " + adminAccount);
         adminAccount.setSocketId(sha.getUser().getName());
         log.info("Success end register!)))");
+    }
+
+    @MessageMapping("/createUserAccount")
+    @SendToUser("/queue/answer/sendResult")
+    public void createUserAccount(SimpMessageHeaderAccessor sha, WebSocketRequest request) throws LogicException {
+        UserAccount userAccount = userStorage.getValue(request.getSessionId());
+        log.info("*** *** *** !important: user socket id: " + sha.getUser().getName());
+        userAccount.setSocketId(sha.getUser().getName());
+        log.info("Success end register user!)))");
     }
 
     @MessageExceptionHandler(LogicException.class)

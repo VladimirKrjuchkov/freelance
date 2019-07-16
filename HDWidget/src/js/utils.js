@@ -93,19 +93,6 @@ function ajax(request, func, params, errorFunction, mode, contentType) {
     return ajaxRequest;
 }
 
-function sendMessage(id){
-    var message = byClass(byId(id), "message")[0].value;
-    if(!getCookie("operId")){
-        if(confirm("Подключить оператора?")){
-            callOper();
-        }
-    }else{
-        console.log("message to send : " + message);
-        wssConnector.send("/method/fromUser", JSON.stringify({'message' : message, 'sessionId' : getCookie('sessionIdUser')}), {});
-        pushMessage(message);
-    }
-}
-
 function getDateLable(){
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');

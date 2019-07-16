@@ -4271,50 +4271,68 @@ function initStompOverSock(debugParam) {
     }, {}, [ 1 ])(1);
 });
 
+client = {
+    registerUser: function() {
+        ajax("/api/user/register", function(result) {
+            var result = JSON.parse(result);
+            if (result.ok) {
+                rmClass(byId("call-oper-button"), "hide");
+            } else {
+                alert(result.message);
+            }
+        }, null, function(result) {
+            var result = JSON.parse(result);
+            alert("Во время регистрации произошла ошибка!");
+            console.log("Во время регистрации произошла ошибка!" + result);
+        }, "POST", "application/json");
+    },
+    sendMessage: function(message) {
+        console.log("message to send : " + message);
+        wssConnector.send("/method/fromUser", JSON.stringify({
+            message: message,
+            sessionId: getCookie("sessionIdUser")
+        }), {});
+        pushMessage(message);
+    },
+    callOper: function() {
+        if (!getCookie("operId") && !getCookie("sessionIdOper")) {
+            ajax("/api/oper/call", function(result) {
+                result = JSON.parse(result);
+                if (!result.ok) {
+                    alert(result.message);
+                } else {
+                    addClass(byId("call-oper-button"), "hide");
+                    rmClass(byId("firstPage"), "hide");
+                    wssConnector = StompOverSock.getInstance(true);
+                    window.setTimeout(function() {
+                        wssConnector.send("/method/createUserAccount", JSON.stringify({
+                            message: "",
+                            sessionId: getCookie("sessionIdUser")
+                        }), {});
+                        wssConnector.subscribe("/user/queue/input/requests", Handlers.inputRequestsHandler);
+                        pushMessage(result.message);
+                    }, 1e3);
+                }
+            }, null, function(result) {
+                var result = JSON.parse(result);
+                alert("Во время вызова оператора произошлда ошибка!");
+                console.log("Во время вызова оператора произошлда ошибка!" + result);
+            }, "GET");
+        } else {
+            alert("Вы уже подключены к оператору");
+        }
+    }
+};
+
 var wssConnector;
 
 addEvent(window, "load", function() {
     if (!getCookie("sessionIdUser")) {
-        if (confirm("Войти в чат?")) {
-            registerUser();
-        }
+        client.registerUser();
     } else {
-        rmClass(byId("firstPage"), "hide");
+        rmClass(byId("call-oper-button"), "hide");
     }
 });
-
-function registerUser() {
-    ajax("/api/user/register", function(result) {
-        var result = JSON.parse(result);
-        if (result.ok) {
-            rmClass(byId("firstPage"), "hide");
-        } else {
-            alert(result.message);
-        }
-    }, null, function(result) {
-        var result = JSON.parse(result);
-        alert("Во время регистрации произошла ошибка!");
-        console.log("Во время регистрации произошла ошибка!" + result);
-    }, "POST", "application/json");
-}
-
-function callOper() {
-    ajax("/api/oper/call", function(result) {
-        result = JSON.parse(result);
-        if (!result.ok) {
-            alert(result.message);
-        } else {
-            wssConnector = StompOverSock.getInstance(true);
-            window.setTimeout(function() {
-                pushMessage(result.message);
-            }, 1e3);
-        }
-    }, null, function(result) {
-        var result = JSON.parse(result);
-        alert("Во время вызова оператора произошлда ошибка!");
-        console.log("Во время вызова оператора произошлда ошибка!" + result);
-    }, "GET");
-}
 
 var WebSock = function(fullUrl, listener, closeCallback) {
     "use strict";
@@ -4986,22 +5004,6 @@ function ajax(request, func, params, errorFunction, mode, contentType) {
     return ajaxRequest;
 }
 
-function sendMessage(id) {
-    var message = byClass(byId(id), "message")[0].value;
-    if (!getCookie("operId")) {
-        if (confirm("Подключить оператора?")) {
-            callOper();
-        }
-    } else {
-        console.log("message to send : " + message);
-        wssConnector.send("/method/fromUser", JSON.stringify({
-            message: message,
-            sessionId: getCookie("sessionIdUser")
-        }), {});
-        pushMessage(message);
-    }
-}
-
 function getDateLable() {
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, "0");
@@ -5645,7 +5647,9 @@ Handlers = {
             dialogs.appendChild(buildNode("DIV", {
                 id: input.clientId,
                 className: "pure-form"
-            }, [ buildNode("TEXTAREA", {
+            }, [ buildNode("DIV", {
+                className: "pure-form"
+            }, "Вы подключены к клиенту " + input.clientId), buildNode("TEXTAREA", {
                 className: "chat"
             }), buildNode("BR"), buildNode("BR"), buildNode("INPUT", {
                 className: "message",
@@ -5654,7 +5658,9 @@ Handlers = {
             }), buildNode("BR"), buildNode("BR"), buildNode("BUTTON", {
                 className: "pure-u-1 pure-button card-0 primary"
             }, "Отправить", {
-                click: sendMessage(input.clientId)
+                click: function() {
+                    admin.sendMessage(input.clientId, byClass(byId(input.clientId), "message")[0].value);
+                }
             }) ]));
             rmClass(byId("dialogs"), "hide");
         } else {
