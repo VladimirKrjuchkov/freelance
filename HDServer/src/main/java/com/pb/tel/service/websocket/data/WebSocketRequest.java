@@ -63,6 +63,8 @@ public class WebSocketRequest implements Serializable{
 
     public String clientId;
 
+    public String operId;
+
     public String getMessage() {
         return message;
     }
@@ -95,6 +97,14 @@ public class WebSocketRequest implements Serializable{
         this.clientId = clientId;
     }
 
+    public String getOperId() {
+        return operId;
+    }
+
+    public void setOperId(String operId) {
+        this.operId = operId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -105,7 +115,8 @@ public class WebSocketRequest implements Serializable{
         if (message != null ? !message.equals(that.message) : that.message != null) return false;
         if (sessionId != null ? !sessionId.equals(that.sessionId) : that.sessionId != null) return false;
         if (requestType != that.requestType) return false;
-        return clientId != null ? clientId.equals(that.clientId) : that.clientId == null;
+        if (clientId != null ? !clientId.equals(that.clientId) : that.clientId != null) return false;
+        return operId != null ? operId.equals(that.operId) : that.operId == null;
     }
 
     @Override
@@ -114,6 +125,7 @@ public class WebSocketRequest implements Serializable{
         result = 31 * result + (sessionId != null ? sessionId.hashCode() : 0);
         result = 31 * result + (requestType != null ? requestType.hashCode() : 0);
         result = 31 * result + (clientId != null ? clientId.hashCode() : 0);
+        result = 31 * result + (operId != null ? operId.hashCode() : 0);
         return result;
     }
 
@@ -124,6 +136,7 @@ public class WebSocketRequest implements Serializable{
                 ", sessionId='" + sessionId + '\'' +
                 ", requestType=" + requestType +
                 ", clientId='" + clientId + '\'' +
+                ", operId='" + operId + '\'' +
                 '}';
     }
 }

@@ -16,8 +16,14 @@ Handlers = {
             rmClass(byId("dialogs"), "hide");
 
         }else {
-            pullMessage(input.message, input.sessionId);
+            admin.pullMessage(input.message, input.sessionId);
         }
+    },
+
+    inputRequestsHandlerUser: function(input){
+        console.log(input);
+        input = JSON.parse(input.body);
+        client.pullMessage(input.message, getCookie("operId"));
     },
 
     resultHandler : function(message){

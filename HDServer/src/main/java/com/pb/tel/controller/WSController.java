@@ -52,10 +52,9 @@ public class WSController {
     public void fromAdmin(SimpMessageHeaderAccessor sha, WebSocketRequest request) throws LogicException {
         log.info("from admin request: " + request);
         AdminAccount adminAccount = adminStorage.getValue(request.getSessionId());
-        log.info("*** *** *** adminAccount.getClients() = " + adminAccount.getClients());
         if(adminAccount.getClients().contains(request.clientId)){
             UserAccount userAccount = userStorage.getValue(request.clientId);
-            log.info("*** *** *** !important: send message to user with socket: " + userAccount.getSocketId());
+            request.setOperId(adminAccount.getSessionId());
             WebSocketServer.sendMessage(userAccount.getSocketId(), request);
         }else{
             log.info("Message not send!");
