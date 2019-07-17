@@ -29,7 +29,7 @@ public class AdminAccount implements Serializable {
 
     private List<String> clients;
 
-    AdminStatus adminStatus = AdminStatus.FREE;
+    AdminStatus adminStatus = AdminStatus.OFFLINE;
 
     private String socketId;
 

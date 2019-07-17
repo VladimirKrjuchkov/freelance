@@ -103,7 +103,7 @@ function getDateLable(){
     return today;
 }
 
-function pushMessage(message){
+function pushMessage(message, roomId){
     if(!message){
         message = "";
     }
@@ -116,7 +116,7 @@ function pushMessage(message){
     byClass(byId('firstPage'), 'message')[0].value = "";
 };
 
-function pullMessage(message){
+function pullMessage(message, roomId){
     if(!message){
         message = "";
     }
@@ -125,7 +125,7 @@ function pullMessage(message){
         chatHistory.push(getDateLable() + "   " + message);
     }
     localStorage.setItem("chatHistory", chatHistory.join(endMarker));
-    byClass(byId('firstPage'), 'chat')[0].innerHTML = chatHistory.join("\n").replace(/--endMesMark/g, "");
+    byClass(byId(roomId), 'chat')[0].innerHTML = chatHistory.join("\n").replace(/--endMesMark/g, "");
 };
 
 function objectToMap(obj, key, value){

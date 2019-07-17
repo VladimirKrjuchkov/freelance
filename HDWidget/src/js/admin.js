@@ -34,6 +34,19 @@ admin = {
             'sessionId': getCookie('sessionIdOper'),
             'clientId': id
         }), {});
-        pushMessage(message);
+        admin.pushMessage(message, id);
     },
+
+    pushMessage: function(message, roomId){
+        if(!message){
+            message = "";
+        }
+        chatHistory = (localStorage.getItem("chatHistory") == null)?[]:localStorage.getItem("chatHistory").split(endMarker);
+        if(message != "") {
+            chatHistory.push(getDateLable() + "   " + message);
+        }
+        localStorage.setItem("chatHistory", chatHistory.join(endMarker));
+        byClass(byId(roomId), 'chat')[0].innerHTML = chatHistory.join("\n").replace(/--endMesMark/g, "");
+        byClass(byId(roomId), 'message')[0].value = "";
+    }
 }

@@ -32,9 +32,9 @@ public class ServiceConfig {
 		return storage;
 	}
 
-	@Bean(name = "freeOpers")
-	public List<String> getFreeOpers(){
-		List<String> opers = new ArrayList<String>();
+	@Bean(name = "registredOpers")
+	public List<AdminAccount> getRegistredOpers(){
+		List<AdminAccount> opers = new ArrayList<>();
 		return opers;
 	}
 //

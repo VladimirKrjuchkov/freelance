@@ -4,7 +4,9 @@ import com.pb.tel.data.AdminAccount;
 import com.pb.tel.data.HttpResponse;
 import com.pb.tel.data.RegisterRequest;
 import com.pb.tel.data.UserAccount;
+import com.pb.tel.data.enumerators.AdminStatus;
 import com.pb.tel.data.enumerators.RequestType;
+import com.pb.tel.service.handlers.AdminHandler;
 import com.pb.tel.service.websocket.WebSocketServer;
 import com.pb.tel.service.websocket.data.WebSocketRequest;
 import com.pb.tel.storage.Storage;
@@ -36,8 +38,11 @@ public class HttpController {
     @Resource(name="userStorage")
     private Storage<String, UserAccount> userStorage;
 
-    @Resource(name="freeOpers")
-    private List<String> freeOpers;
+    @Resource(name="registredOpers")
+    private List<AdminAccount> registredOpers;
+
+    @Resource
+    private AdminHandler adminHandler;
 
     private final Logger log = Logger.getLogger(HttpController.class.getCanonicalName());
 
@@ -49,7 +54,8 @@ public class HttpController {
         AdminAccount adminAccount = new AdminAccount(UUID.randomUUID().toString());
         adminAccount.setLogin(request.getLogin());
         adminStorage.putValue(adminAccount.getSessionId(), adminAccount, Utils.getDateAfterSeconds(Integer.valueOf(environment.getProperty("session.expiry"))));
-        freeOpers.add(adminAccount.getSessionId());
+        adminAccount.setAdminStatus(AdminStatus.ONLINE);
+        registredOpers.add(adminAccount);
         Utils.setCookie(response, "sessionIdOper", adminAccount.getSessionId(), null, environment.getProperty("main.domain"), false, Integer.valueOf(environment.getProperty("session.expiry")));
         Utils.setCookie(response, "operName", request.getLogin(), null, environment.getProperty("main.domain"), false, Integer.valueOf(environment.getProperty("session.expiry")));
         return HttpResponse.getSuccessResponse(request.getLogin());
@@ -68,16 +74,15 @@ public class HttpController {
     @RequestMapping(value = "/oper/call", method = RequestMethod.GET)
     @ResponseBody
     public HttpResponse callOper(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        if(freeOpers.size() <= 0){
+        AdminAccount adminAccount = adminHandler.getMostFreeOper();
+        if(adminAccount == null){
             return HttpResponse.getErrorResponse("Нет свободных операторов попробуйте позже");
         }
-        String operSession = freeOpers.remove(0);
-        AdminAccount adminAccount = adminStorage.getValue(operSession);
         UserAccount userAccount = userStorage.getValue(Utils.getCookie(request, "sessionIdUser"));
         adminAccount.getClients().add(userAccount.getSessionId());
         userAccount.setOperSocketId(adminAccount.getSocketId());
-        userAccount.setOperSession(operSession);
-        Utils.setCookie(response, "operId", operSession, null, environment.getProperty("main.domain"), false, Integer.valueOf(environment.getProperty("session.expiry")));
+        userAccount.setOperSession(adminAccount.getSessionId());
+        Utils.setCookie(response, "operId", adminAccount.getSessionId(), null, environment.getProperty("main.domain"), false, Integer.valueOf(environment.getProperty("session.expiry")));
         WebSocketServer.sendMessage(userAccount.getOperSocketId(), new WebSocketRequest("Вы подключены к пользователю " + userAccount.getSessionId(), RequestType.CALL_OPER, userAccount.getSessionId()));
         return HttpResponse.getSuccessResponse("Здравствуйте, меня звать " + adminAccount.getLogin() + ", какой у вас вопрос?");
     }

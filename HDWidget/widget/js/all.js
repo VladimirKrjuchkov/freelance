@@ -4292,7 +4292,7 @@ client = {
             message: message,
             sessionId: getCookie("sessionIdUser")
         }), {});
-        pushMessage(message);
+        pushMessage(message, getCookie("operId"));
     },
     callOper: function() {
         if (!getCookie("operId") && !getCookie("sessionIdOper")) {
@@ -4310,7 +4310,7 @@ client = {
                             sessionId: getCookie("sessionIdUser")
                         }), {});
                         wssConnector.subscribe("/user/queue/input/requests", Handlers.inputRequestsHandler);
-                        pushMessage(result.message);
+                        pushMessage(result.message, getCookie("operId"));
                     }, 1e3);
                 }
             }, null, function(result) {
@@ -5014,7 +5014,7 @@ function getDateLable() {
     return today;
 }
 
-function pushMessage(message) {
+function pushMessage(message, roomId) {
     if (!message) {
         message = "";
     }
@@ -5027,7 +5027,7 @@ function pushMessage(message) {
     byClass(byId("firstPage"), "message")[0].value = "";
 }
 
-function pullMessage(message) {
+function pullMessage(message, roomId) {
     if (!message) {
         message = "";
     }
@@ -5036,7 +5036,7 @@ function pullMessage(message) {
         chatHistory.push(getDateLable() + "   " + message);
     }
     localStorage.setItem("chatHistory", chatHistory.join(endMarker));
-    byClass(byId("firstPage"), "chat")[0].innerHTML = chatHistory.join("\n").replace(/--endMesMark/g, "");
+    byClass(byId(roomId), "chat")[0].innerHTML = chatHistory.join("\n").replace(/--endMesMark/g, "");
 }
 
 function objectToMap(obj, key, value) {
@@ -5664,7 +5664,7 @@ Handlers = {
             }) ]));
             rmClass(byId("dialogs"), "hide");
         } else {
-            pullMessage(input.message);
+            pullMessage(input.message, input.sessionId);
         }
     },
     resultHandler: function(message) {

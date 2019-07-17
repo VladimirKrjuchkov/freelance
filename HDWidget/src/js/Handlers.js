@@ -16,7 +16,7 @@ Handlers = {
             rmClass(byId("dialogs"), "hide");
 
         }else {
-            pullMessage(input.message);
+            pullMessage(input.message, input.sessionId);
         }
     },
 

@@ -20,7 +20,7 @@ client = {
             'message': message,
             'sessionId': getCookie('sessionIdUser')
         }), {});
-        pushMessage(message);
+        pushMessage(message, getCookie('operId'));
     },
 
     callOper: function() {
@@ -39,7 +39,7 @@ client = {
                             'sessionId': getCookie("sessionIdUser")
                         }), {});
                         wssConnector.subscribe("/user/queue/input/requests", Handlers.inputRequestsHandler);
-                        pushMessage(result.message);
+                        pushMessage(result.message, getCookie('operId'));
                     }, 1000);
                 }
             }, null, function (result) {

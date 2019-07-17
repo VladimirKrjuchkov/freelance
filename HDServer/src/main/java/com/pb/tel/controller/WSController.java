@@ -36,8 +36,8 @@ public class WSController {
     @Resource(name="userStorage")
     private Storage<String, UserAccount> userStorage;
 
-    @Resource(name="freeOpers")
-    private List<String> freeOpers;
+    @Resource(name="registredOpers")
+    private List<String> registredOpers;
 
     @MessageMapping("/fromUser")
     @SendToUser("/queue/answer/sendUserResult")
