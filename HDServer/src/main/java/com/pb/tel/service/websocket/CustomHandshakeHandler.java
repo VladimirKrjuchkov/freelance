@@ -16,7 +16,6 @@ public class CustomHandshakeHandler extends DefaultHandshakeHandler{
     protected Principal determineUser(ServerHttpRequest request,
                                       WebSocketHandler wsHandler,
                                       Map<String, Object> attributes) {
-        // Generate principal with UUID as name
         return new StompPrincipal(UUID.randomUUID().toString());
     }
 }

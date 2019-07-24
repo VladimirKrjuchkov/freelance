@@ -67,7 +67,7 @@ deploy.enabled=false
 def allJsModules = [
 		project.prDir+"/src/js/StompOverSock.js",
 		project.prDir+"/src/js/sockjs.js",
-		project.prDir+"/src/js/client.js",
+		project.prDir+"/src/js/user.js",
 		project.prDir+"/src/js/main.js",
 		project.prDir+"/src/js/WebSock.js",
 		project.prDir+"/src/js/webstomp.js",
@@ -78,12 +78,10 @@ def allJsModules = [
 def adminJsModules = [
 		project.prDir+"/src/js/StompOverSock.js",
 		project.prDir+"/src/js/sockjs.js",
-		project.prDir+"/src/js/admin.js",
-		project.prDir+"/src/js/adminMain.js",
+		project.prDir+"/src/js/oper.js",
 		project.prDir+"/src/js/WebSock.js",
 		project.prDir+"/src/js/webstomp.js",
 		project.prDir+"/src/js/utils.js",
-		project.prDir+"/src/js/Handlers.js"
 ]
 
 npm_update {

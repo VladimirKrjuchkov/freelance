@@ -16,24 +16,19 @@
     <meta property="og:description" content="Widget for HelpDesk connection"/>
     <link rel="stylesheet" href="/css/all.css"/>
     <script src="js/all.js"></script>
-    <!--<script async src="https://www.googletagmanager.com/gtag/js?id=UA-110018670-1"></script>-->
-    <!--<script>-->
-        <!--window.dataLayer = window.dataLayer || [];-->
-
-        <!--function gtag() {-->
-            <!--dataLayer.push(arguments);-->
-        <!--}-->
-        <!--gtag('js', new Date());-->
-        <!--gtag('config', 'UA-110018670-1');-->
-    <!--</script>-->
 </head>
 
 <body>
 <div id="canvas" class="loginMode">
     <div id="header" class="pure-u card-0 pure-form">
     </div>
-    <button class="pure-u-1 pure-button card-0 primary hide" id="call-oper-button" onclick="client.callOper()">Подключить оператора</button>
+    <div id="regPage" class="pure-form">
+        <div class="title">Введите ваше имя:</div>
+        <input class="login" type="text" autofocus="" placeholder="Имя"/>
+        <button class="pure-u-1 pure-button card-0 primary" onclick="user.enter()">Войти в чат</button>
+    </div>
     <div id="firstPage" class="pure-form  hide">
+        <div class="title" id="user-name"></div>
         <div class="title">Чат:</div>
         <textarea class="chat chat-field main-chat-field"></textarea>
         <br>
@@ -41,7 +36,8 @@
         <input class="message chat-field" type="text" autofocus="" placeholder="Введите сообщение"/>
         <br>
         <br>
-        <button class="pure-u-1 pure-button card-0 primary" onclick="client.sendMessage(byClass(byId('firstPage'), 'message')[0].value)">Отправить</button>
+        <button class="pure-u-1 pure-button card-0 primary hide" id="call-oper-button" onclick="user.callOper()">Подключить оператора</button>
+        <button class="pure-u-1 pure-button card-0 primary" onclick="user.sendMessage(byClass(byId('firstPage'), 'message')[0].value)">Отправить сообщение</button>
     </div>
     <div id="startPage" class="pure-form hide">
     </div>

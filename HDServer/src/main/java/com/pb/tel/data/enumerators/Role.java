@@ -1,15 +1,15 @@
 package com.pb.tel.data.enumerators;
 
 /**
- * Created by vladimir on 02.07.19.
+ * Created by vladimir on 22.07.19.
  */
-public enum AdminStatus {
-    ONLINE ("ONLINE"),
-    OFFLINE ("OFFLINE");
+public enum Role {
+    OPERATOR("OPERATOR"),
+    USER("USER");
 
     private String desc;
 
-    AdminStatus(String desc){
+    Role(String desc){
         this.desc = desc;
     }
 

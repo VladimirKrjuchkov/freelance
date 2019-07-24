@@ -32,9 +32,11 @@
 
 package com.pb.tel.service.websocket.data;
 
+import com.pb.tel.data.Account;
 import com.pb.tel.data.enumerators.RequestType;
 
 import java.io.Serializable;
+
 
 public class WebSocketRequest implements Serializable{
 
@@ -44,26 +46,65 @@ public class WebSocketRequest implements Serializable{
         this.message = message;
     }
 
-    public WebSocketRequest(String message, RequestType requestType){
+    public WebSocketRequest(boolean ok){
+        this.ok = ok;
+    };
+
+    public WebSocketRequest(boolean ok, String message){
+        this.ok = ok;
         this.message = message;
-        this.requestType = requestType;
     }
 
-    public WebSocketRequest(String message, RequestType requestType, String clientId){
+    public WebSocketRequest(boolean ok, String message, Account account){
+        this.ok = ok;
         this.message = message;
-        this.requestType = requestType;
-        this.clientId = clientId;
+        this.account = account;
     }
 
-    public String message;
+    public WebSocketRequest(boolean ok, Account account){
+        this.ok = ok;
+        this.account = account;
+    }
 
-    public String sessionId;
+    private boolean ok;
 
-    public RequestType requestType;
+    private String message;
 
-    public String clientId;
+    private long sessionExp;
 
-    public String operId;
+    private Account account;
+
+    private RequestType requestType;
+
+    private String userSessionId;
+
+    public static WebSocketRequest getErrorRequest(String message){
+        return new WebSocketRequest(false, message);
+    }
+
+    public static WebSocketRequest getSuccessRequest(String message){
+        return new WebSocketRequest(true, message);
+    }
+
+    public static WebSocketRequest getSuccessRequest(String message, Account account){
+        return new WebSocketRequest(true, message, account);
+    }
+
+    public static WebSocketRequest getSuccessRequest(Account account){
+        return new WebSocketRequest(true, account);
+    }
+
+    public static WebSocketRequest getSuccessRequest(){
+        return new WebSocketRequest(true);
+    }
+
+    public boolean isOk() {
+        return ok;
+    }
+
+    public void setOk(boolean ok) {
+        this.ok = ok;
+    }
 
     public String getMessage() {
         return message;
@@ -73,12 +114,20 @@ public class WebSocketRequest implements Serializable{
         this.message = message;
     }
 
-    public String getSessionId() {
-        return sessionId;
+    public long getSessionExp() {
+        return sessionExp;
     }
 
-    public void setSessionId(String sessionId) {
-        this.sessionId = sessionId;
+    public void setSessionExp(long sessionExp) {
+        this.sessionExp = sessionExp;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
     public RequestType getRequestType() {
@@ -89,20 +138,12 @@ public class WebSocketRequest implements Serializable{
         this.requestType = requestType;
     }
 
-    public String getClientId() {
-        return clientId;
+    public String getUserSessionId() {
+        return userSessionId;
     }
 
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
-    }
-
-    public String getOperId() {
-        return operId;
-    }
-
-    public void setOperId(String operId) {
-        this.operId = operId;
+    public void setUserSessionId(String userSessionId) {
+        this.userSessionId = userSessionId;
     }
 
     @Override
@@ -112,31 +153,34 @@ public class WebSocketRequest implements Serializable{
 
         WebSocketRequest that = (WebSocketRequest) o;
 
+        if (ok != that.ok) return false;
+        if (sessionExp != that.sessionExp) return false;
         if (message != null ? !message.equals(that.message) : that.message != null) return false;
-        if (sessionId != null ? !sessionId.equals(that.sessionId) : that.sessionId != null) return false;
+        if (account != null ? !account.equals(that.account) : that.account != null) return false;
         if (requestType != that.requestType) return false;
-        if (clientId != null ? !clientId.equals(that.clientId) : that.clientId != null) return false;
-        return operId != null ? operId.equals(that.operId) : that.operId == null;
+        return userSessionId != null ? userSessionId.equals(that.userSessionId) : that.userSessionId == null;
     }
 
     @Override
     public int hashCode() {
-        int result = message != null ? message.hashCode() : 0;
-        result = 31 * result + (sessionId != null ? sessionId.hashCode() : 0);
+        int result = (ok ? 1 : 0);
+        result = 31 * result + (message != null ? message.hashCode() : 0);
+        result = 31 * result + (int) (sessionExp ^ (sessionExp >>> 32));
+        result = 31 * result + (account != null ? account.hashCode() : 0);
         result = 31 * result + (requestType != null ? requestType.hashCode() : 0);
-        result = 31 * result + (clientId != null ? clientId.hashCode() : 0);
-        result = 31 * result + (operId != null ? operId.hashCode() : 0);
+        result = 31 * result + (userSessionId != null ? userSessionId.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
         return "WebSocketRequest{" +
-                "message='" + message + '\'' +
-                ", sessionId='" + sessionId + '\'' +
+                "ok=" + ok +
+                ", message='" + message + '\'' +
+                ", sessionExp=" + sessionExp +
+                ", account=" + account +
                 ", requestType=" + requestType +
-                ", clientId='" + clientId + '\'' +
-                ", operId='" + operId + '\'' +
+                ", userSessionId='" + userSessionId + '\'' +
                 '}';
     }
 }

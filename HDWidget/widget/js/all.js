@@ -4271,89 +4271,41 @@ function initStompOverSock(debugParam) {
     }, {}, [ 1 ])(1);
 });
 
-client = {
-    registerUser: function() {
-        ajax("/api/user/register", function(result) {
-            var result = JSON.parse(result);
-            if (result.ok) {
-                rmClass(byId("call-oper-button"), "hide");
-            } else {
-                alert(result.message);
-            }
-        }, null, function(result) {
-            var result = JSON.parse(result);
-            alert("Во время регистрации произошла ошибка!");
-            console.log("Во время регистрации произошла ошибка!" + result);
-        }, "POST", "application/json");
+user = {
+    enter: function() {
+        var req = {
+            login: byClass(byId("regPage"), "login")[0].value
+        };
+        wssConnector.send("/method/user/enter", JSON.stringify(req), {});
+    },
+    callOper: function() {
+        wssConnector.send("/method/oper/call", "", {});
     },
     sendMessage: function(message) {
         console.log("message to send : " + message);
-        wssConnector.send("/method/fromUser", JSON.stringify({
-            message: message,
-            sessionId: getCookie("sessionIdUser")
+        wssConnector.send("/method/user/message", JSON.stringify({
+            message: message
         }), {});
-        client.pushMessage(message, getCookie("operId"));
     },
-    pullMessage: function(message, roomId) {
-        if (!message) {
-            message = "";
-        }
-        chatHistory = localStorage.getItem("chatHistory_" + roomId) == null ? [] : localStorage.getItem("chatHistory_" + roomId).split(endMarker);
-        if (message != "") {
-            chatHistory.push(getDateLable() + "   " + message);
-        }
-        localStorage.setItem("chatHistory_" + roomId, chatHistory.join(endMarker));
-        byClass(byId("firstPage"), "chat")[0].innerHTML = chatHistory.join("\n").replace(/--endMesMark/g, "");
-    },
-    callOper: function() {
-        if (!getCookie("operId") && !getCookie("sessionIdOper")) {
-            ajax("/api/oper/call", function(result) {
-                result = JSON.parse(result);
-                if (!result.ok) {
-                    alert(result.message);
-                } else {
-                    addClass(byId("call-oper-button"), "hide");
-                    rmClass(byId("firstPage"), "hide");
-                    wssConnector = StompOverSock.getInstance(true);
-                    window.setTimeout(function() {
-                        wssConnector.send("/method/createUserAccount", JSON.stringify({
-                            message: "",
-                            sessionId: getCookie("sessionIdUser")
-                        }), {});
-                        wssConnector.subscribe("/user/queue/input/requests", Handlers.inputRequestsHandlerUser);
-                        client.pushMessage(result.message, getCookie("operId"));
-                    }, 1e3);
-                }
-            }, null, function(result) {
-                var result = JSON.parse(result);
-                alert("Во время вызова оператора произошлда ошибка!");
-                console.log("Во время вызова оператора произошлда ошибка!" + result);
-            }, "GET");
-        } else {
-            alert("Вы уже подключены к оператору");
-        }
-    },
-    pushMessage: function(message, roomId) {
-        if (!message) {
-            message = "";
-        }
-        chatHistory = localStorage.getItem("chatHistory_" + roomId) == null ? [] : localStorage.getItem("chatHistory_" + roomId).split(endMarker);
-        if (message != "") {
-            chatHistory.push(getDateLable() + "   " + message);
-        }
-        localStorage.setItem("chatHistory_" + roomId, chatHistory.join(endMarker));
-        byClass(byId("firstPage"), "chat")[0].innerHTML = chatHistory.join("\n").replace(/--endMesMark/g, "");
-        byClass(byId("firstPage"), "message")[0].value = "";
+    userCheck: function() {
+        console.log("check user");
+        wssConnector.send("/method/user/check", "", {});
     }
 };
 
 var wssConnector;
 
 addEvent(window, "load", function() {
-    if (!getCookie("sessionIdUser")) {
-        client.registerUser();
+    wssConnector = getCookie("wssConnector");
+    if (!wssConnector) {
+        wssConnector = StompOverSock.getInstance(true);
+        wssConnector.subscribe("/user/queue/answer/user/enter", Handlers.userEnterHandler);
+        wssConnector.subscribe("/user/queue/answer/user/check", Handlers.userCheckHandler);
+        wssConnector.subscribe("/user/queue/answer/user/message", Handlers.messagingResultHandler);
+        wssConnector.subscribe("/user/queue/answer/oper/call", Handlers.operCallHandler);
+        wssConnector.subscribe("/user/queue/answer/input/requests", Handlers.inputMessagesHandler);
     } else {
-        rmClass(byId("call-oper-button"), "hide");
+        user.userCheck();
     }
 });
 
@@ -5037,29 +4989,29 @@ function getDateLable() {
     return today;
 }
 
-function pushMessage(message, roomId) {
+function pushMessage(message, roomId, nodeId) {
     if (!message) {
         message = "";
     }
-    chatHistory = localStorage.getItem("chatHistory") == null ? [] : localStorage.getItem("chatHistory").split(endMarker);
+    chatHistory = localStorage.getItem("chatHistory_" + roomId) == null ? [] : localStorage.getItem("chatHistory_" + roomId).split(endMarker);
     if (message != "") {
         chatHistory.push(getDateLable() + "   " + message);
     }
-    localStorage.setItem("chatHistory", chatHistory.join(endMarker));
-    byClass(byId("firstPage"), "chat")[0].innerHTML = chatHistory.join("\n").replace(/--endMesMark/g, "");
-    byClass(byId("firstPage"), "message")[0].value = "";
+    localStorage.setItem("chatHistory_" + roomId, chatHistory.join(endMarker));
+    byClass(byId(nodeId), "chat")[0].innerHTML = chatHistory.join("\n").replace(/--endMesMark/g, "");
+    byClass(byId(nodeId), "message")[0].value = "";
 }
 
-function pullMessage(message, roomId) {
+function pullMessage(message, roomId, nodeId) {
     if (!message) {
         message = "";
     }
-    chatHistory = localStorage.getItem("chatHistory") == null ? [] : localStorage.getItem("chatHistory").split(endMarker);
+    chatHistory = localStorage.getItem("chatHistory_" + roomId) == null ? [] : localStorage.getItem("chatHistory_" + roomId).split(endMarker);
     if (message != "") {
         chatHistory.push(getDateLable() + "   " + message);
     }
-    localStorage.setItem("chatHistory", chatHistory.join(endMarker));
-    byClass(byId(roomId), "chat")[0].innerHTML = chatHistory.join("\n").replace(/--endMesMark/g, "");
+    localStorage.setItem("chatHistory_" + roomId, chatHistory.join(endMarker));
+    byClass(byId(nodeId), "chat")[0].innerHTML = chatHistory.join("\n").replace(/--endMesMark/g, "");
 }
 
 function objectToMap(obj, key, value) {
@@ -5073,6 +5025,11 @@ function objectToMap(obj, key, value) {
 function getCookie(name) {
     var matches = document.cookie.match(new RegExp("(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, "\\$1") + "=([^;]*)"));
     return matches ? decodeURIComponent(matches[1]) : undefined;
+}
+
+function setCookie(key, value, exp) {
+    document.cookie = key + "=" + value + "; expires=" + new Date(exp + 969e5).toGMTString() + "; path=" + location.hostname;
+    return value;
 }
 
 function ajaxRaw(url, callback, error) {
@@ -5663,46 +5620,46 @@ var _ = {
 };
 
 Handlers = {
-    inputRequestsHandler: function(input) {
-        console.log(input);
+    userEnterHandler: function(input) {
         input = JSON.parse(input.body);
-        if (input.requestType == "CALL_OPER") {
-            dialogs.appendChild(buildNode("DIV", {
-                id: input.clientId,
-                className: "pure-form"
-            }, [ buildNode("DIV", {
-                className: "pure-form"
-            }, "Вы подключены к клиенту " + input.clientId), buildNode("TEXTAREA", {
-                className: "chat"
-            }), buildNode("BR"), buildNode("BR"), buildNode("INPUT", {
-                className: "message",
-                type: "text",
-                placeholder: "Введите сообщение"
-            }), buildNode("BR"), buildNode("BR"), buildNode("BUTTON", {
-                className: "pure-u-1 pure-button card-0 primary"
-            }, "Отправить", {
-                click: function() {
-                    admin.sendMessage(input.clientId, byClass(byId(input.clientId), "message")[0].value);
-                }
-            }) ]));
-            rmClass(byId("dialogs"), "hide");
+        if (input.ok) {
+            var status = input.account.status;
+            if (status == "DISCONNECTED") {
+                rmClass(byId("call-oper-button"), "hide");
+            } else {
+                pullMessage(input.message, input.account.sessionId, "firstPage");
+            }
+            byId("user-name").innerHTML = "Вы вошли как " + input.account.login;
+            addClass(byId("regPage"), "hide");
+            rmClass(byId("firstPage"), "hide");
+            setCookie("wssConnector", wssConnector, input.sessionExp);
         } else {
-            admin.pullMessage(input.message, input.sessionId);
+            alert(input.message);
         }
     },
-    inputRequestsHandlerUser: function(input) {
-        console.log(input);
+    operCallHandler: function(input) {
         input = JSON.parse(input.body);
-        client.pullMessage(input.message, getCookie("operId"));
-    },
-    resultHandler: function(message) {
-        var response = JSON.parse(message.body);
-        if (!response.ok) {
-            alert(response.message);
+        if (input.ok) {
+            pullMessage(input.message, input.account.sessionId, "firstPage");
+            addClass(byId("call-oper-button"), "hide");
         } else {
-            chatHistory.push(response.message);
-            localStorage.setItem("chatHistory", chatHistory);
-            byClass(byId("firstPage"), "chat")[0].innerHTML = chatHistory.join("\n");
+            alert(input.message);
+        }
+    },
+    messagingResultHandler: function(input) {
+        input = JSON.parse(input.body);
+        pushMessage(input.message, Object.values(input.account.connectedAccounts)[0].sessionId, "firstPage");
+    },
+    inputMessagesHandler: function(input) {
+        input = JSON.parse(input.body);
+        pullMessage(input.message, input.account.sessionId, "firstPage");
+    },
+    userCheckHandler: function(input) {
+        input = JSON.parse(input.body);
+        if (input.account) {
+            setCookie("wssConnector", wssConnector, input.sessionExp);
+            addClass(byId("regPage"), "hide");
+            rmClass(byId("firstPage"), "hide");
         }
     }
 };

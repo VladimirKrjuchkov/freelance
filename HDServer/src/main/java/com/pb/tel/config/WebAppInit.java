@@ -10,21 +10,13 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
 import javax.servlet.*;
 import java.util.EnumSet;
 import java.util.Set;
-import java.util.logging.Logger;
-
-//import com.pb.util.bpn.ws.logging.HttpServletRequestResponseLoggingFilter;
 
 public class WebAppInit extends AbstractAnnotationConfigDispatcherServletInitializer{
-
-	private static final Logger log = Logger.getLogger(WebAppInit.class.getCanonicalName());
-
-	public static String excludeComponentScanPattern = "";
 
 	@Override
 	protected Class<?>[] getRootConfigClasses(){
 		return new Class[]{RootConfig.class, ServiceConfig.class, WebSocketConfig.class};
 	}
-
 
 	@Override
 	protected Class<?>[] getServletConfigClasses(){
@@ -72,15 +64,11 @@ public class WebAppInit extends AbstractAnnotationConfigDispatcherServletInitial
 		}
 
 		servletContext.setSessionTrackingModes(EnumSet.of(SessionTrackingMode.COOKIE));
-//		Эту строчку надо разкоментить чтоб запустить вместо JSESSIONID PPLSID
-		//servletContext.setSessionTrackingModes(Collections.EMPTY_SET);
 		servletContext.getSessionCookieConfig().setPath("/");
 		servletContext.getSessionCookieConfig().setDomain(null);
 		servletContext.getSessionCookieConfig().setHttpOnly(true);
-		servletContext.getSessionCookieConfig().setMaxAge(600);// @CHN@
-//		servletContext.addListener(new SessionListener());
-		//servletContext.getSessionCookieConfig().setSecure(true);
-
+		servletContext.getSessionCookieConfig().setMaxAge(600);
+//		servletContext.getSessionCookieConfig().setSecure(true);
 		customizeRegistration(registration);
 	}
 
@@ -113,22 +101,5 @@ public class WebAppInit extends AbstractAnnotationConfigDispatcherServletInitial
 	protected Set<SessionTrackingMode> getSessionTrackingModes() {
 		return EnumSet.of(SessionTrackingMode.COOKIE);
 	}
-
-//	protected EnumSet<DispatcherType> getSecurityDispatcherTypes() {
-//		return EnumSet.of(DispatcherType.REQUEST, DispatcherType.ERROR,	DispatcherType.ASYNC);
-//	}
-
-
-//	public class SessionListener implements HttpSessionListener {
-//		@Override
-//		public void sessionCreated(HttpSessionEvent event) {
-//			log.info("==== Session is created ====    id: "+event.getSession().getId());
-//		event.getSession().setMaxInactiveInterval(15);
-//		}
-//		@Override
-//		public void sessionDestroyed(HttpSessionEvent event) {
-//			log.info("==== Session is destroyed ====   id: "+event.getSession().getId());
-//		}
-//	}
 
 }

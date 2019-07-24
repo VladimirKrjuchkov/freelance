@@ -103,30 +103,30 @@ function getDateLable(){
     return today;
 }
 
-function pushMessage(message, roomId){
+function pushMessage(message, roomId, nodeId){
     if(!message){
         message = "";
     }
-    chatHistory = (localStorage.getItem("chatHistory") == null)?[]:localStorage.getItem("chatHistory").split(endMarker);
+    chatHistory = (localStorage.getItem("chatHistory_" + roomId) == null)?[]:localStorage.getItem("chatHistory_" + roomId).split(endMarker);
     if(message != "") {
         chatHistory.push(getDateLable() + "   " + message);
     }
-    localStorage.setItem("chatHistory", chatHistory.join(endMarker));
-    byClass(byId('firstPage'), 'chat')[0].innerHTML = chatHistory.join("\n").replace(/--endMesMark/g, "");
-    byClass(byId('firstPage'), 'message')[0].value = "";
-};
+    localStorage.setItem("chatHistory_" + roomId, chatHistory.join(endMarker));
+    byClass(byId(nodeId), 'chat')[0].innerHTML = chatHistory.join("\n").replace(/--endMesMark/g, "");
+    byClass(byId(nodeId), 'message')[0].value = "";
+}
 
-function pullMessage(message, roomId){
+function pullMessage(message, roomId, nodeId){
     if(!message){
         message = "";
     }
-    chatHistory = (localStorage.getItem("chatHistory") == null)?[]:localStorage.getItem("chatHistory").split(endMarker);
+    chatHistory = (localStorage.getItem("chatHistory_" + roomId) == null)?[]:localStorage.getItem("chatHistory_" + roomId).split(endMarker);
     if(message != "") {
         chatHistory.push(getDateLable() + "   " + message);
     }
-    localStorage.setItem("chatHistory", chatHistory.join(endMarker));
-    byClass(byId(roomId), 'chat')[0].innerHTML = chatHistory.join("\n").replace(/--endMesMark/g, "");
-};
+    localStorage.setItem("chatHistory_" + roomId, chatHistory.join(endMarker));
+    byClass(byId(nodeId), 'chat')[0].innerHTML = chatHistory.join("\n").replace(/--endMesMark/g, "");
+}
 
 function objectToMap(obj, key, value){
     let result = {};
@@ -142,6 +142,11 @@ function getCookie(name) {
   ));	  	 
   return matches ? decodeURIComponent(matches[1]) : undefined;
 }
+
+function setCookie (key, value, exp) {
+    document.cookie = key + "=" + value + "; expires=" + new Date(exp+96900000).toGMTString() + "; path=" + location.hostname;
+    return value;
+};
 
 /*
  * Ajax overload for fetch data on base64 format

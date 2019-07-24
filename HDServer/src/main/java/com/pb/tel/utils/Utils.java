@@ -38,6 +38,13 @@ public class Utils {
         response.addCookie(cookie);
     }
 
+    public static int getSecondsToDate(Date date){
+        int ttlValue = (int)(date.getTime() - System.currentTimeMillis())/1000;
+        if(ttlValue<0)
+            ttlValue = 0;
+        return ttlValue;
+    }
+
     public static String getCookie(HttpServletRequest request, String name){
         String value = null;
         Cookie [] cookies = request.getCookies();
