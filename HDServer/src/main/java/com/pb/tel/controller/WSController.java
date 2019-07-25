@@ -7,6 +7,7 @@ import com.pb.tel.data.enumerators.Role;
 import com.pb.tel.data.enumerators.Status;
 import com.pb.tel.service.exception.LogicException;
 import com.pb.tel.service.handlers.AdminHandler;
+import com.pb.tel.service.handlers.UserHandler;
 import com.pb.tel.service.websocket.WebSocketServer;
 import com.pb.tel.service.websocket.data.WebSocketRequest;
 import com.pb.tel.storage.Storage;
@@ -38,6 +39,9 @@ public class WSController {
     @Resource
     private AdminHandler adminHandler;
 
+    @Resource
+    private UserHandler userHandler;
+
     @Resource(name="registredOpers")
     private List<Account> registredOpers;
 
@@ -57,12 +61,12 @@ public class WSController {
             account.setStatus(Status.DISCONNECTED);
             account.setRole(Role.USER);
 
-        }else if(userAccount.getStatus() == Status.CONNECTED &&
-                 userAccount.getConnectedAccounts() != null &&
-                 !userAccount.getConnectedAccounts().isEmpty() &&
-                 accountStorage.getValue(userAccount.getConnectedOperSessionId()) != null &&
-                 accountStorage.getValue(userAccount.getConnectedOperSessionId()).getStatus() == Status.ONLINE){
-            webSocketRequest.setMessage("Вы подключены к оператору " + accountStorage.getValue(userAccount.getConnectedOperSessionId()).getLogin());
+        }else if(account.getStatus() == Status.CONNECTED &&
+                account.getConnectedAccounts() != null &&
+                 !account.getConnectedAccounts().isEmpty() &&
+                 accountStorage.getValue(account.getConnectedOperSessionId()) != null &&
+                 accountStorage.getValue(account.getConnectedOperSessionId()).getStatus() == Status.ONLINE){
+            webSocketRequest.setMessage("Вы подключены к оператору " + accountStorage.getValue(account.getConnectedOperSessionId()).getLogin());
         }
         accountStorage.putValue(account.getSessionId(), account, Utils.getDateAfterSeconds(Integer.valueOf(environment.getProperty("session.expiry"))));
         webSocketRequest.setAccount(account);
@@ -99,6 +103,7 @@ public class WSController {
         }
         operAccount.addConnectedAccount(new ConnectedAccount(sessionId, userAccount.getLogin()));
         userAccount.addConnectedAccount(new ConnectedAccount(operAccount.getSessionId(), operAccount.getLogin()));
+        userAccount.setStatus(Status.CONNECTED);
         WebSocketRequest webSocketRequest = WebSocketRequest.getSuccessRequest("Вы подключены к пользователю " + userAccount.getSessionId(), operAccount);
         webSocketRequest.setRequestType(RequestType.CALL_OPER);
         WebSocketServer.sendMessage(userAccount.getConnectedOperSessionId(), webSocketRequest);

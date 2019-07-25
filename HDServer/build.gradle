@@ -19,6 +19,11 @@ dependencies {
     compile "org.springframework.data:spring-data-redis"
     compile "org.springframework:spring-messaging"
 
+    compile "org.springframework.security:spring-security-config:5.1.5.RELEASE"
+    compile "org.springframework.security:spring-security-messaging:5.1.5.RELEASE"
+    compile "org.springframework.security:spring-security-web:5.1.5.RELEASE"
+
+
     compile "com.fasterxml.jackson.core:jackson-core:2.9.0.pr2"
     compile "com.fasterxml.jackson.core:jackson-annotations:2.9.0.pr2"
     compile "com.fasterxml.jackson.core:jackson-databind:2.9.0.pr2"
