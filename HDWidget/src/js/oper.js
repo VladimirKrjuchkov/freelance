@@ -1,16 +1,26 @@
 var wssConnector;
 addEvent(window, "load", function () {
-    wssConnector = getCookie("wssConnector");
-    if(!wssConnector) {
-        wssConnector = StompOverSock.getInstance(true);
-        wssConnector.subscribe("/user/queue/answer/oper/enter", oper.operEnterHandler);
-        wssConnector.subscribe("/user/queue/answer/oper/check", oper.userCheckHandler);
-        wssConnector.subscribe("/user/queue/answer/oper/message", oper.messagingResultHandler);
-        wssConnector.subscribe("/user/queue/answer/input/requests", oper.inputMessagesHandler);
-
-    }else{
-        oper.operCheck();
-    }
+    ajax("/api/sidCheck", function(resp) {
+        var mes = JSON.parse(resp);
+        if (mes.state != "ok") {
+            alert(mes.desc);
+        } else {
+            rmClass(byId("loginPage"), "hide");
+        }
+    }, null, function(resp) {
+        alert(resp);
+    }, "POST");
+    // wssConnector = getCookie("wssConnector");
+    // if(!wssConnector) {
+    //     wssConnector = StompOverSock.getInstance(true);
+    //     wssConnector.subscribe("/user/queue/answer/oper/enter", oper.operEnterHandler);
+    //     wssConnector.subscribe("/user/queue/answer/oper/check", oper.userCheckHandler);
+    //     wssConnector.subscribe("/user/queue/answer/oper/message", oper.messagingResultHandler);
+    //     wssConnector.subscribe("/user/queue/answer/input/requests", oper.inputMessagesHandler);
+    //
+    // }else{
+    //     oper.operCheck();
+    // }
 });
 
 

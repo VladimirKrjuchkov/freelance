@@ -3,7 +3,7 @@
 // (powered by Fernflower decompiler)
 //
 
-package com.pb.tel.filter.logging;
+package com.pb.tel.filter;
 
 import com.pb.tel.utils.BufferedBodyHttpServletRequestWrapper;
 import com.pb.tel.utils.BufferedHttpServletResponseWrapper;

@@ -36,15 +36,19 @@
     <div id="dialogs" class="pure-form hide">
 
     </div>
-    <div id="regPage" class="pure-form">
-        <div class="title">Регистрация админа:</div>
-        <input class="login" type="text" autofocus="" placeholder="Логин"/>
-        <br>
-        <br>
-        <input class="password" type="password" autofocus="" placeholder="Пароль"/>
-        <br>
-        <br>
-        <button class="pure-u-1 pure-button card-0 primary" onclick="oper.enter()">Зарегистрироваться</button>
+    <div id="loginPage" class="pure-form hide">
+        <form action="/api/login" id="formLogin" method="POST">
+            <div id="regPage" class="pure-form">
+                <div class="title">Регистрация админа:</div>
+                <input class="login" name="username" type="text" autofocus="" placeholder="Логин"/>
+                <br>
+                <br>
+                <input class="password" type="password" name="password" autofocus="" placeholder="Пароль"/>
+                <br>
+                <br>
+                <button class="pure-u-1 pure-button card-0 primary" type="submit">Зарегистрироваться</button>
+            </div>
+        </form>
     </div>
     <div id="startPage" class="pure-form hide">
     </div>

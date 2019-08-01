@@ -1,6 +1,6 @@
 package com.pb.tel.service.handlers;
 
-import com.pb.tel.data.Account;
+import com.pb.tel.data.UserAccount;
 import com.pb.tel.data.enumerators.Status;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +17,11 @@ import java.util.TreeSet;
 public class AdminHandler {
 
     @Resource(name="registredOpers")
-    private List<Account> registredOpers;
+    private List<UserAccount> registredOpers;
 
-    public Account getMostFreeOper(){
-        Comparator<Account> ocomp = new AdminComporator();
-        TreeSet<Account> freeOpers = new TreeSet(ocomp);
+    public UserAccount getMostFreeOper(){
+        Comparator<UserAccount> ocomp = new AdminComporator();
+        TreeSet<UserAccount> freeOpers = new TreeSet(ocomp);
         registredOpers.stream().filter(registredOpers -> Status.ONLINE.equals(registredOpers.getStatus())).forEach(oper -> freeOpers.add(oper));
         if(freeOpers.size() <= 0){
             return null;
@@ -30,9 +30,9 @@ public class AdminHandler {
         }
     }
 
-    class AdminComporator implements Comparator<Account> {
+    class AdminComporator implements Comparator<UserAccount> {
 
-        public int compare(Account a, Account b){
+        public int compare(UserAccount a, UserAccount b){
 
             if(a.getConnectedAccounts().size()> b.getConnectedAccounts().size())
                 return 1;

@@ -4,6 +4,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.FrameworkServlet;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
@@ -15,7 +16,7 @@ public class WebAppInit extends AbstractAnnotationConfigDispatcherServletInitial
 
 	@Override
 	protected Class<?>[] getRootConfigClasses(){
-		return new Class[]{RootConfig.class, ServiceConfig.class, WebSocketConfig.class};
+		return new Class[]{RootConfig.class, ServiceConfig.class, SecurityConfig.class, WebSocketConfig.class};
 	}
 
 	@Override
@@ -67,7 +68,7 @@ public class WebAppInit extends AbstractAnnotationConfigDispatcherServletInitial
 		servletContext.getSessionCookieConfig().setPath("/");
 		servletContext.getSessionCookieConfig().setDomain(null);
 		servletContext.getSessionCookieConfig().setHttpOnly(true);
-		servletContext.getSessionCookieConfig().setMaxAge(600);
+//		servletContext.getSessionCookieConfig().setMaxAge(600);
 //		servletContext.getSessionCookieConfig().setSecure(true);
 		customizeRegistration(registration);
 	}
@@ -84,11 +85,11 @@ public class WebAppInit extends AbstractAnnotationConfigDispatcherServletInitial
 //	    logFilterRegistration.setInitParameter("useMessageSeparator", "true");
 //	    logFilterRegistration.addMappingForUrlPatterns(null, true, "/*");
 
-//	    DelegatingFilterProxy delegateFilterProxy = new DelegatingFilterProxy();
-//	    FilterRegistration.Dynamic secureFilterRegistration = servletContext.addFilter("springSecurityFilterChain", delegateFilterProxy);
-//	    checkRegister(secureFilterRegistration, "springSecurityFilterChain");
-//	    secureFilterRegistration.setAsyncSupported(true);
-//		secureFilterRegistration.addMappingForUrlPatterns(getSecurityDispatcherTypes(), true,"/*");
+	    DelegatingFilterProxy delegateFilterProxy = new DelegatingFilterProxy();
+	    FilterRegistration.Dynamic secureFilterRegistration = servletContext.addFilter("springSecurityFilterChain", delegateFilterProxy);
+	    checkRegister(secureFilterRegistration, "springSecurityFilterChain");
+	    secureFilterRegistration.setAsyncSupported(true);
+		secureFilterRegistration.addMappingForUrlPatterns(getSecurityDispatcherTypes(), true,"/*");
 	}
 
 	private void checkRegister(FilterRegistration.Dynamic registration, String filterName){
@@ -102,4 +103,7 @@ public class WebAppInit extends AbstractAnnotationConfigDispatcherServletInitial
 		return EnumSet.of(SessionTrackingMode.COOKIE);
 	}
 
+	protected EnumSet<DispatcherType> getSecurityDispatcherTypes() {
+		return EnumSet.of(DispatcherType.REQUEST, DispatcherType.ERROR,	DispatcherType.ASYNC);
+	}
 }

@@ -32,7 +32,7 @@
 
 package com.pb.tel.service.websocket.data;
 
-import com.pb.tel.data.Account;
+import com.pb.tel.data.UserAccount;
 import com.pb.tel.data.enumerators.RequestType;
 
 import java.io.Serializable;
@@ -55,15 +55,15 @@ public class WebSocketRequest implements Serializable{
         this.message = message;
     }
 
-    public WebSocketRequest(boolean ok, String message, Account account){
+    public WebSocketRequest(boolean ok, String message, UserAccount account){
         this.ok = ok;
         this.message = message;
-        this.account = account;
+        this.userAccount = userAccount;
     }
 
-    public WebSocketRequest(boolean ok, Account account){
+    public WebSocketRequest(boolean ok, UserAccount userAccount){
         this.ok = ok;
-        this.account = account;
+        this.userAccount = userAccount;
     }
 
     private boolean ok;
@@ -72,7 +72,7 @@ public class WebSocketRequest implements Serializable{
 
     private long sessionExp;
 
-    private Account account;
+    private UserAccount userAccount;
 
     private RequestType requestType;
 
@@ -86,12 +86,12 @@ public class WebSocketRequest implements Serializable{
         return new WebSocketRequest(true, message);
     }
 
-    public static WebSocketRequest getSuccessRequest(String message, Account account){
-        return new WebSocketRequest(true, message, account);
+    public static WebSocketRequest getSuccessRequest(String message, UserAccount userAccount){
+        return new WebSocketRequest(true, message, userAccount);
     }
 
-    public static WebSocketRequest getSuccessRequest(Account account){
-        return new WebSocketRequest(true, account);
+    public static WebSocketRequest getSuccessRequest(UserAccount userAccount){
+        return new WebSocketRequest(true, userAccount);
     }
 
     public static WebSocketRequest getSuccessRequest(){
@@ -122,12 +122,12 @@ public class WebSocketRequest implements Serializable{
         this.sessionExp = sessionExp;
     }
 
-    public Account getAccount() {
-        return account;
+    public UserAccount getUserAccount() {
+        return userAccount;
     }
 
-    public void setAccount(Account account) {
-        this.account = account;
+    public void setUserAccount(UserAccount userAccount) {
+        this.userAccount = userAccount;
     }
 
     public RequestType getRequestType() {
@@ -156,7 +156,7 @@ public class WebSocketRequest implements Serializable{
         if (ok != that.ok) return false;
         if (sessionExp != that.sessionExp) return false;
         if (message != null ? !message.equals(that.message) : that.message != null) return false;
-        if (account != null ? !account.equals(that.account) : that.account != null) return false;
+        if (userAccount != null ? !userAccount.equals(that.userAccount) : that.userAccount != null) return false;
         if (requestType != that.requestType) return false;
         return userSessionId != null ? userSessionId.equals(that.userSessionId) : that.userSessionId == null;
     }
@@ -166,7 +166,7 @@ public class WebSocketRequest implements Serializable{
         int result = (ok ? 1 : 0);
         result = 31 * result + (message != null ? message.hashCode() : 0);
         result = 31 * result + (int) (sessionExp ^ (sessionExp >>> 32));
-        result = 31 * result + (account != null ? account.hashCode() : 0);
+        result = 31 * result + (userAccount != null ? userAccount.hashCode() : 0);
         result = 31 * result + (requestType != null ? requestType.hashCode() : 0);
         result = 31 * result + (userSessionId != null ? userSessionId.hashCode() : 0);
         return result;
@@ -178,7 +178,7 @@ public class WebSocketRequest implements Serializable{
                 "ok=" + ok +
                 ", message='" + message + '\'' +
                 ", sessionExp=" + sessionExp +
-                ", account=" + account +
+                ", userAccount=" + userAccount +
                 ", requestType=" + requestType +
                 ", userSessionId='" + userSessionId + '\'' +
                 '}';

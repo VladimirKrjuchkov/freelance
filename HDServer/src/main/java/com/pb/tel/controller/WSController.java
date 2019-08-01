@@ -1,7 +1,7 @@
 package com.pb.tel.controller;
 
-import com.pb.tel.data.Account;
 import com.pb.tel.data.ConnectedAccount;
+import com.pb.tel.data.UserAccount;
 import com.pb.tel.data.enumerators.RequestType;
 import com.pb.tel.data.enumerators.Role;
 import com.pb.tel.data.enumerators.Status;
@@ -43,17 +43,17 @@ public class WSController {
     private UserHandler userHandler;
 
     @Resource(name="registredOpers")
-    private List<Account> registredOpers;
+    private List<UserAccount> registredOpers;
 
-    @Resource(name="accountStorage")
-    private Storage<String, Account> accountStorage;
+    @Resource(name="dataStorage")
+    private Storage<String, UserAccount> accountStorage;
 
     @MessageMapping("/user/enter")
     @SendToUser("/queue/answer/user/enter")
-    public WebSocketRequest userEnter(SimpMessageHeaderAccessor sha, Account userAccount) throws LogicException {
+    public WebSocketRequest userEnter(SimpMessageHeaderAccessor sha, UserAccount userAccount) throws LogicException {
         String sessionId = sha.getUser().getName();
         log.info("start registration for user: " + sessionId);
-        Account account = accountStorage.getValue(sessionId);
+        UserAccount account = accountStorage.getValue(sessionId);
         WebSocketRequest webSocketRequest = WebSocketRequest.getSuccessRequest();
         if(account == null){
             account = userAccount;
@@ -66,10 +66,10 @@ public class WSController {
                  !account.getConnectedAccounts().isEmpty() &&
                  accountStorage.getValue(account.getConnectedOperSessionId()) != null &&
                  accountStorage.getValue(account.getConnectedOperSessionId()).getStatus() == Status.ONLINE){
-            webSocketRequest.setMessage("Вы подключены к оператору " + accountStorage.getValue(account.getConnectedOperSessionId()).getLogin());
+            webSocketRequest.setMessage("Вы подключены к оператору " + accountStorage.getValue(account.getConnectedOperSessionId()).getUser().getLogin());
         }
         accountStorage.putValue(account.getSessionId(), account, Utils.getDateAfterSeconds(Integer.valueOf(environment.getProperty("session.expiry"))));
-        webSocketRequest.setAccount(account);
+        webSocketRequest.setUserAccount(account);
         webSocketRequest.setSessionExp(System.currentTimeMillis() + Integer.valueOf(environment.getProperty("session.expiry")));
         return webSocketRequest;
     }
@@ -78,7 +78,7 @@ public class WSController {
     @SendToUser("/queue/answer/user/check")
     public WebSocketRequest userCheck(SimpMessageHeaderAccessor sha) throws LogicException {
         String sessionId = sha.getUser().getName();
-        Account userAccount = accountStorage.getValue(sessionId);
+        UserAccount userAccount = accountStorage.getValue(sessionId);
         accountStorage.putValue(userAccount.getSessionId(), userAccount, Utils.getDateAfterSeconds(Integer.valueOf(environment.getProperty("session.expiry"))));
         WebSocketRequest webSocketRequest = WebSocketRequest.getSuccessRequest(userAccount);
         webSocketRequest.setSessionExp(System.currentTimeMillis() + Integer.valueOf(environment.getProperty("session.expiry")));
@@ -90,24 +90,24 @@ public class WSController {
     public WebSocketRequest operCall(SimpMessageHeaderAccessor sha) throws LogicException {
         String sessionId = sha.getUser().getName();
         log.info("start call oper for user: " + sessionId);
-        Account userAccount = accountStorage.getValue(sessionId);
+        UserAccount userAccount = accountStorage.getValue(sessionId);
         if(userAccount.getStatus() == Status.CONNECTED &&
                 userAccount.getConnectedAccounts() != null &&
                 accountStorage.getValue(userAccount.getConnectedOperSessionId()) != null &&
                 accountStorage.getValue(userAccount.getConnectedOperSessionId()).getStatus() == Status.ONLINE){
             return WebSocketRequest.getErrorRequest("Вы уже подключены к оператору");
         }
-        Account operAccount = adminHandler.getMostFreeOper();
+        UserAccount operAccount = adminHandler.getMostFreeOper();
         if(operAccount == null){
             return WebSocketRequest.getErrorRequest("Нет свободных операторов попробуйте позже");
         }
-        operAccount.addConnectedAccount(new ConnectedAccount(sessionId, userAccount.getLogin()));
-        userAccount.addConnectedAccount(new ConnectedAccount(operAccount.getSessionId(), operAccount.getLogin()));
+        operAccount.addConnectedAccount(new ConnectedAccount(sessionId, userAccount.getUser().getLogin()));
+        userAccount.addConnectedAccount(new ConnectedAccount(operAccount.getSessionId(), operAccount.getUser().getLogin()));
         userAccount.setStatus(Status.CONNECTED);
         WebSocketRequest webSocketRequest = WebSocketRequest.getSuccessRequest("Вы подключены к пользователю " + userAccount.getSessionId(), operAccount);
         webSocketRequest.setRequestType(RequestType.CALL_OPER);
         WebSocketServer.sendMessage(userAccount.getConnectedOperSessionId(), webSocketRequest);
-        return WebSocketRequest.getSuccessRequest("Здравствуйте, меня звать " + operAccount.getLogin() + ", какой у вас вопрос?", operAccount);
+        return WebSocketRequest.getSuccessRequest("Здравствуйте, меня звать " + operAccount.getUser().getLogin() + ", какой у вас вопрос?", operAccount);
     }
 
     @MessageMapping("/user/message")
@@ -115,8 +115,8 @@ public class WSController {
     public WebSocketRequest fromUser(SimpMessageHeaderAccessor sha, WebSocketRequest request) throws LogicException {
         log.info("from user request: " + request);
         String sessionId = sha.getUser().getName();
-        Account userAccount = accountStorage.getValue(sessionId);
-        request.setAccount(userAccount);
+        UserAccount userAccount = accountStorage.getValue(sessionId);
+        request.setUserAccount(userAccount);
         WebSocketServer.sendMessage(userAccount.getConnectedOperSessionId(), request);
         return WebSocketRequest.getSuccessRequest(request.getMessage(), userAccount);
     }
@@ -126,11 +126,11 @@ public class WSController {
     public WebSocketRequest fromOper(SimpMessageHeaderAccessor sha, WebSocketRequest request) throws LogicException {
         log.info("from user request: " + request);
         String sessionId = sha.getUser().getName();
-        Account operAccount = accountStorage.getValue(sessionId);
+        UserAccount operAccount = accountStorage.getValue(sessionId);
         if(operAccount.getConnectedAccounts().get(request.getUserSessionId()) == null){
             return WebSocketRequest.getErrorRequest("Вы не можете отправлять сообщения этому пользователю");
         }
-        request.setAccount(operAccount);
+        request.setUserAccount(operAccount);
         WebSocketServer.sendMessage(request.getUserSessionId(), request);
         WebSocketRequest response = WebSocketRequest.getSuccessRequest(request.getMessage(), operAccount);
         response.setUserSessionId(request.getUserSessionId());
@@ -139,19 +139,19 @@ public class WSController {
 
     @MessageMapping("/oper/enter")//<<<--- перед этим всем надо реализовать проверку логина/пароля при помощи OAuth2
     @SendToUser("/queue/answer/oper/enter")
-    public WebSocketRequest operEnter(SimpMessageHeaderAccessor sha, Account operAccount) throws LogicException {
+    public WebSocketRequest operEnter(SimpMessageHeaderAccessor sha, UserAccount operAccount) throws LogicException {
         String sessionId = sha.getUser().getName();
         log.info("start registration for oper: " + sessionId);
-        Account account = (Account) accountStorage.getValue(sessionId);
+        UserAccount account = (UserAccount) accountStorage.getValue(sessionId);
         WebSocketRequest webSocketRequest = WebSocketRequest.getSuccessRequest();
         if(account == null){
             account = operAccount;
             account.setSessionId(sessionId);
             account.setStatus(Status.ONLINE);
         }
-        registredOpers.add((Account) account);
+        registredOpers.add((UserAccount) account);
         accountStorage.putValue(account.getSessionId(), account, Utils.getDateAfterSeconds(Integer.valueOf(environment.getProperty("session.expiry"))));
-        webSocketRequest.setAccount(account);
+        webSocketRequest.setUserAccount(account);
         webSocketRequest.setSessionExp(System.currentTimeMillis() + Integer.valueOf(environment.getProperty("session.expiry")));
         return webSocketRequest;
     }
