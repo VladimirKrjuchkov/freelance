@@ -1,5 +1,6 @@
 package com.pb.tel.config;
 
+import com.pb.tel.utils.logging.HttpServletRequestResponseLoggingFilter;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.context.WebApplicationContext;
@@ -64,7 +65,7 @@ public class WebAppInit extends AbstractAnnotationConfigDispatcherServletInitial
 			}
 		}
 
-		servletContext.setSessionTrackingModes(EnumSet.of(SessionTrackingMode.COOKIE));
+//		servletContext.setSessionTrackingModes(EnumSet.of(SessionTrackingMode.COOKIE));
 		servletContext.getSessionCookieConfig().setPath("/");
 		servletContext.getSessionCookieConfig().setDomain(null);
 		servletContext.getSessionCookieConfig().setHttpOnly(true);
@@ -80,10 +81,10 @@ public class WebAppInit extends AbstractAnnotationConfigDispatcherServletInitial
 	    encodingFilterRegistration.setInitParameter("forceEncoding", "true");
 	    encodingFilterRegistration.addMappingForUrlPatterns(null, true, "/*");
 
-//	    FilterRegistration.Dynamic logFilterRegistration = servletContext.addFilter("LoggingRequestResponseFilter", new HttpServletRequestResponseLoggingFilter());
-//	    checkRegister(logFilterRegistration, "LoggingRequestResponseFilter");
-//	    logFilterRegistration.setInitParameter("useMessageSeparator", "true");
-//	    logFilterRegistration.addMappingForUrlPatterns(null, true, "/*");
+	    FilterRegistration.Dynamic logFilterRegistration = servletContext.addFilter("LoggingRequestResponseFilter", new HttpServletRequestResponseLoggingFilter());
+	    checkRegister(logFilterRegistration, "LoggingRequestResponseFilter");
+	    logFilterRegistration.setInitParameter("useMessageSeparator", "true");
+	    logFilterRegistration.addMappingForUrlPatterns(null, true, "/*");
 
 	    DelegatingFilterProxy delegateFilterProxy = new DelegatingFilterProxy();
 	    FilterRegistration.Dynamic secureFilterRegistration = servletContext.addFilter("springSecurityFilterChain", delegateFilterProxy);

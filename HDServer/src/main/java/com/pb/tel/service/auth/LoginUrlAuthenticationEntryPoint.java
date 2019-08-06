@@ -5,7 +5,6 @@ import com.pb.tel.data.Mes;
 import com.pb.tel.data.Roles;
 import com.pb.tel.data.UserAccount;
 import com.pb.tel.data.enumerators.AuthType;
-import com.pb.tel.service.Reference;
 import com.pb.tel.service.exception.LogicException;
 import com.pb.tel.storage.Storage;
 import com.pb.tel.utils.MessageUtil;
@@ -16,10 +15,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.util.RedirectUrlBuilder;
-import org.springframework.security.web.util.UrlUtils;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.Resource;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -48,17 +45,17 @@ public class LoginUrlAuthenticationEntryPoint extends org.springframework.securi
     @Autowired
     private ClientDetailsService clientDetailsService;
 
-    @Resource(name="h2hAuthorization")
-    private H2HAuthorization h2hAuthorization;
+//    @Resource(name="h2hAuthorization")
+//    private H2HAuthorization h2hAuthorization;
 
     @Autowired
     private TokenStoreExtended tokenStore;
 
     private TokenClientIdExtractor tokenClientIdExtractor;
 
-    public LoginUrlAuthenticationEntryPoint(String loginFormUrl) {
-        super(loginFormUrl);
-    }
+//    public LoginUrlAuthenticationEntryPoint(String loginFormUrl) {
+//        super(loginFormUrl);
+//    }
 
     public LoginUrlAuthenticationEntryPoint(String loginFormUrl, String sidParametrName) {
         super(loginFormUrl);
@@ -66,7 +63,7 @@ public class LoginUrlAuthenticationEntryPoint extends org.springframework.securi
     }
 
     protected Object[] determineUrl(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException){
-        boolean h2HLogin = false;
+//        boolean h2HLogin = false;
         ClientDetails clientDetails = null;
         String superUrlString = super.determineUrlToUseForThisRequest(request, response, authException);
         log.info("superUrlString: "+superUrlString);
@@ -82,21 +79,21 @@ public class LoginUrlAuthenticationEntryPoint extends org.springframework.securi
                     return new Object[]{superUrlString, null, null};
                 else {
                     tokenStore.removeAccessToken((String)auth.getPrincipal());
-                    Utils.setCookie(response, Reference.sidParametrName, "", null, null, true, 0);
+//                    Utils.setCookie(response, Reference.sidParametrName, "", null, null, true, 0);
                 }
             }
 
             clientDetails = (ClientDetails)clientDetailsService.loadClientByClientId(clientId);
 
-            if(Boolean.valueOf(request.getParameter(AGENT_CHECK)) && Roles.convertAuthorityToRoles(clientDetails.getAuthorities()).contains(Roles.ROLE_H2H))
-                h2HLogin = true;
+//            if(Boolean.valueOf(request.getParameter(AGENT_CHECK)) && Roles.convertAuthorityToRoles(clientDetails.getAuthorities()).contains(Roles.ROLE_H2H))
+//                h2HLogin = true;
 
-            log.info("h2HLogin: "+h2HLogin);
-            if(!h2HLogin && (request.getParameterValues(REDIRECT_URL) == null || request.getParameterValues(REDIRECT_URL).length != 1))
-                throw Utils.getLogicException("auth.AUTH07", REDIRECT_URL);
+//            log.info("h2HLogin: "+h2HLogin);
+//            if(!h2HLogin && (request.getParameterValues(REDIRECT_URL) == null || request.getParameterValues(REDIRECT_URL).length != 1))
+//                throw Utils.getLogicException("auth.AUTH07", REDIRECT_URL);
 
             log.info("clientDetail:"+clientDetails);
-            Utils.setCookie(response, "pplsEntrance", "true", null/*"/PplsService/"*/, null/*MessageUtil.getProperty("server.domain")*/, false, 3);
+//            Utils.setCookie(response, "pplsEntrance", "true", null/*"/PplsService/"*/, null/*MessageUtil.getProperty("server.domain")*/, false, 3);
             userAccount = prepareEntrance(request, response, clientDetails);
 
             return new Object[]{superUrlString, userAccount, clientDetails};
@@ -205,28 +202,28 @@ public class LoginUrlAuthenticationEntryPoint extends org.springframework.securi
                 return;
             }
         }
-        else {
-            // redirect to login page. Use https if forceHttps true
-            Object[] result = determineUrl(request, response, authException);
-            redirectUrl = (String)result[0];
-            UserAccount userAccount = (UserAccount)result[1];
-            ClientDetails clientDetail = (ClientDetails)result[2];
-            if(clientDetail!=null && userAccount.getAuthType()==AuthType.agentOnly){
-                userAccount = h2hAuthorization.createAuthorizationCode(userAccount, clientDetail);
-                request.setAttribute("h2hAuthorizationCodeResult", userAccount.getMes());
-                userAccount.setMes(null);
-                redirectUrl = "/oauth/getAuthorizationCode";
-                RequestDispatcher dispatcher = request.getRequestDispatcher(redirectUrl);
-                dispatcher.forward(request, response);
-                return;
-            }
-
-            if (!UrlUtils.isAbsoluteUrl(redirectUrl))
-                redirectUrl = makeAbsoluteUrl(request, response, redirectUrl);
-
-            //redirectUrl = buildRedirectUrlToLoginPage(request, response, authException);
-
-        }
+//        else {
+//            // redirect to login page. Use https if forceHttps true
+//            Object[] result = determineUrl(request, response, authException);
+//            redirectUrl = (String)result[0];
+//            UserAccount userAccount = (UserAccount)result[1];
+//            ClientDetails clientDetail = (ClientDetails)result[2];
+//            if(clientDetail!=null && userAccount.getAuthType()==AuthType.agentOnly){
+//                userAccount = h2hAuthorization.createAuthorizationCode(userAccount, clientDetail);
+//                request.setAttribute("h2hAuthorizationCodeResult", userAccount.getMes());
+//                userAccount.setMes(null);
+//                redirectUrl = "/oauth/getAuthorizationCode";
+//                RequestDispatcher dispatcher = request.getRequestDispatcher(redirectUrl);
+//                dispatcher.forward(request, response);
+//                return;
+//            }
+//
+//            if (!UrlUtils.isAbsoluteUrl(redirectUrl))
+//                redirectUrl = makeAbsoluteUrl(request, response, redirectUrl);
+//
+//            //redirectUrl = buildRedirectUrlToLoginPage(request, response, authException);
+//
+//        }
 
         log.info("redirectUrl FOR redirect: " + redirectUrl);
 

@@ -111,6 +111,9 @@ public class TokenClientIdExtractor implements TokenExtractor {
                 }
         }
 
+        log.info("*** *** *** token = " + token);
+        log.info("*** *** *** clientId = " + clientId);
+
         String authHeaderValues[] = {token, clientId};
         return authHeaderValues;
     }

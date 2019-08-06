@@ -145,7 +145,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 
     @Bean(name="accessDecisionManager")
     public AccessDecisionManager accessDecisionManager(){
-        List<AccessDecisionVoter> listVoters = new ArrayList();
+        List<AccessDecisionVoter<? extends Object>> listVoters = new ArrayList();
         listVoters.add(new ScopeVoter());
         listVoters.add(new RoleVoter());
         listVoters.add(new AuthenticatedVoter());

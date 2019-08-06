@@ -18,6 +18,7 @@ import org.springframework.security.oauth2.provider.authentication.OAuth2Authent
 import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
+import org.springframework.security.web.context.NullSecurityContextRepository;
 import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
 
 import javax.annotation.PostConstruct;
@@ -70,13 +71,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private AuthenticationFailureHandlerImpl authenticationFailureHandlerImpl;
 
-	@Autowired
-	private HelpDeskUserDetailsService helpDeskUserDetailsService;
-
-
-	@Autowired
-	private CasheProxyHelpDeskUserDetailsService casheProxyHelpDeskUserDetailsService;
-    
+//	@Autowired
+//	private HelpDeskUserDetailsService helpDeskUserDetailsService;
+//
+//
+//	@Autowired
+//	private CasheProxyHelpDeskUserDetailsService casheProxyHelpDeskUserDetailsService;
+//
     @Autowired
     @Lazy
 	private ResourceServerTokenServices tokenServices;
@@ -102,11 +103,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
     	HttpSecurity preparedHttp = http.
     		 csrf().disable().
-    		 //headers().addHeaderWriter(new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)).and(). ///Это опыты были по наладке wss. Добавляет хидер XFrameOptions с значением SAMEORIGIN в ответе        		 	
-             //antMatchers("/static/**","/login","/sidCheck", "/answerGeneric/**").permitAll(). 
-    		 authorizeRequests().    	
-    		 antMatchers("/login","/sidCheck").permitAll().             
-             anyRequest().authenticated().             
+    		 //headers().addHeaderWriter(new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)).and(). ///Это опыты были по наладке wss. Добавляет хидер XFrameOptions с значением SAMEORIGIN в ответе
+             //antMatchers("/static/**","/login","/sidCheck", "/answerGeneric/**").permitAll().
+    		 authorizeRequests().
+    		 antMatchers("/login","/sidCheck").permitAll().
+             anyRequest().authenticated().
              and().
 			 addFilterBefore(usernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class).
 //             formLogin().
@@ -114,13 +115,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //             successHandler(successHandlerImplementation()).
 //             failureHandler(authenticationFailureHandlerImpl).
 //             and().
-             exceptionHandling(). 
+             exceptionHandling().
              authenticationEntryPoint(loginUrlAuthenticationEntryPoint()).
              and();
     		if(useRedisSecurityContextRepository)
     	  	 preparedHttp.securityContext().securityContextRepository(getRedisSecurityContextRepository());
 //             and().
-//             sessionManagement().enableSessionUrlRewriting(false);    
+//             sessionManagement().enableSessionUrlRewriting(false);
     }
     
     @Configuration
@@ -130,12 +131,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             http
             	.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
             	.csrf().disable()
-            	.headers().addHeaderWriter(new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)).and()
+            	.headers().addHeaderWriter(new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN))
+				.and()
                 .antMatcher("/checked/**")                              
                 .authorizeRequests()                
-                .anyRequest().hasRole("USER")                
+                .anyRequest().hasAnyRole("USER", "ADMIN")
                 .and()
-                .addFilterBefore(resourceTokenClientIdProcessingFilter(), AbstractPreAuthenticatedProcessingFilter.class);                
+                .addFilterBefore(resourceTokenClientIdProcessingFilter(), AbstractPreAuthenticatedProcessingFilter.class)
+				.securityContext().securityContextRepository(new NullSecurityContextRepository());
         }
     }
 
@@ -179,7 +182,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     
     @Bean(name="authenticationFailureHandlerImpl")
   	public AuthenticationFailureHandlerImpl authenticationFailureHandlerImpl(){
-    	AuthenticationFailureHandlerImpl authenticationFailureHandlerImpl = new AuthenticationFailureHandlerImpl(entranceLink);//"http://10.56.2.228:9997"
+    	AuthenticationFailureHandlerImpl authenticationFailureHandlerImpl = new AuthenticationFailureHandlerImpl(entranceLink+"/admin.html");
     	return authenticationFailureHandlerImpl;
     }
   	  	

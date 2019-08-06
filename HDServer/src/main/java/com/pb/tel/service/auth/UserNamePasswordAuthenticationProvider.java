@@ -1,6 +1,9 @@
 package com.pb.tel.service.auth;
 
+import com.pb.tel.data.UserAccount;
+import com.pb.tel.storage.Storage;
 import com.pb.tel.utils.MessageUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,6 +22,9 @@ public class UserNamePasswordAuthenticationProvider extends AbstractAuthenticati
 
     private final Logger log = Logger.getLogger(UserNamePasswordAuthenticationProvider.class.getCanonicalName());
 
+    @Autowired
+    private Storage sessionStorage ;
+
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         log.info("Start authenticate in UserNamePasswordAuthenticationProvider");
         Object details = authentication.getDetails();
@@ -31,15 +37,21 @@ public class UserNamePasswordAuthenticationProvider extends AbstractAuthenticati
             log.info("login: "+login);
             log.info("password: "+password);
             user = userDetailsService.loadUserByUsername(login);
+            String principals[] = ((String) authentication.getPrincipal()).split(",");
+            String storageKey = principals[0];
+            UserAccount userAccount = (UserAccount)sessionStorage.getValue(storageKey);
+            userAccount.setUser(user);
+            sessionStorage.putValue(storageKey, userAccount, userAccount.getMaxPossibleSessionExpire());
+            UsernamePasswordAuthenticationToken result;
 
-            log.info("user: "+user.getUsername());
-//            String password256Hash = Utils.getSh256(password + Reference.passwordSalt);
+
+//            String password256Hash = Utils.getSh256(password + Reference.passwordSalt); <<<--- после рефакторинга надо будет хешить пароль
             String password256Hash = password;
 
             if(!user.isEnabled())
                 throw new BadCredentialsException(MessageUtil.getMessage("auth.AUTH03", login));
 
-//            if(!password256Hash.equals(user.getPassword()) && !Utils.getSh512(password + Reference.passwordSalt).equals(user.getPassword()))
+//            if(!password256Hash.equals(user.getPassword()) && !Utils.getSh512(password + Reference.passwordSalt).equals(user.getPassword())) <<<--- после рефакторинга надо будет хешить пароль
             if(!password256Hash.equals(user.getPassword()))
                 throw new BadCredentialsException(MessageUtil.getMessage("auth.AUTH02"));
         }
@@ -50,16 +62,15 @@ public class UserNamePasswordAuthenticationProvider extends AbstractAuthenticati
             log.log(Level.SEVERE, "Error in time check user credentials ! ", e);
             throw new BadCredentialsException(MessageUtil.getMessage("auth.AUTH02"), e);
         }
-
-
         log.info("authentication: "+authentication);
         log.info("authentication: "+authentication.getPrincipal());
         log.info("authentication: "+authentication.getCredentials());
         log.info("authentication: "+user.getAuthorities());
 
 
-        UsernamePasswordAuthenticationToken result = new UsernamePasswordAuthenticationToken(authentication.getPrincipal(),
-                /*authentication.getCredentials()*/"userPassword", user.getAuthorities());
+        log.info("*** *** *** user.getAuthorities() = " + user.getAuthorities());
+        UsernamePasswordAuthenticationToken result = new UsernamePasswordAuthenticationToken(user.getUsername(), user, user.getAuthorities());
+        log.info("*** *** *** result.getAuthorities() = " + result.getAuthorities());
         result.setDetails(authentication.getDetails());
 
         log.info("result authentication: "+result);

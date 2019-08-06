@@ -33,6 +33,7 @@ public class HelpDeskUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
+        login = login.split(",")[1];
         User user = userDaoImpl.getUserByLogin(login);
         if(user == null)
             throw new UsernameNotFoundException(MessageUtil.getMessage("auth.AUTH06"));

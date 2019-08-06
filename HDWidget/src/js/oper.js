@@ -1,26 +1,39 @@
 var wssConnector;
 addEvent(window, "load", function () {
-    ajax("/api/sidCheck", function(resp) {
-        var mes = JSON.parse(resp);
-        if (mes.state != "ok") {
-            alert(mes.desc);
-        } else {
-            rmClass(byId("loginPage"), "hide");
-        }
-    }, null, function(resp) {
-        alert(resp);
-    }, "POST");
-    // wssConnector = getCookie("wssConnector");
-    // if(!wssConnector) {
-    //     wssConnector = StompOverSock.getInstance(true);
-    //     wssConnector.subscribe("/user/queue/answer/oper/enter", oper.operEnterHandler);
-    //     wssConnector.subscribe("/user/queue/answer/oper/check", oper.userCheckHandler);
-    //     wssConnector.subscribe("/user/queue/answer/oper/message", oper.messagingResultHandler);
-    //     wssConnector.subscribe("/user/queue/answer/input/requests", oper.inputMessagesHandler);
-    //
-    // }else{
-    //     oper.operCheck();
-    // }
+    if(!getCookie("storageKey")){
+        ajax("/api/sidCheck", function (resp) {
+            var mes = JSON.parse(resp);
+            if (mes.state != "ok") {
+                alert(mes.desc);
+            } else {
+                rmClass(byId("loginPage"), "hide");
+            }
+        }, null, function (resp) {
+            alert(resp);
+        }, "POST");
+    }
+
+    if (window.location.pathname.indexOf("/startwork")==0){
+        var params = new URL(window.location.href).searchParams;
+        byId("admin-name").innerHTML = "Вы вошли как " + params.get('name');
+        addClass(byId("loginPage"), "hide");
+        // wssConnector = getCookie("wssConnector");
+        // if(!wssConnector) {
+        //     wssConnector = StompOverSock.getInstance(true);
+        //     wssConnector.subscribe("/user/queue/answer/oper/enter", oper.operEnterHandler);
+        //     wssConnector.subscribe("/user/queue/answer/oper/check", oper.userCheckHandler);
+        //     wssConnector.subscribe("/user/queue/answer/oper/message", oper.messagingResultHandler);
+        //     wssConnector.subscribe("/user/queue/answer/input/requests", oper.inputMessagesHandler);
+        //
+        // }else{
+        //     oper.operCheck();
+        // }
+        ajax("/api/checked/sayHellow", function (resp) {
+            console.log("success!!!");
+        }, null, function (resp) {
+            console.log("error!!!");
+        }, "GET");
+    }
 });
 
 

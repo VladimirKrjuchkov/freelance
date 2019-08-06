@@ -67,9 +67,10 @@ public class User implements Serializable, UserDetails {
     private Boolean blocked;
 
 
+    @JsonIgnore
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+    public Collection<? extends GrantedAuthority> getAuthorities(){
+        return Roles.convertRolesToAuthority(roles);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.pb.tel.service.auth;
 
 import com.pb.tel.dao.AgentDaoImpl;
+import com.pb.tel.data.AgentDetails;
 import com.pb.tel.data.Roles;
 import com.pb.tel.service.exception.LogicException;
 import com.pb.tel.utils.Utils;

@@ -375,4 +375,8 @@ public class VerifyUtil {
     public static boolean firstNotNull(Object[] arr) {
         return arr != null && arr.length > 0 && arr[0] != null;
     }
+
+    public static void main(String[] args) {
+        System.out.println("VerifyUtil");
+    }
 }

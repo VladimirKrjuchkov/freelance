@@ -1,6 +1,5 @@
 package com.pb.tel.service.auth;
 
-import com.pb.tel.utils.Utils;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 
@@ -8,7 +7,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,14 +20,14 @@ public class AuthenticationFailureHandlerImpl extends SimpleUrlAuthenticationFai
     private String defaultFailureUrl;
 
     public AuthenticationFailureHandlerImpl(String defaultFailureUrl){
-        super(defaultFailureUrl+"/admin.html");
-        this.defaultFailureUrl = defaultFailureUrl+"/admin.html";
+        super(defaultFailureUrl);
+        this.defaultFailureUrl = defaultFailureUrl;
     }
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)throws IOException, ServletException {
-        log.info("onAuthenticationFailure !!!! #$# response = "+response);
-        log.info("onAuthenticationFailure !!!! #$# exception.getMessage() = "+exception.getMessage());
+        log.info("onAuthenticationFailure::response: " + response);
+        log.info("onAuthenticationFailure::message: " + exception.getMessage());
 //		String sidBi = "";
 //		UserAccount userAccount = null;
 //		String code = AuthFormActionCodes.showBanks.toString();
@@ -63,11 +61,11 @@ public class AuthenticationFailureHandlerImpl extends SimpleUrlAuthenticationFai
 //		else
 //			response.sendRedirect(errorUrl);
 
-        log.log(Level.SEVERE, "Was finished authentication failer handler. Reset exac and sidCheck cookie.  Redirect to : "+defaultFailureUrl, exception);
+        log.log(Level.SEVERE, "Authentication failure. Redirect to : "+defaultFailureUrl, exception);
         //response.sendRedirect(defaultFailureUrl);
-        Utils.setCookie(response, "exac", "", null/*"/PplsService/"*/, null/*MessageUtil.getProperty("server.domain")*/, true, 0);
-        Utils.setCookie(response, "sidCheck", "", null, null, false, 0);
-        Utils.setCookie(response, "errorMessage", URLEncoder.encode(exception.getMessage(), "UTF-8"), null, null, false, 5);
+//        Utils.setCookie(response, "exac", "", null/*"/PplsService/"*/, null/*MessageUtil.getProperty("server.domain")*/, true, 0);
+//        Utils.setCookie(response, "sidCheck", "", null, null, false, 0);
+//        Utils.setCookie(response, "errorMessage", URLEncoder.encode(exception.getMessage(), "UTF-8"), null, null, false, 5);
         super.onAuthenticationFailure(request, response, exception);
         //response.sendError(HttpStatus.UNAUTHORIZED.value(),	HttpStatus.UNAUTHORIZED.getReasonPhrase());
     }

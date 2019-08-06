@@ -9,6 +9,7 @@ import com.pb.tel.service.auth.ClientDetails;
 import com.pb.tel.service.exception.LogicException;
 import com.pb.tel.utils.Utils;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.common.ExpiringOAuth2RefreshToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 
@@ -21,6 +22,12 @@ import java.util.*;
  */
 
 public class UserAccount implements Serializable {
+
+    public UserAccount(){}
+
+    public UserAccount(UserDetails user){
+        this.user = user;
+    }
 
     private static final long serialVersionUID = 1L;
 
@@ -37,6 +44,9 @@ public class UserAccount implements Serializable {
     private Role role;
 
     private Mes mes;
+
+    @JsonIgnore
+    String storageKey;
 
     @JsonProperty
     private String autorizeUrl;
@@ -81,7 +91,7 @@ public class UserAccount implements Serializable {
     @JsonProperty
     private String refreshToken;
 
-    private User user;
+    private UserDetails user;
 
     @JsonIgnore
     private OAuth2AccessToken oAuth2AccessToken;
@@ -277,12 +287,20 @@ public class UserAccount implements Serializable {
         this.refreshToken = refreshToken;
     }
 
-    public User getUser() {
+    public UserDetails getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(UserDetails user) {
         this.user = user;
+    }
+
+    public String getStorageKey() {
+        return storageKey;
+    }
+
+    public void setStorageKey(String storageKey) {
+        this.storageKey = storageKey;
     }
 
     public OAuth2AccessToken getAccessTokenObject(){
@@ -315,9 +333,9 @@ public class UserAccount implements Serializable {
 
     @JsonIgnore
     public UserAccount fillAgentUserAccaunt(ClientDetails clientDetails) {
-        this.setUsername(clientDetails.getTechUser().getLogin());
+//        this.setUsername(clientDetails.getTechUser().getLogin());
         this.setPassword("userPassword");
-        this.setAuthority(clientDetails.getTechUser().getAuthorities());
+//        this.setAuthority(clientDetails.getTechUser().getAuthorities());
         return this;
     }
 }

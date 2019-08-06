@@ -28,16 +28,25 @@
         maxEntriesLocalDisk="10000000" 
         diskExpiryThreadIntervalSeconds="120" -->
  
-    <cache name="com.pb.tel.data.privatmarket.Customer.forSelect"
-    	   eternal="false"    	   
-           timeToIdleSeconds="3"
-           timeToLiveSeconds="3"
-           overflowToDisk="false"          
-           maxEntriesLocalHeap="100" 
-           memoryStoreEvictionPolicy="LRU">
-           <searchable/>
-        <!-- <persistence strategy="localTempSwap" /> -->
-    </cache>
+    <!--<cache name="com.pb.tel.data.privatmarket.Customer.forSelect"-->
+    	   <!--eternal="false"    	   -->
+           <!--timeToIdleSeconds="3"-->
+           <!--timeToLiveSeconds="3"-->
+           <!--overflowToDisk="false"          -->
+           <!--maxEntriesLocalHeap="100" -->
+           <!--memoryStoreEvictionPolicy="LRU">-->
+           <!--<searchable/>-->
+        <!--&lt;!&ndash; <persistence strategy="localTempSwap" /> &ndash;&gt;-->
+    <!--</cache>-->
     <!-- maxEntriesLocalHeap="100" -->
-    
+
+	<cache name="com.pb.tel.service.auth.HelpDeskUserCache"
+		   eternal="false"
+		   timeToIdleSeconds="900"
+		   timeToLiveSeconds="1800"
+		   overflowToDisk="false"
+		   maxEntriesLocalHeap="300"
+		   memoryStoreEvictionPolicy="LRU">
+	</cache>
+
 </ehcache>

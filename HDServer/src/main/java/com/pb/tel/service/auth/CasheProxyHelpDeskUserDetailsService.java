@@ -23,7 +23,7 @@ public class CasheProxyHelpDeskUserDetailsService {
     private UserDaoImpl userDaoImpl;
 
 
-    @Cacheable(cacheManager = "cacheManager", cacheNames = "com.pb.ppls.service.auth.PaperlessUserCache")
+    @Cacheable(cacheManager = "cacheManager", cacheNames = "com.pb.tel.service.auth.HelpDeskUserCache")
     public Object cachableLoadUserByUsername(String username) {
         User details = null;
         details = userDaoImpl.getUserByLogin(username);

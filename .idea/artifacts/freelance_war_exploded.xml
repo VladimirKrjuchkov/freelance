@@ -7,102 +7,10 @@
           <element id="module-output" name="freelance" />
         </element>
         <element id="directory" name="lib">
-          <element id="library" level="project" name="Maven: org.hibernate:hibernate-entitymanager:5.2.10.Final" />
-          <element id="library" level="project" name="Maven: org.jboss.logging:jboss-logging:3.3.0.Final" />
-          <element id="library" level="project" name="Maven: org.hibernate:hibernate-core:5.2.10.Final" />
-          <element id="library" level="project" name="Maven: antlr:antlr:2.7.7" />
-          <element id="library" level="project" name="Maven: org.jboss:jandex:2.0.3.Final" />
-          <element id="library" level="project" name="Maven: dom4j:dom4j:1.6.1" />
-          <element id="library" level="project" name="Maven: org.hibernate.common:hibernate-commons-annotations:5.0.1.Final" />
-          <element id="library" level="project" name="Maven: org.javassist:javassist:3.20.0-GA" />
-          <element id="library" level="project" name="Maven: net.bytebuddy:byte-buddy:1.6.6" />
-          <element id="library" level="project" name="Maven: org.jboss.spec.javax.transaction:jboss-transaction-api_1.2_spec:1.0.1.Final" />
-          <element id="library" level="project" name="Maven: org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final" />
-          <element id="library" level="project" name="Maven: org.hibernate:hibernate-validator:5.4.1.Final" />
-          <element id="library" level="project" name="Maven: com.fasterxml:classmate:1.3.1" />
-          <element id="library" level="project" name="Maven: org.springframework:spring-orm:4.3.9.RELEASE" />
-          <element id="library" level="project" name="Maven: org.springframework:spring-beans:4.3.9.RELEASE" />
-          <element id="library" level="project" name="Maven: org.springframework:spring-core:4.3.9.RELEASE" />
-          <element id="library" level="project" name="Maven: commons-logging:commons-logging:1.2" />
-          <element id="library" level="project" name="Maven: org.springframework:spring-jdbc:4.3.9.RELEASE" />
-          <element id="library" level="project" name="Maven: org.springframework:spring-tx:4.3.9.RELEASE" />
-          <element id="library" level="project" name="Maven: org.springframework:spring-oxm:4.3.9.RELEASE" />
-          <element id="library" level="project" name="Maven: org.springframework:spring-context:4.3.9.RELEASE" />
-          <element id="library" level="project" name="Maven: org.springframework:spring-aop:4.3.9.RELEASE" />
-          <element id="library" level="project" name="Maven: org.springframework:spring-expression:4.3.9.RELEASE" />
-          <element id="library" level="project" name="Maven: org.springframework:spring-webmvc:4.3.9.RELEASE" />
-          <element id="library" level="project" name="Maven: org.springframework:spring-web:4.3.9.RELEASE" />
-          <element id="library" level="project" name="Maven: org.springframework:spring-websocket:5.1.2.RELEASE" />
-          <element id="library" level="project" name="Maven: javax.servlet:javax.servlet-api:3.1.0" />
-          <element id="library" level="project" name="Maven: javax.servlet:jstl:1.2" />
-          <element id="library" level="project" name="Maven: javax.validation:validation-api:1.1.0.Final" />
-          <element id="library" level="project" name="Maven: javax.xml.bind:jaxb-api:2.2.5" />
-          <element id="library" level="project" name="Maven: com.sun.xml.bind:jaxb-impl:2.2.5" />
-          <element id="library" level="project" name="Maven: com.sybase.jdbc3:jconn3:1.0" />
-          <element id="library" level="project" name="Maven: org.springframework:spring-context-support:4.3.9.RELEASE" />
-          <element id="library" level="project" name="Maven: net.sf.ehcache:ehcache:2.9.0" />
-          <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.7.7" />
-          <element id="library" level="project" name="Maven: org.hibernate:hibernate-ehcache:5.2.10.Final" />
-          <element id="library" level="project" name="Maven: commons-io:commons-io:2.3" />
           <element id="file-copy" path="$MAVEN_REPOSITORY$/com/pb/util/bpn/com.pb.util.bpn/1.0.23-SNAPSHOT/com.pb.util.bpn-1.0.23-20190227.121804-708.jar" output-file-name="com.pb.util.bpn-1.0.23-SNAPSHOT.jar" />
-          <element id="library" level="project" name="Maven: com.pb.util:gsvutil:3.0" />
-          <element id="library" level="project" name="Maven: com.pb.swing:pbswing-fixed:1.0-RELEASE" />
-          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-core:2.9.0.pr2" />
-          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.9.0.pr2" />
-          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.9.0.pr2" />
           <element id="file-copy" path="$MAVEN_REPOSITORY$/com/pb/uniwin/UniWinATMService/1.0.22-SNAPSHOT/UniWinATMService-1.0.22-20190507.154353-963.jar" output-file-name="UniWinATMService-1.0.22-SNAPSHOT.jar" />
-          <element id="library" level="project" name="Maven: com.pb:RMIServer:1.0" />
-          <element id="library" level="project" name="Maven: jaxen:jaxen:1.1.4" />
-          <element id="library" level="project" name="Maven: saxpath:saxpath:1.0-FCS" />
-          <element id="library" level="project" name="Maven: com.pb:vvv.util.server:1.0.0.12" />
-          <element id="library" level="project" name="Maven: com.pb:smssender:1.2" />
-          <element id="library" level="project" name="Maven: c3p0:c3p0:0.9.1.2" />
-          <element id="library" level="project" name="Maven: com.pb.crm:ClContMes:1.0.17.2" />
-          <element id="library" level="project" name="Maven: com.googlecode.json-simple:json-simple:1.1" />
-          <element id="library" level="project" name="Maven: com.pb.address:AddressReferenceClient:1.0.6.15" />
-          <element id="library" level="project" name="Maven: org.apache.httpcomponents:httpmime:4.5.3" />
-          <element id="library" level="project" name="Maven: org.apache.httpcomponents:httpclient:4.5.3" />
-          <element id="library" level="project" name="Maven: org.apache.httpcomponents:httpcore:4.4.6" />
-          <element id="library" level="project" name="Maven: redis.clients:jedis:2.9.0" />
-          <element id="library" level="project" name="Maven: org.apache.commons:commons-pool2:2.4.2" />
-          <element id="library" level="project" name="Maven: io.jsonwebtoken:jjwt:0.9.0" />
-          <element id="library" level="project" name="Maven: com.auth0:java-jwt:3.3.0" />
-          <element id="library" level="project" name="Maven: commons-codec:commons-codec:1.11" />
-          <element id="library" level="project" name="Maven: com.mchange:c3p0:0.9.5.2" />
-          <element id="library" level="project" name="Maven: com.mchange:mchange-commons-java:0.2.11" />
-          <element id="library" level="project" name="Maven: com.mysql.jdbc:mysql-connector-java:bin:6.0.5" />
           <element id="file-copy" path="$MAVEN_REPOSITORY$/com/pb/uniwin/UniWinUACommonServer/1.0.22-SNAPSHOT/UniWinUACommonServer-1.0.22-20190619.103749-1206.jar" output-file-name="UniWinUACommonServer-1.0.22-SNAPSHOT.jar" />
-          <element id="library" level="project" name="Maven: org.apache.servicemix.bundles:org.apache.servicemix.bundles.dom4j:1.6.1_5" />
-          <element id="library" level="project" name="Maven: xml-apis:xml-apis:1.0.b2" />
           <element id="file-copy" path="$MAVEN_REPOSITORY$/com/pb/uniwin/UniWinUACommon/1.0.22-SNAPSHOT/UniWinUACommon-1.0.22-20190625.070439-1359.jar" output-file-name="UniWinUACommon-1.0.22-SNAPSHOT.jar" />
-          <element id="library" level="project" name="Maven: com.pb.cis:ClientObjectTools:9.4.116" />
-          <element id="library" level="project" name="Maven: com.pb.cis:CisToolsN:9.4.116" />
-          <element id="library" level="project" name="Maven: com.pb.cxp:CXPClient:1.58" />
-          <element id="library" level="project" name="Maven: org.slf4j:slf4j-log4j12:1.7.6" />
-          <element id="library" level="project" name="Maven: log4j:log4j:1.2.17" />
-          <element id="library" level="project" name="Maven: com.pb.cis:CISTools:9.4.116" />
-          <element id="library" level="project" name="Maven: com.pb.ksv:CIS4_stub:2.0.0.0" />
-          <element id="library" level="project" name="Maven: cxp:cxp-client:0.9.1.7" />
-          <element id="library" level="project" name="Maven: com.pb.util.vvv:com.pb.util.vvv:1.2" />
-          <element id="library" level="project" name="Maven: ge.bog.commons.text:GeorgianIntegers:1.0" />
-          <element id="library" level="project" name="Maven: com.pb:bai.util:1.3.1.17" />
-          <element id="library" level="project" name="Maven: com.google.guava:guava:r05" />
-          <element id="library" level="project" name="Maven: pb.si.promin.kernel:ChameleonAPI_client:2.10" />
-          <element id="library" level="project" name="Maven: com.pb.cis:CISUtils:9.4.116" />
-          <element id="library" level="project" name="Maven: org.quartz-scheduler:quartz:2.3.0" />
-          <element id="library" level="project" name="Maven: com.zaxxer:HikariCP-java6:2.3.13" />
-          <element id="library" level="project" name="Maven: net.sf.ehcache:ehcache-core:2.3.1" />
-          <element id="library" level="project" name="Maven: net.sf.ehcache:ehcache-terracotta:2.3.1" />
-          <element id="library" level="project" name="Maven: com.googlecode.ehcache-spring-annotations:ehcache-spring-annotations:1.2.0" />
-          <element id="library" level="project" name="Maven: aopalliance:aopalliance:1.0" />
-          <element id="library" level="project" name="Maven: com.pb.ksv:MSGCore:2.0.1.020" />
-          <element id="library" level="project" name="Maven: org.eclipse.persistence:eclipselink:2.5.0-RC1" />
-          <element id="library" level="project" name="Maven: org.eclipse.persistence:javax.persistence:2.1.0-RC1" />
-          <element id="library" level="project" name="Maven: com.sybase.eas:easj2ee:5.2.0" />
-          <element id="library" level="project" name="Maven: com.pb.pav.timing:TimingClientLight:0.0.0.3" />
-          <element id="library" level="project" name="Maven: junit:junit:4.12" />
-          <element id="library" level="project" name="Maven: org.hamcrest:hamcrest-core:1.3" />
-          <element id="library" level="project" name="Maven: org.springframework:spring-messaging:4.3.9.RELEASE" />
         </element>
       </element>
       <element id="directory" name="META-INF">

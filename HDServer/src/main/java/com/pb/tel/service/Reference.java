@@ -22,8 +22,8 @@ public class Reference {
 
 
     private static Environment env = MessageUtil.env;
-    public static String sidParametrName = env.getProperty("sidParametrName");
-    public static String passwordSalt = env.getProperty("passwordSalt");
+    public static String sidParametrName = env.getProperty("sid.parametr.name");
+    public static String passwordSalt = env.getProperty("password.salt");
 
     public static String buildSid(String accessToken, String clientId){
         return "Bearer "+accessToken+", Id "+clientId;
@@ -35,7 +35,7 @@ public class Reference {
         PreAuthenticatedAuthenticationToken authenticationToken = new PreAuthenticatedAuthenticationToken(userDetails, userAccount, authority);
         authenticationToken.setDetails(details);
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-        log.info("return UsernamePasswordAuthenticationToken = "+authenticationToken);
+        log.info("return token = "+authenticationToken);
         return authenticationToken;
     }
 

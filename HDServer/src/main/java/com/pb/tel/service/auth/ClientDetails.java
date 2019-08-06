@@ -1,10 +1,9 @@
 package com.pb.tel.service.auth;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.pb.tel.data.AgentDetails;
 import com.pb.tel.data.Consumers;
-import com.pb.tel.data.User;
 import org.springframework.security.oauth2.provider.client.BaseClientDetails;
-import org.springframework.util.StringUtils;
 
 import javax.xml.bind.annotation.XmlTransient;
 import java.util.ArrayList;
@@ -54,12 +53,9 @@ public class ClientDetails extends BaseClientDetails implements Consumers {
         this.name = agentDetails.getName();
         this.groupIds = prepareGroupIds(agentDetails.getGroupIds());
         this.ip = Arrays.asList(agentDetails.getIp()==null ? new String[]{""} : agentDetails.getIp().split(","));
-        this.useForMobile = agentDetails.isUseForMobile();
         this.allowRoleControl = agentDetails.isAllowRoleControl();
-        this.commercial = agentDetails.isCommercial();
         this.agentCert = agentDetails.getAgentCert();
         //if(!Util.isEmpty(agentDetails.getStrategies()))
-        this.strategies = Arrays.asList(StringUtils.trimArrayElements(StringUtils.commaDelimitedListToStringArray(agentDetails.getStrategies())));
         this.setClientSecret(agentDetails.getClientSecret());
         setAccessTokenValiditySeconds(agentDetails.getAccessTokenValiditySeconds());
         setRefreshTokenValiditySeconds(agentDetails.getRefreshTokenValiditySeconds());
@@ -119,9 +115,9 @@ public class ClientDetails extends BaseClientDetails implements Consumers {
         return agentCert;
     }
 
-    public User getTechUser(){
-        return agentDetails.getUser();
-    }
+//    public User getTechUser(){
+//        return agentDetails.getUser();
+//    }
 
     @Override
     public String toString() {

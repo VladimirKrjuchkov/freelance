@@ -1,6 +1,7 @@
 package com.pb.tel.service.auth;
 
 import com.pb.tel.data.Mes;
+import com.pb.tel.data.User;
 import com.pb.tel.data.UserAccount;
 import com.pb.tel.service.Reference;
 import com.pb.tel.service.exception.LogicException;
@@ -32,9 +33,9 @@ public class H2HAuthorization {
     private AuthorizationCodeServices authorizationCodeServices;
 
     public UserAccount createAuthorizationCode(UserAccount userAccount, ClientDetails clientDetails){
-        log.info("techUser: "+clientDetails.getTechUser().getLogin()+"   authorities: "+clientDetails.getTechUser().getAuthorities());
+        log.info("techUser: "+((User)(userAccount.getUser())).getLogin()+"   authorities: "+userAccount.getUser().getAuthorities());
         userAccount.fillAgentUserAccaunt(clientDetails);
-        Authentication authentication = Reference.authorizeUser(clientDetails.getTechUser(), userAccount, Reference.getCombinetAuthorities(clientDetails.getAuthorities(), userAccount.getAuthority()), null);
+        Authentication authentication = Reference.authorizeUser(userAccount.getUser(), userAccount, Reference.getCombinetAuthorities(clientDetails.getAuthorities(), userAccount.getAuthority()), null);
         try{
             String code = createAuthorizationCode(userAccount, authentication);
             userAccount.setMes(new Mes(code, null));

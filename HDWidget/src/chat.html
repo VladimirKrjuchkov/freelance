@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta content="IE=11" http-equiv="X-UA-Compatible"/>
+    <title>Chat</title>
+    <link type="image/x-icon" href="/favicon.ico" rel="shortcut icon"/>
+    <meta name="description" content="Widget for HelpDesk connection"/>
+    <meta name="“viewport”" content="“user-scalable=no," initial-scale="1.0," maximum-scale="3.0," width="device-width”"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <!--<meta property="og:image" content="https://paperless.com.ua/img/og_logo11.jpg"/>-->
+    <meta property="og:title" content="Widget for HelpDesk connection"/>
+    <meta property="og:description" content="Widget for HelpDesk connection"/>
+    <link rel="stylesheet" href="/css/all.css"/>
+    <script src="js/all.js"></script>
+</head>
+
+<body>
+<div id="canvas" class="loginMode">
+    <div id="header" class="pure-u card-0 pure-form">
+    </div>
+    <div id="regPage" class="pure-form">
+        <div class="title">Введите ваше имя:</div>
+        <input class="login" type="text" autofocus="" placeholder="Имя"/>
+        <button class="pure-u-1 pure-button card-0 primary" onclick="user.enter()">Войти в чат</button>
+    </div>
+    <div id="firstPage" class="pure-form  hide">
+        <div class="title" id="user-name"></div>
+        <div class="title">Чат:</div>
+        <textarea class="chat chat-field main-chat-field"></textarea>
+        <br>
+        <br>
+        <input class="message chat-field" type="text" autofocus="" placeholder="Введите сообщение"/>
+        <br>
+        <br>
+        <button class="pure-u-1 pure-button card-0 primary hide" id="call-oper-button" onclick="user.callOper()">Подключить оператора</button>
+        <button class="pure-u-1 pure-button card-0 primary" onclick="user.sendMessage(byClass(byId('firstPage'), 'message')[0].value)">Отправить сообщение</button>
+    </div>
+    <div id="startPage" class="pure-form hide">
+    </div>
+</div>
+<div id="jsTitle" class="hidden"></div>
+</body>
+
+</html>

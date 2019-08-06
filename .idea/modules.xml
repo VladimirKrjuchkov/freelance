@@ -11,7 +11,6 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/HelpDeskChat.iml" filepath="$PROJECT_DIR$/.idea/modules/HelpDeskChat.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/HelpDeskChat_main.iml" filepath="$PROJECT_DIR$/.idea/modules/HelpDeskChat_main.iml" group="HelpDeskChat" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/HelpDeskChat_test.iml" filepath="$PROJECT_DIR$/.idea/modules/HelpDeskChat_test.iml" group="HelpDeskChat" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/freelance.iml" filepath="$PROJECT_DIR$/.idea/freelance.iml" />
     </modules>
   </component>
 </project>

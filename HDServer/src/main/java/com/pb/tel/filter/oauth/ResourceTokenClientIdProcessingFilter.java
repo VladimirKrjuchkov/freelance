@@ -17,6 +17,7 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -74,10 +75,12 @@ public class ResourceTokenClientIdProcessingFilter extends AbstractAuthenticatio
                         needsDetails.setDetails(authenticationDetailsSource.buildDetails(request));
                     }
                     log.fine("Start Authentication");
+                    log.info("Start Authentication");
 
                     Authentication authResult = authenticationManager.authenticate(authentication);
 
                     log.fine("Authentication success: " + authResult);
+                    log.info("Authentication success: " + authResult);
 
                     Authentication preAuthentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -93,7 +96,7 @@ public class ResourceTokenClientIdProcessingFilter extends AbstractAuthenticatio
         }
         catch (OAuth2Exception /*| LogicException */failed) {
             SecurityContextHolder.clearContext();
-
+            log.log(Level.SEVERE, "**** *** *** VOT ETOT FAIL: ", failed);
             log.fine("Authentication request failed: " + failed);
 //			if(failureHandler!=null && failed instanceof LogicException)
 //				failureHandler.onAuthenticationFailure(request, response, new com.pb.bi.service.auth.AuthenticationException(((LogicException)failed).getText(), failed, failed));
