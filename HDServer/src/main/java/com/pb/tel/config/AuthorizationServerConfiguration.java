@@ -81,26 +81,8 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     @Autowired
     private ClientCredentialsTokenEndpointFilter clientCredentialsTokenEndpointFilter;
 
-
-//	@EnableResourceServer
-//	ResourceServerSecurityConfigurer ss;
-//	ResourceServerConfigurerAdapter sacc;
-//	SecurityContextPersistenceFilter dcd;
-//	UsernamePasswordAuthenticationFilter dcdd;
-//	org.springframework.security.core.context.SecurityContextImpl dcds;
-//	CompositeSessionAuthenticationStrategy scxssxs;
-//	ChangeSessionIdAuthenticationStrategy aaaaw;
-//	AuthorizationEndpoint scs;
-//	UsernamePasswordAuthenticationFilter sxcs;
-//	TokenEndpoint dvdd;
-//	HttpSessionSecurityContextRepository cs;
-//	org.springframework.security.web.context.SecurityContextPersistenceFilter sxs;
-//	AccessDeniedHandlerImpl dvd;
-
-
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
-        //security.allowFormAuthenticationForClients();
         security.addTokenEndpointAuthenticationFilter(clientCredentialsTokenEndpointFilter);
         log.info("configure  AuthorizationServerSecurityConfigurer   (M1)  in   AuthorizationServerConfiguration");
     }
@@ -111,22 +93,18 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
         clients.withClientDetails(clientDetailsService);
     }
 
-    @Override
-    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-        log.info("configure  AuthorizationServerEndpointsConfigurer (M3) in   AuthorizationServerConfiguration");
-        //log.info("authenticationManager: "+authenticationManager);
-        endpoints.tokenGranter(tokenGranter).
-                approvalStore(approvalStore).
-                pathMapping("/oauth/confirm_access", "redirect:"+"redirect:"+ MessageUtil.getProperty("entranceLink")+"/continuereg").
-//		pathMapping("/oauth/confirm_access", "/oauth/confirm_access").
-        requestFactory(tokenRequestFactory).
-//                userApprovalHandler(approvalHandler).
-                authorizationCodeServices(authorizationCodeServices).
-                allowedTokenEndpointRequestMethods(HttpMethod.GET).
-                //authenticationManager(authenticationManager).
-                        tokenStore(tokenStore).
-                tokenServices(tokenService);
-    }
+//    @Override
+//    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+//        log.info("configure  AuthorizationServerEndpointsConfigurer (M3) in   AuthorizationServerConfiguration");
+//        endpoints.tokenGranter(tokenGranter)
+//                 .approvalStore(approvalStore)
+//                 .pathMapping("/oauth/confirm_access", "redirect:"+"redirect:"+ MessageUtil.getProperty("entranceLink")+"/continuereg")
+//                 .requestFactory(tokenRequestFactory)
+//                 .authorizationCodeServices(authorizationCodeServices)
+//                 .allowedTokenEndpointRequestMethods(HttpMethod.GET)
+//                 .tokenStore(tokenStore)
+//                 .tokenServices(tokenService);
+//    }
 
     @Bean(name="agentAuthenticationProvider")
     public AgentAuthenticationProvider agentAuthenticationProvider(){

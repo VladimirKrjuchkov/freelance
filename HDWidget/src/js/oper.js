@@ -17,22 +17,17 @@ addEvent(window, "load", function () {
         var params = new URL(window.location.href).searchParams;
         byId("admin-name").innerHTML = "Вы вошли как " + params.get('name');
         addClass(byId("loginPage"), "hide");
-        // wssConnector = getCookie("wssConnector");
-        // if(!wssConnector) {
-        //     wssConnector = StompOverSock.getInstance(true);
-        //     wssConnector.subscribe("/user/queue/answer/oper/enter", oper.operEnterHandler);
-        //     wssConnector.subscribe("/user/queue/answer/oper/check", oper.userCheckHandler);
-        //     wssConnector.subscribe("/user/queue/answer/oper/message", oper.messagingResultHandler);
-        //     wssConnector.subscribe("/user/queue/answer/input/requests", oper.inputMessagesHandler);
-        //
-        // }else{
-        //     oper.operCheck();
-        // }
-        ajax("/api/checked/sayHellow", function (resp) {
-            console.log("success!!!");
-        }, null, function (resp) {
-            console.log("error!!!");
-        }, "GET");
+        wssConnector = getCookie("wssConnector");
+        if(!wssConnector) {
+            wssConnector = StompOverSock.getInstance(true);
+            wssConnector.subscribe("/user/queue/answer/oper/enter", oper.operEnterHandler);
+            wssConnector.subscribe("/user/queue/answer/oper/check", oper.userCheckHandler);
+            wssConnector.subscribe("/user/queue/answer/oper/message", oper.messagingResultHandler);
+            wssConnector.subscribe("/user/queue/answer/input/requests", oper.inputMessagesHandler);
+
+        }else{
+            oper.operCheck();
+        }
     }
 });
 
