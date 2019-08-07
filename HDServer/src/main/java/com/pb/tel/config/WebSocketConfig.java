@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
-	
+
 	private final Logger log = Logger.getLogger(WebSocketConfig.class.getCanonicalName());
 
 	@Autowired

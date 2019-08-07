@@ -22,7 +22,7 @@ import java.util.List;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ServletConfig implements WebMvcConfigurer{
 	   @Bean
-	   public LocaleResolver localeResolver() {		 
+	   public LocaleResolver localeResolver() {
 	      CookieLocaleResolver localeResolver = new CookieLocaleResolver();
 	      return localeResolver;
 	   }

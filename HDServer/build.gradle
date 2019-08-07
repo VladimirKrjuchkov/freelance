@@ -41,7 +41,7 @@ dependencies {
     compile "redis.clients:jedis:2.9.0", withoutLog
     compile group: 'com.google.code.gson', name: 'gson', version: '2.7', withoutLog
     compile group: 'org.apache.tomcat', name: 'juli', version: '6.0.26', withoutLog
-//    compile "com.mchange:c3p0:0.9.5.2"
+    compile "com.mchange:c3p0:0.9.5.2"
     compile 'com.zaxxer:HikariCP:2.6.1', withoutLog
     compile "net.sf.ehcache:ehcache-core:2.6.11", withoutLog
     compile "org.postgresql:postgresql:42.2.5", withoutLog

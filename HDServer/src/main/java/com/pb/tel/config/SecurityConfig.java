@@ -29,45 +29,45 @@ import java.util.logging.Logger;
 @EnableWebSecurity//(debug=true)
 //@Order(-5001)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-	
+
 	private static final Logger log = Logger.getLogger(SecurityConfig.class.getCanonicalName());
 
-	
+
 	@Value("${refresh.token.validity.seconds}")
   	private int refreshTokenValidity;
-  	
+
   	@Value("${access.token.validity.seconds}")
   	private int accessTokenValidity;
-  	
+
   	@Value("${sid.parametr.name}")
   	private String sidParametrName;
-  	
+
 	@Value("${entrancelink}")
   	private String entranceLink;
-	
+
 	@Value("${redis.token.store.prefix}")
 	private String prefix;
-  	
+
   	public static int refreshTokenValiditySeconds;
-  	  	
+
   	public static int accessTokenValiditySeconds;
-  	
+
   	public static String redisTokenStorePrefix;
-  	
-  	
+
+
   	@Value("${redis.enable}")
   	private boolean useRedisSecurityContextRepository;
-  	
+
   	@PostConstruct
   	private void init(){
   		accessTokenValiditySeconds = accessTokenValidity;
-  		refreshTokenValiditySeconds = refreshTokenValidity;  	
+  		refreshTokenValiditySeconds = refreshTokenValidity;
   		redisTokenStorePrefix = prefix;
   	}
-	
+
 	@Autowired
 	private UserNamePasswordAuthenticationProvider userNamePasswordAuthenticationProvider;
- 
+
     @Autowired
     private AuthenticationFailureHandlerImpl authenticationFailureHandlerImpl;
 
@@ -81,24 +81,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     @Lazy
 	private ResourceServerTokenServices tokenServices;
-    
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		//    	auth.inMemoryAuthentication()
 		//        .withUser("user").password("password").roles("USER");
-    	auth.authenticationProvider(userNamePasswordAuthenticationProvider).eraseCredentials(false);//.authenticationProvider(agentAuthenticationProvider);    
+    	auth.authenticationProvider(userNamePasswordAuthenticationProvider).eraseCredentials(false);//.authenticationProvider(agentAuthenticationProvider);
     	//super.configure(auth);
     	log.info("AuthenticationManagerBuilder: "+auth);
     //	log.info("authenticationManager in configure (SecurityConfig): "+authenticationManager);
     }
-// 
+//
 //    @Bean
 //    public DefaultCookieSerializer defaultCookieSerializer(){
 //        DefaultCookieSerializer defaultCookieSerializer = new DefaultCookieSerializer();
 //        defaultCookieSerializer.setCookieName("mySessionId");
 //        return defaultCookieSerializer;
 //    }
-       
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
     	HttpSecurity preparedHttp = http.
@@ -123,9 +123,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //             and().
 //             sessionManagement().enableSessionUrlRewriting(false);
     }
-    
+
     @Configuration
-    @Order(1)                                                       
+    @Order(1)
     public class ApiWebSecurityConfigurationAdapter extends WebSecurityConfigurerAdapter {
         protected void configure(HttpSecurity http) throws Exception {
             http
@@ -133,9 +133,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             	.csrf().disable()
             	.headers().addHeaderWriter(new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN))
 				.and()
-                .antMatcher("/checked/**")                              
-                .authorizeRequests()                
-                .anyRequest().hasAnyRole("USER", "ADMIN")
+                .antMatcher("/checked/**")
+                .authorizeRequests()
+//                .anyRequest().hasAnyRole("USER", "ADMIN")
+				.anyRequest().authenticated()
                 .and()
                 .addFilterBefore(resourceTokenClientIdProcessingFilter(), AbstractPreAuthenticatedProcessingFilter.class)
 				.securityContext().securityContextRepository(new NullSecurityContextRepository());
@@ -157,43 +158,43 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public AuthenticationManager authenticationManager() throws Exception {
 		return super.authenticationManager();
 	}
-    
+
     @Bean(name="redisSecurityContextRepository")
     public RedisSecurityContextRepository getRedisSecurityContextRepository(){
     	return new RedisSecurityContextRepository();
-    } 
-    
+    }
+
     @Bean(name="resourceTokenClientIdProcessingFilter")
     public ResourceTokenClientIdProcessingFilter resourceTokenClientIdProcessingFilter(){
     	ResourceTokenClientIdProcessingFilter resourceTokenClientIdProcessingFilter = new ResourceTokenClientIdProcessingFilter();
     	OAuth2AuthenticationManager oAuth2AuthenticationManager = new OAuth2AuthenticationManager();
     	oAuth2AuthenticationManager.setClientDetailsService(clientDetailsService());
-    	oAuth2AuthenticationManager.setTokenServices(tokenServices);    	
+    	oAuth2AuthenticationManager.setTokenServices(tokenServices);
     	resourceTokenClientIdProcessingFilter.setAuthenticationManager(oAuth2AuthenticationManager);
     	resourceTokenClientIdProcessingFilter.setTokenExtractor(new TokenClientIdExtractor(sidParametrName));
     	return resourceTokenClientIdProcessingFilter;
     }
-    
+
     @Bean(name="successHandlerImplementation")
   	public SuccessHandlerImplementation successHandlerImplementation(){
-    	SuccessHandlerImplementation successHandlerImplementation = new SuccessHandlerImplementation();   		
+    	SuccessHandlerImplementation successHandlerImplementation = new SuccessHandlerImplementation();
   		return successHandlerImplementation;
   	}
-    
+
     @Bean(name="authenticationFailureHandlerImpl")
   	public AuthenticationFailureHandlerImpl authenticationFailureHandlerImpl(){
     	AuthenticationFailureHandlerImpl authenticationFailureHandlerImpl = new AuthenticationFailureHandlerImpl(entranceLink+"/admin.html");
     	return authenticationFailureHandlerImpl;
     }
-  	  	
-  	
+
+
   	@Bean(name="userNamePasswordAuthenticationProvider")
   	public UserNamePasswordAuthenticationProvider userNamePasswordAuthenticationProvider(HelpDeskUserDetailsService helpDeskUserDetailsService){
   		UserNamePasswordAuthenticationProvider userNamePasswordAuthenticationProvider = new UserNamePasswordAuthenticationProvider();
   		userNamePasswordAuthenticationProvider.setUserDetailsService(helpDeskUserDetailsService);
   		return userNamePasswordAuthenticationProvider;
   	}
-  	  	
+
   	@Bean(name="loginUrlAuthenticationEntryPoint")
   	public LoginUrlAuthenticationEntryPoint loginUrlAuthenticationEntryPoint(){
 		LoginUrlAuthenticationEntryPoint loginUrlAuthenticationEntryPoint = new LoginUrlAuthenticationEntryPoint(entranceLink+"/agent", sidParametrName);
