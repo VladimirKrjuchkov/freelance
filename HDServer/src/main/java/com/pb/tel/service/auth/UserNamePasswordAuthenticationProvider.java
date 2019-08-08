@@ -66,11 +66,7 @@ public class UserNamePasswordAuthenticationProvider extends AbstractAuthenticati
         log.info("authentication: "+authentication.getPrincipal());
         log.info("authentication: "+authentication.getCredentials());
         log.info("authentication: "+user.getAuthorities());
-
-
-        log.info("*** *** *** user.getAuthorities() = " + user.getAuthorities());
         UsernamePasswordAuthenticationToken result = new UsernamePasswordAuthenticationToken(user.getUsername(), user, user.getAuthorities());
-        log.info("*** *** *** result.getAuthorities() = " + result.getAuthorities());
         result.setDetails(authentication.getDetails());
 
         log.info("result authentication: "+result);
