@@ -35,8 +35,6 @@ public class AccountHandler {
         UserAccount userAccount = generateUserAccount();
         String storageKey = UUID.randomUUID().toString();
         userAccount.setStorageKey(storageKey);
-        log.info("*** *** *** userAccount.getMaxPossibleSessionExpire() = " + userAccount.getMaxPossibleSessionExpire());
-        log.info("*** *** *** userAccount.getMaxInSecondPossibleSessionExpire() = " + userAccount.getMaxInSecondPossibleSessionExpire());
         sessionStorage.putValue(storageKey, userAccount, userAccount.getMaxPossibleSessionExpire());
         Utils.setCookie(httpServletResponse, "storageKey", storageKey, null, null, false, userAccount.getMaxInSecondPossibleSessionExpire());
     }

@@ -44,27 +44,9 @@ public class TokenClientIdExtractor implements TokenExtractor {
     }
 
     public String[] extractTokenClienId(HttpServletRequest request) {
-        // first check the header...
         String authHeaderValues[] = extractHeaderTokenClienId(request);
         String token = authHeaderValues[0];
         String client_id = authHeaderValues[1];
-
-        // Это так мы закрываем/открываем параметры (token и client_id) в запросе  bearer type allows a request parameter as well
-//		if (token == null) {
-//			log.fine("Token not found in headers. Trying request parameters.");
-//			token = request.getParameter(OAuth2AccessToken.ACCESS_TOKEN);
-//			if (token == null) {
-//				log.fine("Token not found in request parameters. Not an OAuth2 request.");
-//			}
-//		}
-//
-//		if (client_id == null) {
-//			log.fine("client_id not found in headers. Trying request parameters.");
-//			client_id = request.getParameter(CLIENT_ID);
-//			if (client_id == null) {
-//				log.fine("client_id not found in request parameters.  Not an OAuth2 request.");
-//			}
-//		}
         String authValues[] = {token, client_id};
         return authValues;
     }
@@ -110,10 +92,6 @@ public class TokenClientIdExtractor implements TokenExtractor {
                     }
                 }
         }
-
-        log.info("*** *** *** token = " + token);
-        log.info("*** *** *** clientId = " + clientId);
-
         String authHeaderValues[] = {token, clientId};
         return authHeaderValues;
     }

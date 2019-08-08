@@ -92,7 +92,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
              and().
 			 addFilterBefore(usernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class).
              exceptionHandling().
-             authenticationEntryPoint(loginUrlAuthenticationEntryPoint()).
              and();
     		 if(useRedisSecurityContextRepository) {
 				 preparedHttp.securityContext().securityContextRepository(getRedisSecurityContextRepository());
@@ -161,19 +160,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     	return authenticationFailureHandlerImpl;
     }
 
-
   	@Bean(name="userNamePasswordAuthenticationProvider")
   	public UserNamePasswordAuthenticationProvider userNamePasswordAuthenticationProvider(HelpDeskUserDetailsService helpDeskUserDetailsService){
   		UserNamePasswordAuthenticationProvider userNamePasswordAuthenticationProvider = new UserNamePasswordAuthenticationProvider();
   		userNamePasswordAuthenticationProvider.setUserDetailsService(helpDeskUserDetailsService);
   		return userNamePasswordAuthenticationProvider;
-  	}
-
-  	@Bean(name="loginUrlAuthenticationEntryPoint")
-  	public LoginUrlAuthenticationEntryPoint loginUrlAuthenticationEntryPoint(){
-		LoginUrlAuthenticationEntryPoint loginUrlAuthenticationEntryPoint = new LoginUrlAuthenticationEntryPoint(entranceLink+"/agent", sidParametrName);
-  		loginUrlAuthenticationEntryPoint.setForceHttps(true);
-  		return loginUrlAuthenticationEntryPoint;
   	}
 
 	@Bean(name="clientDetailsService")
