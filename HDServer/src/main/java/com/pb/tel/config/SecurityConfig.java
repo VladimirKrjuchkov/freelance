@@ -26,8 +26,7 @@ import java.util.logging.Logger;
 
 
 @Configuration
-@EnableWebSecurity//(debug=true)
-//@Order(-5001)
+@EnableWebSecurity(debug=true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private static final Logger log = Logger.getLogger(SecurityConfig.class.getCanonicalName());
@@ -48,15 +47,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Value("${redis.token.store.prefix}")
 	private String prefix;
 
+	@Value("${not.secured.urls}")
+	private String[] notSecuredUrls;
+
+	@Value("${redis.enable}")
+	private boolean useRedisSecurityContextRepository;
+
   	public static int refreshTokenValiditySeconds;
 
   	public static int accessTokenValiditySeconds;
 
   	public static String redisTokenStorePrefix;
-
-
-  	@Value("${redis.enable}")
-  	private boolean useRedisSecurityContextRepository;
 
   	@PostConstruct
   	private void init(){
@@ -71,57 +72,31 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private AuthenticationFailureHandlerImpl authenticationFailureHandlerImpl;
 
-//	@Autowired
-//	private HelpDeskUserDetailsService helpDeskUserDetailsService;
-//
-//
-//	@Autowired
-//	private CasheProxyHelpDeskUserDetailsService casheProxyHelpDeskUserDetailsService;
-//
     @Autowired
     @Lazy
 	private ResourceServerTokenServices tokenServices;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		//    	auth.inMemoryAuthentication()
-		//        .withUser("user").password("password").roles("USER");
-    	auth.authenticationProvider(userNamePasswordAuthenticationProvider).eraseCredentials(false);//.authenticationProvider(agentAuthenticationProvider);
-    	//super.configure(auth);
+    	auth.authenticationProvider(userNamePasswordAuthenticationProvider).eraseCredentials(false);
     	log.info("AuthenticationManagerBuilder: "+auth);
-    //	log.info("authenticationManager in configure (SecurityConfig): "+authenticationManager);
     }
-//
-//    @Bean
-//    public DefaultCookieSerializer defaultCookieSerializer(){
-//        DefaultCookieSerializer defaultCookieSerializer = new DefaultCookieSerializer();
-//        defaultCookieSerializer.setCookieName("mySessionId");
-//        return defaultCookieSerializer;
-//    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
     	HttpSecurity preparedHttp = http.
     		 csrf().disable().
-    		 //headers().addHeaderWriter(new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)).and(). ///Это опыты были по наладке wss. Добавляет хидер XFrameOptions с значением SAMEORIGIN в ответе
-             //antMatchers("/static/**","/login","/sidCheck", "/answerGeneric/**").permitAll().
     		 authorizeRequests().
-    		 antMatchers("/login","/sidCheck").permitAll().
+    		 antMatchers(notSecuredUrls).permitAll().
              anyRequest().authenticated().
              and().
 			 addFilterBefore(usernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class).
-//             formLogin().
-//             loginProcessingUrl("/login").
-//             successHandler(successHandlerImplementation()).
-//             failureHandler(authenticationFailureHandlerImpl).
-//             and().
              exceptionHandling().
              authenticationEntryPoint(loginUrlAuthenticationEntryPoint()).
              and();
-    		if(useRedisSecurityContextRepository)
-    	  	 preparedHttp.securityContext().securityContextRepository(getRedisSecurityContextRepository());
-//             and().
-//             sessionManagement().enableSessionUrlRewriting(false);
+    		 if(useRedisSecurityContextRepository) {
+				 preparedHttp.securityContext().securityContextRepository(getRedisSecurityContextRepository());
+			 }
     }
 
     @Configuration
@@ -135,7 +110,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.and()
                 .antMatcher("/checked/**")
                 .authorizeRequests()
-//                .anyRequest().hasAnyRole("USER", "ADMIN")
 				.anyRequest().authenticated()
                 .and()
                 .addFilterBefore(resourceTokenClientIdProcessingFilter(), AbstractPreAuthenticatedProcessingFilter.class)

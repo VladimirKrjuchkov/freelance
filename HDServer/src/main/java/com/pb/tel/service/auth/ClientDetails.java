@@ -2,7 +2,6 @@ package com.pb.tel.service.auth;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pb.tel.data.AgentDetails;
-import com.pb.tel.data.Consumers;
 import org.springframework.security.oauth2.provider.client.BaseClientDetails;
 
 import javax.xml.bind.annotation.XmlTransient;
@@ -14,7 +13,7 @@ import java.util.logging.Logger;
 /**
  * Created by vladimir on 26.07.19.
  */
-public class ClientDetails extends BaseClientDetails implements Consumers {
+public class ClientDetails extends BaseClientDetails{
 
     private final Logger log = Logger.getLogger(ClientDetails.class.getCanonicalName());
 
@@ -69,12 +68,10 @@ public class ClientDetails extends BaseClientDetails implements Consumers {
         return listGroupIds;
     }
 
-    @Override
     public String getId() {
         return getClientId();
     }
 
-    @Override
     public String getName() {
         return name;
     }

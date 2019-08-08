@@ -17,7 +17,6 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -53,9 +52,7 @@ public class ResourceTokenClientIdProcessingFilter extends AbstractAuthenticatio
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
         final HttpServletRequest request = (HttpServletRequest) req;
         final HttpServletResponse response = (HttpServletResponse) res;
-
         try {
-
             if(!isAloowedIp(request))
                 throw OAuth2Exception.create(OAuth2Exception.UNAUTHORIZED_CLIENT, MessageUtil.getMessage("AUTH31"));
 
@@ -82,27 +79,14 @@ public class ResourceTokenClientIdProcessingFilter extends AbstractAuthenticatio
                     log.fine("Authentication success: " + authResult);
                     log.info("Authentication success: " + authResult);
 
-                    Authentication preAuthentication = SecurityContextHolder.getContext().getAuthentication();
-
                     SecurityContextHolder.getContext().setAuthentication(authResult);
-//
-//					if(authenticationManager instanceof ExtendAuthentication && ((ExtendAuthentication)authenticationManager).suitableForExtendAuthentication(request)){
-//						log.info("Start ExtendAuthentication !");
-//						authResult = ((ExtendAuthentication)authenticationManager).extendAuthenticate(authResult, preAuthentication);
-//						log.fine("ExtendAuthentication success: " + authResult);
-//					}
                 }
             }
         }
-        catch (OAuth2Exception /*| LogicException */failed) {
+        catch (OAuth2Exception failed) {
             SecurityContextHolder.clearContext();
-            log.log(Level.SEVERE, "**** *** *** VOT ETOT FAIL: ", failed);
             log.fine("Authentication request failed: " + failed);
-//			if(failureHandler!=null && failed instanceof LogicException)
-//				failureHandler.onAuthenticationFailure(request, response, new com.pb.bi.service.auth.AuthenticationException(((LogicException)failed).getText(), failed, failed));
-//			else
             authenticationEntryPoint.commence(request, response, new InsufficientAuthenticationException(failed.getMessage(), failed));
-
             return;
         }
 

@@ -35,7 +35,7 @@ public class Mes implements Serializable {
 
     private String desc;
 
-    private User user;
+    private Operator user;
 
     public MesState getState() {
         return state;
@@ -61,11 +61,11 @@ public class Mes implements Serializable {
         this.desc = desc;
     }
 
-    public User getUser() {
+    public Operator getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(Operator user) {
         this.user = user;
     }
 

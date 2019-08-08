@@ -155,7 +155,7 @@ public class LoginUrlAuthenticationEntryPoint extends org.springframework.securi
         userAccount.setClientId(clientDetail.getClientId());
         String userStoreKey = UUID.randomUUID().toString();
         userAccount.setSidBi(userStoreKey);
-        userAccount.setMaxInSecondPossibleSessionExpire(computeMaxPossibleSessionExpire(clientDetail));
+//        userAccount.setMaxInSecondPossibleSessionExpire(computeMaxPossibleSessionExpire(clientDetail));
         return userAccount;
     }
 

@@ -1,9 +1,8 @@
 package com.pb.tel.service.auth;
 
-import com.pb.tel.dao.UserDaoImpl;
-import com.pb.tel.data.User;
+import com.pb.tel.dao.OperatorDaoImpl;
+import com.pb.tel.data.Operator;
 import com.pb.tel.utils.MessageUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,23 +17,13 @@ import javax.annotation.Resource;
 @Service("helpDeskUserDetailsService")
 public class HelpDeskUserDetailsService implements UserDetailsService {
 
-    @Autowired
-    private CasheProxyHelpDeskUserDetailsService casheProxyPaperlessUserDetailsService;
-
-
-    @Resource(name="userDaoImpl")
-    private UserDaoImpl userDaoImpl;
-
-//	@Override
-//	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException{
-//		Object result = casheProxyPaperlessUserDetailsService.cachableLoadUserByUsername(username);
-//		return (UserDetails)result;
-//	}
+    @Resource(name="operatorDaoImpl")
+    private OperatorDaoImpl operatorDaoImpl;
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
         login = login.split(",")[1];
-        User user = userDaoImpl.getUserByLogin(login);
+        Operator user = operatorDaoImpl.getUserByLogin(login);
         if(user == null)
             throw new UsernameNotFoundException(MessageUtil.getMessage("auth.AUTH06"));
         return user;

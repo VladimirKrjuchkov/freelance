@@ -1,7 +1,7 @@
 package com.pb.tel.service.handlers;
 
-import com.pb.tel.dao.UserDaoImpl;
-import com.pb.tel.data.User;
+import com.pb.tel.dao.OperatorDaoImpl;
+import com.pb.tel.data.Operator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,18 +18,16 @@ public class UserHandler {
     private final static Logger log = Logger.getLogger(UserHandler.class.getCanonicalName());
 
     @Autowired
-    private UserDaoImpl userDaoImpl;
+    private OperatorDaoImpl operatorDaoDaoImpl;
 
-    public User getUserByLogin(String login) {
-        User result = null;
+    public Operator getUserByLogin(String login) {
+        Operator result = null;
         try {
-            result = userDaoImpl.getUserByLogin(login);
-//            result.setSessionTtl(Utils.getSecondsToDate(new Date())*1000);
+            result = operatorDaoDaoImpl.getUserByLogin(login);
 
         }catch (NoResultException e){
             log.info("No user found for inn: " + login);
         }
-//		result.setSessionTtl(Util.getSecondsToDate(userAccount.getMaxPossibleSessionExpire())*1000);
         return result;
     }
 }

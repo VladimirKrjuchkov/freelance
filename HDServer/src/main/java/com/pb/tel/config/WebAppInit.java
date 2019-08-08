@@ -36,41 +36,30 @@ public class WebAppInit extends AbstractAnnotationConfigDispatcherServletInitial
 	protected void registerDispatcherServlet(ServletContext servletContext) {
 		String servletName = getServletName();
 		Assert.hasLength(servletName, "getServletName() must not return null or empty");
-
 		WebApplicationContext servletAppContext = createServletApplicationContext();
 		Assert.notNull(servletAppContext, "createServletApplicationContext() must not return null");
-
 		FrameworkServlet dispatcherServlet = createDispatcherServlet(servletAppContext);
 		Assert.notNull(dispatcherServlet, "createDispatcherServlet(WebApplicationContext) must not return null");
 		dispatcherServlet.setContextInitializers(getServletApplicationContextInitializers());
-
 		ServletRegistration.Dynamic registration = servletContext.addServlet(servletName, dispatcherServlet);
 		if (registration == null) {
 			throw new IllegalStateException("Failed to register servlet with name '" + servletName + "'. " +
 					"Check if there is another servlet registered under the same name.");
 		}
-
 		registration.setLoadOnStartup(1);
 		registration.addMapping(getServletMappings());
 		registration.setAsyncSupported(isAsyncSupported());
-
 		servletContext.setSessionTrackingModes(getSessionTrackingModes());
-
 		registerServletFilterCustom(servletContext);
-
 		Filter[] filters = getServletFilters();
 		if (!ObjectUtils.isEmpty(filters)) {
 			for (Filter filter : filters) {
 				registerServletFilter(servletContext, filter);
 			}
 		}
-
-//		servletContext.setSessionTrackingModes(EnumSet.of(SessionTrackingMode.COOKIE));
 		servletContext.getSessionCookieConfig().setPath("/");
 		servletContext.getSessionCookieConfig().setDomain(null);
 		servletContext.getSessionCookieConfig().setHttpOnly(true);
-//		servletContext.getSessionCookieConfig().setMaxAge(600);
-//		servletContext.getSessionCookieConfig().setSecure(true);
 		customizeRegistration(registration);
 	}
 

@@ -4,8 +4,7 @@ package com.pb.tel.data.enumerators;
  * Created by vladimir on 03.07.19.
  */
 public enum RequestType {
-    CALL_OPER("CALL_OPER"),
-    ENTER_USER("ENTER_USER");
+    CALL_OPER("CALL_OPER");
 
     private String desc;
 

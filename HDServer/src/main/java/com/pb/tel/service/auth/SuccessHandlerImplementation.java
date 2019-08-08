@@ -1,6 +1,6 @@
 package com.pb.tel.service.auth;
 
-import com.pb.tel.data.User;
+import com.pb.tel.data.Operator;
 import com.pb.tel.data.UserAccount;
 import com.pb.tel.service.Reference;
 import com.pb.tel.service.handlers.UserHandler;
@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.OAuth2Request;
 import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
@@ -22,12 +21,10 @@ import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -105,7 +102,7 @@ public class SuccessHandlerImplementation extends SavedRequestAwareAuthenticatio
         Authentication userAauthentication = Reference.authorizeUser((org.springframework.security.core.userdetails.UserDetails)authentication.getCredentials(), userAccount, Reference.getCombinetAuthorities(agentAuthority, userAccount.getAuthority()), authentication.getDetails());
         String autorizeUrl = userAccount.getAutorizeUrl();
         if(authentication.isAuthenticated()){
-            autorizeUrl = MessageUtil.getProperty("main.address") + "/startwork?name=" + ((User)(userAccount.getUser())).getLogin();
+            autorizeUrl = MessageUtil.getProperty("main.address") + "/startwork?name=" + ((Operator)(userAccount.getUser())).getLogin();
             String userAccessToken = createToken(userAccount, userAauthentication, agentAuthority);
             Utils.setCookie(response, Reference.sidParametrName, Reference.buildSid(userAccessToken, userAccount.getClientId()), null, null, true, userAccount.getMaxInSecondPossibleSessionExpire()+10);
         }else{
@@ -118,55 +115,55 @@ public class SuccessHandlerImplementation extends SavedRequestAwareAuthenticatio
     }
 
 
-    public void entryRegisterProcess(ClientDetails mainAgent, HttpServletRequest request, HttpServletResponse response, Authentication authentication, UserAccount userAccount, String workStationUserId, boolean finalRegister )throws IOException, ServletException  {
-        ClientDetails clientDetails = ((ClientDetailsService)clientDetailsService).loadClientByClientId(userAccount.getClientId());
-        Collection<GrantedAuthority> agentAuthority = clientDetails.getAuthorities();
-        mainAgent = clientDetails;
-        Authentication userAauthentication = Reference.authorizeUser((org.springframework.security.core.userdetails.UserDetails)authentication.getCredentials(), userAccount, Reference.getCombinetAuthorities(agentAuthority, userAccount.getAuthority()), authentication.getDetails());
-        String autorizeUrl = userAccount.getAutorizeUrl();
-
-        log.info("mainAgent: "+mainAgent);
-        log.info("userAccount: "+userAccount);
-
-        if(!useJSESSIONID){
-            String cookieValue = UUID.randomUUID().toString();
-            Utils.setCookie(response, RedisSecurityContextRepository.HD_SECURITY_CONTEXT_KEY, cookieValue, null, null, true, 5);
-            request.setAttribute("sessionCookieValue", cookieValue);
-        }
-
-        if(authentication.isAuthenticated()){
-            autorizeUrl = MessageUtil.getProperty("entranceLink") + "/startwork";
-            String userAccessToken = createToken(userAccount, userAauthentication, agentAuthority);
-            Utils.setCookie(response, Reference.sidParametrName, Reference.buildSid(userAccessToken, userAccount.getClientId()), null, null, true, userAccount.getMaxInSecondPossibleSessionExpire()+10);
-            if(mainAgent==null) { //Значит это авторизация для агентов паперлесс(а-ля Полтава Энерго)
-                createAndSetToContextAuthenticationForAgent(clientDetails, userAccount, userAauthentication, request);
-                autorizeUrl = MessageUtil.getProperty("entranceLink") + "/oauth/agent?redirect_uri="+userAccount.getAutorizeUrl();
-            }
-            else
-            if(!finalRegister)
-                SecurityContextHolder.clearContext();
-        }
-        else
-        if(mainAgent!=null) {
-            HttpSession httpSession = request.getSession(false);
-            if(httpSession==null)
-                httpSession = request.getSession(true);
-            autorizeUrl = MessageUtil.getProperty("entranceLink") + "/PplsService/oauth/authorize?response_type=code&client_id="+mainAgent.getClientId()+"&redirect_uri="+MessageUtil.getProperty("entranceLink") + "/startwork";
-        }
-
-        userAccount.setAutorizeUrl(autorizeUrl);
-        if(!authentication.isAuthenticated())
-            sessionStorage.putValue(workStationUserId, userAccount, userAccount.getMaxPossibleSessionExpire());
-
-        getRedirectStrategy().sendRedirect(request, response, autorizeUrl);
-
-    }
+//    public void entryRegisterProcess(ClientDetails mainAgent, HttpServletRequest request, HttpServletResponse response, Authentication authentication, UserAccount userAccount, String workStationUserId, boolean finalRegister )throws IOException, ServletException  {
+//        ClientDetails clientDetails = ((ClientDetailsService)clientDetailsService).loadClientByClientId(userAccount.getClientId());
+//        Collection<GrantedAuthority> agentAuthority = clientDetails.getAuthorities();
+//        mainAgent = clientDetails;
+//        Authentication userAauthentication = Reference.authorizeUser((org.springframework.security.core.userdetails.UserDetails)authentication.getCredentials(), userAccount, Reference.getCombinetAuthorities(agentAuthority, userAccount.getAuthority()), authentication.getDetails());
+//        String autorizeUrl = userAccount.getAutorizeUrl();
+//
+//        log.info("mainAgent: "+mainAgent);
+//        log.info("userAccount: "+userAccount);
+//
+//        if(!useJSESSIONID){
+//            String cookieValue = UUID.randomUUID().toString();
+//            Utils.setCookie(response, RedisSecurityContextRepository.HD_SECURITY_CONTEXT_KEY, cookieValue, null, null, true, 5);
+//            request.setAttribute("sessionCookieValue", cookieValue);
+//        }
+//
+//        if(authentication.isAuthenticated()){
+//            autorizeUrl = MessageUtil.getProperty("entranceLink") + "/startwork";
+//            String userAccessToken = createToken(userAccount, userAauthentication, agentAuthority);
+//            Utils.setCookie(response, Reference.sidParametrName, Reference.buildSid(userAccessToken, userAccount.getClientId()), null, null, true, userAccount.getMaxInSecondPossibleSessionExpire()+10);
+//            if(mainAgent==null) { //Значит это авторизация для агентов паперлесс(а-ля Полтава Энерго)
+//                createAndSetToContextAuthenticationForAgent(clientDetails, userAccount, userAauthentication, request);
+//                autorizeUrl = MessageUtil.getProperty("entranceLink") + "/oauth/agent?redirect_uri="+userAccount.getAutorizeUrl();
+//            }
+//            else
+//            if(!finalRegister)
+//                SecurityContextHolder.clearContext();
+//        }
+//        else
+//        if(mainAgent!=null) {
+//            HttpSession httpSession = request.getSession(false);
+//            if(httpSession==null)
+//                httpSession = request.getSession(true);
+//            autorizeUrl = MessageUtil.getProperty("entranceLink") + "/PplsService/oauth/authorize?response_type=code&client_id="+mainAgent.getClientId()+"&redirect_uri="+MessageUtil.getProperty("entranceLink") + "/startwork";
+//        }
+//
+//        userAccount.setAutorizeUrl(autorizeUrl);
+//        if(!authentication.isAuthenticated())
+//            sessionStorage.putValue(workStationUserId, userAccount, userAccount.getMaxPossibleSessionExpire());
+//
+//        getRedirectStrategy().sendRedirect(request, response, autorizeUrl);
+//
+//    }
 
 
     private void createAndSetToContextAuthenticationForAgent(ClientDetails clientDetails, UserAccount userAccount, Authentication authentication, HttpServletRequest request){
 //        org.springframework.security.core.userdetails.UserDetails agentUserDetails = clientDetails.getTechUser();//userHandler.loadUserByEmail(clientDetails.getTechUser().getLogin());
 //        UsernamePasswordAuthenticationToken agentAuthentication = new UsernamePasswordAuthenticationToken(agentUserDetails.getUsername(), agentUserDetails, agentUserDetails.getAuthorities());
-        UsernamePasswordAuthenticationToken agentAuthentication = new UsernamePasswordAuthenticationToken((((User)(userAccount.getUser())).getUsername()), (User)(userAccount.getUser()), (((User)(userAccount.getUser())).getAuthorities()));
+        UsernamePasswordAuthenticationToken agentAuthentication = new UsernamePasswordAuthenticationToken((((Operator)(userAccount.getUser())).getUsername()), (Operator)(userAccount.getUser()), (((Operator)(userAccount.getUser())).getAuthorities()));
         agentAuthentication.setDetails(authentication.getDetails());
 
 //        UserAccount agentUserAccount = loginUrlAuthenticationEntryPoint.generateUserAccount(request, clientDetails);

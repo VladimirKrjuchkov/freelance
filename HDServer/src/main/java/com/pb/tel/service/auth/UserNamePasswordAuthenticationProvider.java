@@ -32,7 +32,7 @@ public class UserNamePasswordAuthenticationProvider extends AbstractAuthenticati
         //String secretComponent = (String)authentication.getDetails();
         String login = (String)authentication.getPrincipal();
         String password = (String)authentication.getCredentials();
-        UserDetails user = null;
+        UserDetails user;
         try{
             log.info("login: "+login);
             log.info("password: "+password);

@@ -70,18 +70,4 @@ public class UsernamePasswordAuthenticationFilter extends AbstractAuthentication
         authRequest.setDetails(this.authenticationDetailsSource.buildDetails(request));
     }
 
-//    public void setUsernameParameter(String usernameParameter) {
-//        Assert.hasText(usernameParameter, "Username parameter must not be empty or null");
-//        this.usernameParameter = usernameParameter;
-//    }
-//
-//    public void setPasswordParameter(String passwordParameter) {
-//        Assert.hasText(passwordParameter, "Password parameter must not be empty or null");
-//        this.passwordParameter = passwordParameter;
-//    }
-
-//    public void setPostOnly(boolean postOnly) {
-//        this.postOnly = postOnly;
-//    }
-
 }

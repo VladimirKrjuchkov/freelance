@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.pb.tel.data.enumerators.AuthType;
 import com.pb.tel.data.enumerators.Role;
 import com.pb.tel.data.enumerators.Status;
-import com.pb.tel.service.auth.ClientDetails;
 import com.pb.tel.service.exception.LogicException;
 import com.pb.tel.utils.Utils;
 import org.springframework.security.core.GrantedAuthority;
@@ -331,11 +330,11 @@ public class UserAccount implements Serializable {
             sessionAccessTokens.add(accessToken);
     }
 
-    @JsonIgnore
-    public UserAccount fillAgentUserAccaunt(ClientDetails clientDetails) {
-//        this.setUsername(clientDetails.getTechUser().getLogin());
-        this.setPassword("userPassword");
-//        this.setAuthority(clientDetails.getTechUser().getAuthorities());
-        return this;
-    }
+//    @JsonIgnore
+//    public UserAccount fillAgentUserAccaunt(ClientDetails clientDetails) {
+////        this.setUsername(clientDetails.getTechUser().getLogin());
+//        this.setPassword("userPassword");
+////        this.setAuthority(clientDetails.getTechUser().getAuthorities());
+//        return this;
+//    }
 }

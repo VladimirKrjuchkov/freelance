@@ -2,8 +2,7 @@ package com.pb.tel.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.pb.tel.data.custom.type.TypeArrayToSet;
-import com.pb.tel.data.custom.type.TypeArrayToUser;
+import com.pb.tel.data.custom.type.TypeArrayToOperator;
 import com.pb.tel.data.custom.type.TypeRoles;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Type;
@@ -12,7 +11,10 @@ import org.hibernate.annotations.TypeDefs;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Set;
@@ -23,16 +25,15 @@ import java.util.Set;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @Entity
 @Table(name = "operators")
-@TypeDefs({@TypeDef(typeClass = TypeArrayToUser.class, name = TypeArrayToUser.NAME),
-           @TypeDef(typeClass = TypeArrayToSet.class, name = TypeArrayToSet.NAME),
+@TypeDefs({@TypeDef(typeClass = TypeArrayToOperator.class, name = TypeArrayToOperator.NAME),
            @TypeDef(typeClass = TypeRoles.class, name = TypeRoles.NAME)})
 
 @DynamicUpdate
-public class User implements Serializable, UserDetails {
+public class Operator implements Serializable, UserDetails {
 
-    public User(){}
+    public Operator(){}
 
-    public User(String login){
+    public Operator(String login){
         this.login = login;
     }
 
@@ -55,8 +56,8 @@ public class User implements Serializable, UserDetails {
     private Collection<Roles> roles;
 
     @Column(name = "friends", nullable=true)
-    @Type(type = TypeArrayToUser.NAME)
-    private Set<User> friends;
+    @Type(type = TypeArrayToOperator.NAME)
+    private Set<Operator> friends;
 
     @Column(name = "create_time", nullable=true)
     @JsonIgnore
@@ -137,11 +138,11 @@ public class User implements Serializable, UserDetails {
         this.roles = roles;
     }
 
-    public Set<User> getFriends() {
+    public Set<Operator> getFriends() {
         return friends;
     }
 
-    public void setFriends(Set<User> friends) {
+    public void setFriends(Set<Operator> friends) {
         this.friends = friends;
     }
 
@@ -166,7 +167,7 @@ public class User implements Serializable, UserDetails {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        User user = (User) o;
+        Operator user = (Operator) o;
 
         if (login != null ? !login.equals(user.login) : user.login != null) return false;
         if (password != null ? !password.equals(user.password) : user.password != null) return false;

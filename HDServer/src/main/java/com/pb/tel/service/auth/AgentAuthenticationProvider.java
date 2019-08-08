@@ -23,17 +23,15 @@ public class AgentAuthenticationProvider extends AbstractAuthenticationProvider 
         String secretComponent = (String)authentication.getDetails();
         String clientId = (String)authentication.getPrincipal();
         String password = (String)authentication.getCredentials();
-        UserDetails user = null;
+        UserDetails user;
         try{
             user = userDetailsService.loadUserByUsername(clientId);
             String secret = clientId + user.getPassword()+secretComponent;
 
             if(!user.isEnabled())
                 throw new BadCredentialsException(MessageUtil.getMessage("auth.AUTH10", ((ClientDetails)user).getName()));
-            //throw new BadCredentialsException(PaperUtil.getTextByCode("AUTH10", ((ClientDetails)user).getName()));
-            //Закрыли ход по паролю, только по его хешу доступно
+
             if(/*!password.equals(user.getPassword()) && !password.equals(Util.getShHash(secret)) &&*/ !password.equals(Utils.getHash(secret, "SHA-512")))
-                //if(/*!password.equals(user.getPassword()) && */!password.equals(user.getPassword()))
                 throw new BadCredentialsException(MessageUtil.getMessage("auth.AUTH09"));
 
         }

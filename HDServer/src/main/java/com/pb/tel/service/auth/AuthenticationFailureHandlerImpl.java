@@ -13,7 +13,8 @@ import java.util.logging.Logger;
 /**
  * Created by vladimir on 26.07.19.
  */
-public class AuthenticationFailureHandlerImpl extends SimpleUrlAuthenticationFailureHandler {
+public class
+AuthenticationFailureHandlerImpl extends SimpleUrlAuthenticationFailureHandler {
 
     private static final Logger log = Logger.getLogger(AuthenticationFailureHandlerImpl.class.getCanonicalName());
 

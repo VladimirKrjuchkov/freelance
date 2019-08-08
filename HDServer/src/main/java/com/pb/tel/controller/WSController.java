@@ -1,7 +1,7 @@
 package com.pb.tel.controller;
 
 import com.pb.tel.data.ConnectedAccount;
-import com.pb.tel.data.User;
+import com.pb.tel.data.Operator;
 import com.pb.tel.data.UserAccount;
 import com.pb.tel.data.enumerators.RequestType;
 import com.pb.tel.data.enumerators.Role;
@@ -68,7 +68,7 @@ public class WSController {
                  accountStorage.getValue(account.getConnectedOperSessionId()) != null &&
                  accountStorage.getValue(account.getConnectedOperSessionId()).getStatus() == Status.ONLINE){
             UserAccount operAccount = accountStorage.getValue(account.getConnectedOperSessionId());
-            webSocketRequest.setMessage("Вы подключены к оператору " + ((User)operAccount.getUser()).getLogin());
+            webSocketRequest.setMessage("Вы подключены к оператору " + ((Operator)operAccount.getUser()).getLogin());
         }
         accountStorage.putValue(account.getSessionId(), account, Utils.getDateAfterSeconds(Integer.valueOf(environment.getProperty("session.expiry"))));
         webSocketRequest.setUserAccount(account);
@@ -103,13 +103,13 @@ public class WSController {
         if(operAccount == null){
             return WebSocketRequest.getErrorRequest("Нет свободных операторов попробуйте позже");
         }
-        operAccount.addConnectedAccount(new ConnectedAccount(sessionId, ((User)userAccount.getUser()).getLogin()));
-        userAccount.addConnectedAccount(new ConnectedAccount(operAccount.getSessionId(), ((User)operAccount.getUser()).getLogin()));
+        operAccount.addConnectedAccount(new ConnectedAccount(sessionId, ((Operator)userAccount.getUser()).getLogin()));
+        userAccount.addConnectedAccount(new ConnectedAccount(operAccount.getSessionId(), ((Operator)operAccount.getUser()).getLogin()));
         userAccount.setStatus(Status.CONNECTED);
         WebSocketRequest webSocketRequest = WebSocketRequest.getSuccessRequest("Вы подключены к пользователю " + userAccount.getSessionId(), operAccount);
         webSocketRequest.setRequestType(RequestType.CALL_OPER);
         WebSocketServer.sendMessage(userAccount.getConnectedOperSessionId(), webSocketRequest);
-        return WebSocketRequest.getSuccessRequest("Здравствуйте, меня звать " + ((User)operAccount.getUser()).getLogin() + ", какой у вас вопрос?", operAccount);
+        return WebSocketRequest.getSuccessRequest("Здравствуйте, меня звать " + ((Operator)operAccount.getUser()).getLogin() + ", какой у вас вопрос?", operAccount);
     }
 
     @MessageMapping("/user/message")

@@ -28,7 +28,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 		log.info("WebSocketConfig 1:   StompEndpointRegistry: "+registry);
 		registry
 				.addEndpoint("/checked/wss")
-//				.addEndpoint("/wss")
 				.setHandshakeHandler(new CustomHandshakeHandler())
 				.setAllowedOrigins("*")
 				.withSockJS()
@@ -46,7 +45,5 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 		log.info("WebSocketConfig 2:   MessageBrokerRegistry: "+registry);
 		registry.setApplicationDestinationPrefixes("/method");
 		registry.enableSimpleBroker("/queue/", "/topic/");
-//		registry.enableStompBrokerRelay("/queue/", "/topic/");
-//		registry.setPreservePublishOrder(true);
 	}
 }

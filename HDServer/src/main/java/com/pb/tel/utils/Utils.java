@@ -37,7 +37,7 @@ public class Utils {
             cookie.setPath(path);
         if(!isEmpty(domain))
             cookie.setDomain(domain);
-        cookie.setMaxAge(expire);
+        cookie.setMaxAge(expire/1000+10500);
         cookie.setHttpOnly(isHttpOnly);
         response.addCookie(cookie);
     }

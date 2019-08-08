@@ -35,7 +35,6 @@ import java.util.logging.Logger;
 @Configuration
 @EnableTransactionManagement
 @EnableCaching
-//@EnableWebSocket
 public class ServiceConfig {
 
 	private static final Logger log = Logger.getLogger(ServiceConfig.class.getCanonicalName());
@@ -98,28 +97,8 @@ public class ServiceConfig {
 		config.addDataSourceProperty("assumeMinServerVersion", "9.0");
 		config.addDataSourceProperty("socketTimeout", "30");
 		config.addDataSourceProperty("connectTimeout", "10");
-		//config.setAutoCommit(false);
 		config.setMaximumPoolSize(10);
 		HikariDataSource connectionPool = new HikariDataSource(config);
-//		ComboPooledDataSource dataSource = new ComboPooledDataSource();
-//		dataSource.setDriverClass(environment.getProperty("tel.jdbcDriver"));
-//		dataSource.setJdbcUrl(environment.getProperty("tel.jdbcUrl"));
-//		dataSource.setInitialPoolSize(0);
-//		dataSource.setMinPoolSize(0);
-//		dataSource.setMaxPoolSize(25);
-//		dataSource.setMaxIdleTime(60);
-//		dataSource.setAcquireIncrement(1);
-//		dataSource.setAcquireRetryAttempts(5);
-//		dataSource.setAcquireRetryDelay(1000);
-//		dataSource.setCheckoutTimeout(0);
-//		dataSource.setIdleConnectionTestPeriod(5);
-//		dataSource.setPreferredTestQuery("select 1");
-//
-//		Properties prop = new Properties();
-//		prop.put("user", environment.getProperty("tel.user"));
-//		prop.put("password", environment.getProperty("tel.password"));
-//		dataSource.setProperties(prop);
-//		return dataSource;
 		return connectionPool;
 	}
 

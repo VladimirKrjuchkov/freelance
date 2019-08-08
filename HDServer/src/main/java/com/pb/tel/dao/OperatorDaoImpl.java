@@ -1,6 +1,6 @@
 package com.pb.tel.dao;
 
-import com.pb.tel.data.User;
+import com.pb.tel.data.Operator;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,20 +13,20 @@ import java.util.logging.Logger;
  * Created by vladimir on 29.07.19.
  */
 
-@Repository("userDaoImpl")
+@Repository("operatorDaoImpl")
 @Transactional
-public class UserDaoImpl {
+public class OperatorDaoImpl {
 
-    private static final Logger log = Logger.getLogger(UserDaoImpl.class.getCanonicalName());
+    private static final Logger log = Logger.getLogger(OperatorDaoImpl.class.getCanonicalName());
 
     @PersistenceContext
     private EntityManager em;
 
     @Transactional(readOnly = true, propagation= Propagation.SUPPORTS)
-    public User getUserByLogin(String login){
+    public Operator getUserByLogin(String login){
         long start = System.currentTimeMillis();
-        User result = em.find(User.class, login);
-        log.info("getUserByLogin at "+(System.currentTimeMillis() - start)+"ms");
+        Operator result = em.find(Operator.class, login);
+        log.info("getOperatorByLogin at "+(System.currentTimeMillis() - start)+"ms");
         return result;
     }
 }

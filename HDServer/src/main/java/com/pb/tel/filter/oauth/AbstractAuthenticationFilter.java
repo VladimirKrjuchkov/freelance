@@ -142,17 +142,11 @@ public abstract class AbstractAuthenticationFilter implements Filter, Initializi
             int pathParamIndex = uri.indexOf(';');
 
             if (pathParamIndex > 0) {
-                // strip everything after the first semi-colon
                 uri = uri.substring(0, pathParamIndex);
             }
             log.fine("uri = "+uri);
 
             return matcher.matcher(uri).matches();
-//	        if ("".equals(request.getContextPath())) {
-//	            return uri.contains(filterProcessesUrl) && (uri.endsWith(filterProcessesUrl) || "/".equals(String.valueOf(uri.charAt(uri.indexOf(filterProcessesUrl)+filterProcessesUrl.length()))));
-//	        }
-//
-//	        return uri.contains(filterProcessesUrl) && (uri.endsWith(request.getContextPath() + filterProcessesUrl) || "/".equals(String.valueOf(uri.charAt(uri.indexOf(filterProcessesUrl)+filterProcessesUrl.length()))));
         }
     }
 }

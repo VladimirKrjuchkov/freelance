@@ -1,6 +1,6 @@
 package com.pb.tel.data.custom.type;
 
-import com.pb.tel.data.User;
+import com.pb.tel.data.Operator;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.usertype.UserType;
@@ -15,11 +15,11 @@ import java.util.logging.Logger;
 /**
  * Created by vladimir on 31.07.19.
  */
-public class TypeArrayToUser implements UserType {
+public class TypeArrayToOperator implements UserType {
 
-    public static final String NAME = "TypeArrayToUser";
+    public static final String NAME = "TypeArrayToOperator";
 
-    private static final Logger log = Logger.getLogger(TypeArrayToMap.class.getCanonicalName());
+    private static final Logger log = Logger.getLogger(TypeArrayToOperator.class.getCanonicalName());
 
     @Override
     public int[] sqlTypes() {
@@ -51,9 +51,9 @@ public class TypeArrayToUser implements UserType {
             return null;
         System.out.println("friendsSqlArray: "+friendsSqlArray);
         String[] friends = (String[]) friendsSqlArray.getArray();
-        Set<User> result = new HashSet<>();
+        Set<Operator> result = new HashSet<>();
         for(String friend :friends)
-            result.add(new User(friend));
+            result.add(new Operator(friend));
         return result;
     }
 
@@ -64,7 +64,7 @@ public class TypeArrayToUser implements UserType {
             return;
         }
         @SuppressWarnings("unchecked")
-        Set<User> friendsSet = (Set<User>)value;
+        Set<Operator> friendsSet = (Set<Operator>)value;
         Array ar = st.getConnection().createArrayOf("VARCHAR", friendsSet.stream().map(user->user.getLogin()).toArray());
         st.setArray(index, ar);
     }

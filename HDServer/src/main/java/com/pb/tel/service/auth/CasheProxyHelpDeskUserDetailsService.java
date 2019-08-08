@@ -1,7 +1,7 @@
 package com.pb.tel.service.auth;
 
-import com.pb.tel.dao.UserDaoImpl;
-import com.pb.tel.data.User;
+import com.pb.tel.dao.OperatorDaoImpl;
+import com.pb.tel.data.Operator;
 import com.pb.tel.utils.MessageUtil;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,14 +19,14 @@ public class CasheProxyHelpDeskUserDetailsService {
 
     private static final Logger log = Logger.getLogger(CasheProxyHelpDeskUserDetailsService.class.getCanonicalName());
 
-    @Resource(name = "userDaoImpl")
-    private UserDaoImpl userDaoImpl;
+    @Resource(name = "operatorDaoImpl")
+    private OperatorDaoImpl operatorDaoImpl;
 
 
     @Cacheable(cacheManager = "cacheManager", cacheNames = "com.pb.tel.service.auth.HelpDeskUserCache")
     public Object cachableLoadUserByUsername(String username) {
-        User details = null;
-        details = userDaoImpl.getUserByLogin(username);
+        Operator details = null;
+        details = operatorDaoImpl.getUserByLogin(username);
         if (details == null)
             throw new UsernameNotFoundException(MessageUtil.getMessage("auth.AUTH01", username));
         return details;

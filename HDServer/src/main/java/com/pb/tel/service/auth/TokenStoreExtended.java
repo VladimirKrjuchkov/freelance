@@ -1,6 +1,6 @@
 package com.pb.tel.service.auth;
 
-import com.pb.tel.data.User;
+import com.pb.tel.data.Operator;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 
@@ -20,7 +20,7 @@ public interface TokenStoreExtended extends TokenStore {
 
     public void leaveMaineSession(String userName, String mainToken);
 
-    public void invalidateUserAuthentications(String userName, User user);
+    public void invalidateUserAuthentications(String userName, Operator user);
 
     public Map<String, Set<OAuth2Authentication>> getAllAuthenticationsByLogin();
 

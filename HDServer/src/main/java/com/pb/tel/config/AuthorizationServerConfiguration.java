@@ -1,13 +1,11 @@
 package com.pb.tel.config;
 
 import com.pb.tel.service.auth.*;
-import com.pb.tel.utils.MessageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.vote.AuthenticatedVoter;
@@ -17,7 +15,6 @@ import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
-import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.CompositeTokenGranter;
 import org.springframework.security.oauth2.provider.OAuth2RequestFactory;
@@ -83,8 +80,8 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
-        security.addTokenEndpointAuthenticationFilter(clientCredentialsTokenEndpointFilter);
         log.info("configure  AuthorizationServerSecurityConfigurer   (M1)  in   AuthorizationServerConfiguration");
+        security.addTokenEndpointAuthenticationFilter(clientCredentialsTokenEndpointFilter);
     }
 
     @Override
@@ -92,19 +89,6 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
         log.info("configure  ClientDetailsServiceConfigurer  (M2) in   AuthorizationServerConfiguration");
         clients.withClientDetails(clientDetailsService);
     }
-
-//    @Override
-//    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-//        log.info("configure  AuthorizationServerEndpointsConfigurer (M3) in   AuthorizationServerConfiguration");
-//        endpoints.tokenGranter(tokenGranter)
-//                 .approvalStore(approvalStore)
-//                 .pathMapping("/oauth/confirm_access", "redirect:"+"redirect:"+ MessageUtil.getProperty("entranceLink")+"/continuereg")
-//                 .requestFactory(tokenRequestFactory)
-//                 .authorizationCodeServices(authorizationCodeServices)
-//                 .allowedTokenEndpointRequestMethods(HttpMethod.GET)
-//                 .tokenStore(tokenStore)
-//                 .tokenServices(tokenService);
-//    }
 
     @Bean(name="agentAuthenticationProvider")
     public AgentAuthenticationProvider agentAuthenticationProvider(){
@@ -130,13 +114,6 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
         listVoters.add(new WebExpressionVoter());
         return new UnanimousBased(listVoters);
     }
-//		--- This is inmemory storage ---
-//    @Bean(name="tokenStore")
-//    public TokenStore tokenStore(){
-//    	InMemoryTokenStore tokenStore = new InMemoryTokenStore() ;//Надо делать реализацию под редис хранилище!!!
-//    	tokenStore.setFlushInterval(1);
-//    	return tokenStore;
-//    }
 
     @Bean(name="tokenStore")
     public TokenStoreExtended redisTokenStore(){
@@ -162,12 +139,6 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
         return new DefaultOAuth2RequestFactory(clientDetailsService);
     }
 
-//    --- This is inmemory storage ---
-//    @Bean(name="authorizationCodeServices")
-//    public AuthorizationCodeServices authorizationCodeServices(){
-//    	return new InMemoryAuthorizationCodeServices();
-//    }
-
     @Bean(name="authorizationCodeServices")
     public AuthorizationCodeServices authorizationCodeServices(RedisTemplate redisTemplate){
         return new RedisBasedAuthorizationCodeServices(redisTemplate);
@@ -190,9 +161,5 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
         TokenApprovalStore tokenApprovalStore = new TokenApprovalStore();
         tokenApprovalStore.setTokenStore(tokenStore);
         return tokenApprovalStore;
-    }
-
-    public String toString(){
-        return super.toString()+"  Eto moy AuthorizationServerConfiguration !!!";
     }
 }

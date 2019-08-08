@@ -1,6 +1,6 @@
 package com.pb.tel.service.auth;
 
-import com.pb.tel.data.User;
+import com.pb.tel.data.Operator;
 import com.pb.tel.data.UserAccount;
 import com.pb.tel.data.enumerators.AuthType;
 import com.pb.tel.service.handlers.UserHandler;
@@ -332,7 +332,7 @@ public class RedisTokenStore implements TokenStoreExtended {
                 byte[] authToAccessKey = serializeKey(AUTH_TO_ACCESS + key);
                 byte[] unameKey = serializeKey(UNAME_TO_ACCESS + getApprovalKey(authentication));
                 byte[] clientId = serializeKey(CLIENT_ID_TO_ACCESS + authentication.getOAuth2Request().getClientId());
-                byte[] byLoginTokenSetKey = serializeKey(BY_LOGIN_TOKENSET + ((User)authentication.getUserAuthentication().getPrincipal()).getUsername());//((UserAccount)authentication.getUserAuthentication().getCredentials()).getUsername());
+                byte[] byLoginTokenSetKey = serializeKey(BY_LOGIN_TOKENSET + ((Operator)authentication.getUserAuthentication().getPrincipal()).getUsername());//((UserAccount)authentication.getUserAuthentication().getCredentials()).getUsername());
                 conn.openPipeline();
                 conn.del(authToAccessKey);
                 conn.lRem(unameKey, 1, access);
@@ -388,7 +388,7 @@ public class RedisTokenStore implements TokenStoreExtended {
                     byte[] authToAccessKey = serializeKey(AUTH_TO_ACCESS + key);
                     byte[] unameKey = serializeKey(UNAME_TO_ACCESS + getApprovalKey(authentication));
                     byte[] clientId = serializeKey(CLIENT_ID_TO_ACCESS + authentication.getOAuth2Request().getClientId());
-                    byte[] byLoginTokenSetKey = serializeKey(BY_LOGIN_TOKENSET + ((User)authentication.getUserAuthentication().getPrincipal()).getUsername());//((UserAccount)authentication.getUserAuthentication().getCredentials()).getUsername());
+                    byte[] byLoginTokenSetKey = serializeKey(BY_LOGIN_TOKENSET + ((Operator)authentication.getUserAuthentication().getPrincipal()).getUsername());//((UserAccount)authentication.getUserAuthentication().getCredentials()).getUsername());
                     conn.del(authToAccessKey);
                     conn.lRem(unameKey, 1, access);
                     conn.lRem(clientId, 1, access);
@@ -587,7 +587,7 @@ public class RedisTokenStore implements TokenStoreExtended {
     }
 
     @Override
-    public void invalidateUserAuthentications(String userName, User user) {
+    public void invalidateUserAuthentications(String userName, Operator user) {
         log.info("userName: "+userName);
         //log.info("mainToken: "+mainToken);
         findAuthenticationsByUserName(userName).stream().forEach(authentication->{
