@@ -1,18 +1,8 @@
 var wssConnector;
 addEvent(window, "load", function () {
-    if(!getCookie("storageKey")){
-        ajax("/api/sidCheck", function (resp) {
-            var mes = JSON.parse(resp);
-            if (mes.state != "ok") {
-                alert(mes.desc);
-            } else {
-                rmClass(byId("loginPage"), "hide");
-            }
-        }, null, function (resp) {
-            alert(resp);
-        }, "POST");
+    if(!getCookie("sessionId")){
+        oper.sidCheck();
     }
-
     if (window.location.pathname.indexOf("/startwork")==0){
         var params = new URL(window.location.href).searchParams;
         byId("admin-name").innerHTML = "Вы вошли как " + params.get('name');
@@ -33,6 +23,17 @@ addEvent(window, "load", function () {
 
 
 oper = {
+    sidCheck: function(){
+        ajax("/api/sidCheck", function (resp) {
+            var mes = JSON.parse(resp);
+            if (mes.state != "ok") {
+                alert(mes.desc);
+            }
+        }, null, function (resp) {
+            alert(resp);
+        }, "POST");
+    },
+
     enter: function(){
         var req = {
             "login": byClass(byId('regPage'), 'login')[0].value,

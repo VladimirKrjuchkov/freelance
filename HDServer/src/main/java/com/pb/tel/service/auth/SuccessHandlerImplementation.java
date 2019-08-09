@@ -45,7 +45,7 @@ public class SuccessHandlerImplementation extends SavedRequestAwareAuthenticatio
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         String storageKey = Utils.exrtactCookieValue(request, "storageKey");
-        UserAccount userAccount = (UserAccount)sessionStorage.getValue(storageKey);
+        UserAccount userAccount = (UserAccount)sessionStorage.removeValue(storageKey);
         Collection<GrantedAuthority> agentAuthority = (Collection<GrantedAuthority>) userAccount.getUser().getAuthorities();
         Authentication userAauthentication = Reference.authorizeUser((org.springframework.security.core.userdetails.UserDetails)authentication.getCredentials(), userAccount, Reference.getCombinetAuthorities(agentAuthority, userAccount.getAuthority()), authentication.getDetails());
         String autorizeUrl = userAccount.getAutorizeUrl();
@@ -53,10 +53,9 @@ public class SuccessHandlerImplementation extends SavedRequestAwareAuthenticatio
             autorizeUrl = MessageUtil.getProperty("main.address") + "/startwork?name=" + ((Operator)(userAccount.getUser())).getLogin();
             String userAccessToken = createToken(userAccount, userAauthentication, agentAuthority);
             Utils.setCookie(response, Reference.sidParametrName, Reference.buildSid(userAccessToken, userAccount.getClientId()), null, null, true, userAccount.getMaxInSecondPossibleSessionExpire()+10);
+
         }else{
-            userAccount.setAutorizeUrl(autorizeUrl);
-            if(!authentication.isAuthenticated())
-                sessionStorage.putValue(storageKey, userAccount, userAccount.getMaxPossibleSessionExpire());
+            sessionStorage.putValue(storageKey, userAccount, userAccount.getMaxPossibleSessionExpire());
         }
         getRedirectStrategy().sendRedirect(request, response, autorizeUrl);
     }

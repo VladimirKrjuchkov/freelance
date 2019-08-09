@@ -31,7 +31,7 @@ public class RestController {
 
     @RequestMapping(value = "/sidCheck", method = RequestMethod.POST)
     @ResponseBody
-    public Mes getSidCheck(HttpServletResponse response, @CookieValue(required=false) String storageKey)throws LogicException {
+    public Mes getSidCheck(HttpServletResponse response, @CookieValue(required=false) String storageKey, @CookieValue(required=false) String sessionId)throws LogicException {
         log.info("Start getSidCheck storageKey = " + storageKey);
         if(storageKey != null){
             sessionStorage.removeValue(storageKey);
