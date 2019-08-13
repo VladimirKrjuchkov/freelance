@@ -67,8 +67,8 @@ public class AgentDetails  implements Serializable {
     @Column(name = "description", nullable=true)
     private String description;
 
-    @Column(name = "techLogin", nullable=false)
-    private String techLogin;
+    @Column(name = "config", nullable=false)
+    private String config;
 
     public String getClientId() {
         return clientId;
@@ -190,12 +190,12 @@ public class AgentDetails  implements Serializable {
         this.description = description;
     }
 
-    public String getTechLogin() {
-        return techLogin;
+    public String getConfig() {
+        return config;
     }
 
-    public void setTechLogin(String techLogin) {
-        this.techLogin = techLogin;
+    public void setConfig(String config) {
+        this.config = config;
     }
 
     @Override
@@ -222,7 +222,7 @@ public class AgentDetails  implements Serializable {
         if (ip != null ? !ip.equals(that.ip) : that.ip != null) return false;
         if (agentCert != null ? !agentCert.equals(that.agentCert) : that.agentCert != null) return false;
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
-        return techLogin != null ? techLogin.equals(that.techLogin) : that.techLogin == null;
+        return config != null ? config.equals(that.config) : that.config == null;
     }
 
     @Override
@@ -242,7 +242,7 @@ public class AgentDetails  implements Serializable {
         result = 31 * result + (allowRoleControl ? 1 : 0);
         result = 31 * result + (agentCert != null ? agentCert.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (techLogin != null ? techLogin.hashCode() : 0);
+        result = 31 * result + (config != null ? config.hashCode() : 0);
         return result;
     }
 
@@ -264,7 +264,7 @@ public class AgentDetails  implements Serializable {
                 ", allowRoleControl=" + allowRoleControl +
                 ", agentCert='" + agentCert + '\'' +
                 ", description='" + description + '\'' +
-                ", techLogin='" + techLogin + '\'' +
+                ", config='" + config + '\'' +
                 '}';
     }
 }

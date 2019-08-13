@@ -1,6 +1,5 @@
 package com.pb.tel.filter.oauth;
 
-import com.pb.tel.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -35,7 +34,7 @@ public class UsernamePasswordAuthenticationFilter extends AbstractAuthentication
             throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
 
         } else {
-            String username = Utils.exrtactCookieValue(request, "storageKey") + "," + this.obtainUsername(request);
+            String username = this.obtainUsername(request);
             String password = this.obtainPassword(request);
             if(username == null) {
                 username = "";

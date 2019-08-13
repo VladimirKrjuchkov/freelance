@@ -1,11 +1,14 @@
 package com.pb.tel.config;
 
+import com.pb.tel.filter.oauth.ClientCredentialsTokenEndpointFilter;
 import com.pb.tel.service.auth.*;
+import com.pb.tel.utils.MessageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.vote.AuthenticatedVoter;
@@ -15,13 +18,13 @@ import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
+import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.CompositeTokenGranter;
 import org.springframework.security.oauth2.provider.OAuth2RequestFactory;
 import org.springframework.security.oauth2.provider.TokenGranter;
 import org.springframework.security.oauth2.provider.approval.ApprovalStore;
 import org.springframework.security.oauth2.provider.approval.TokenApprovalStore;
-import org.springframework.security.oauth2.provider.client.ClientCredentialsTokenEndpointFilter;
 import org.springframework.security.oauth2.provider.client.ClientCredentialsTokenGranter;
 import org.springframework.security.oauth2.provider.client.ClientDetailsUserDetailsService;
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
@@ -75,6 +78,9 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     @Resource(name="tokenRequestFactory")
     private DefaultOAuth2RequestFactory tokenRequestFactory;
 
+    @Resource(name="approvalHandler")
+    private ApprovalHandler approvalHandler;
+
     @Autowired
     private ClientCredentialsTokenEndpointFilter clientCredentialsTokenEndpointFilter;
 
@@ -88,6 +94,23 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         log.info("configure  ClientDetailsServiceConfigurer  (M2) in   AuthorizationServerConfiguration");
         clients.withClientDetails(clientDetailsService);
+    }
+
+    @Override
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+        log.info("configure  AuthorizationServerEndpointsConfigurer (M3) in   AuthorizationServerConfiguration");
+        //log.info("authenticationManager: "+authenticationManager);
+        endpoints.tokenGranter(tokenGranter).
+        approvalStore(approvalStore).
+        pathMapping("/oauth/confirm_access", "redirect:"+"redirect:"+ MessageUtil.getProperty("entranceLink")+"/continuereg").
+//		pathMapping("/oauth/confirm_access", "/oauth/confirm_access").
+        requestFactory(tokenRequestFactory).
+        userApprovalHandler(approvalHandler).
+        authorizationCodeServices(authorizationCodeServices).
+        allowedTokenEndpointRequestMethods(HttpMethod.GET).
+        //authenticationManager(authenticationManager).
+        tokenStore(tokenStore).
+        tokenServices(tokenService);
     }
 
     @Bean(name="agentAuthenticationProvider")
@@ -161,5 +184,14 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
         TokenApprovalStore tokenApprovalStore = new TokenApprovalStore();
         tokenApprovalStore.setTokenStore(tokenStore);
         return tokenApprovalStore;
+    }
+
+    @Bean(name="approvalHandler")
+    public ApprovalHandler approvalHandler(ClientDetailsServiceInterface clientDetailsService, ApprovalStore tokenApprovalStore, DefaultOAuth2RequestFactory tokenRequestFactory){
+        ApprovalHandler approvalHandler = new ApprovalHandler();
+        approvalHandler.setClientDetailsService(clientDetailsService);
+        approvalHandler.setApprovalStore(tokenApprovalStore);
+        approvalHandler.setRequestFactory(tokenRequestFactory);
+        return approvalHandler;
     }
 }

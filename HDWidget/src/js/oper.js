@@ -1,46 +1,33 @@
 var wssConnector;
 addEvent(window, "load", function () {
-    if(!getCookie("sessionId")){
-        oper.sidCheck();
-    }
+    oper.authCheck();
     if (window.location.pathname.indexOf("/startwork")==0){
         var params = new URL(window.location.href).searchParams;
         byId("admin-name").innerHTML = "Вы вошли как " + params.get('name');
         addClass(byId("loginPage"), "hide");
-        wssConnector = getCookie("wssConnector");
-        if(!wssConnector) {
-            wssConnector = StompOverSock.getInstance(true);
-            wssConnector.subscribe("/user/queue/answer/oper/enter", oper.operEnterHandler);
-            wssConnector.subscribe("/user/queue/answer/oper/check", oper.userCheckHandler);
-            wssConnector.subscribe("/user/queue/answer/oper/message", oper.messagingResultHandler);
-            wssConnector.subscribe("/user/queue/answer/input/requests", oper.inputMessagesHandler);
-
-        }else{
-            oper.operCheck();
-        }
+        oper.createWSSConnection();
     }
 });
 
 
 oper = {
-    sidCheck: function(){
-        ajax("/api/sidCheck", function (resp) {
+    authCheck: function(){
+        ajax("/api/checked/authCheck", function (resp){
             var mes = JSON.parse(resp);
-            if (mes.state != "ok") {
-                alert(mes.desc);
+            if (mes.state == "ok") {
+                byId("admin-name").innerHTML = "Вы вошли как " + mes.code;
+                addClass(byId("loginPage"), "hide");
+                oper.createWSSConnection();
             }
-        }, null, function (resp) {
-            alert(resp);
-        }, "POST");
+        }, null, function () {}, "GET");
     },
 
-    enter: function(){
-        var req = {
-            "login": byClass(byId('regPage'), 'login')[0].value,
-            "password": byClass(byId('regPage'), 'password')[0].value
-        }
-        wssConnector.send("/method/oper/enter", JSON.stringify(req), {});
-
+    createWSSConnection: function(){
+        wssConnector = StompOverSock.getInstance(true);
+        wssConnector.subscribe("/user/queue/answer/oper/enter", oper.operEnterHandler);
+        wssConnector.subscribe("/user/queue/answer/oper/check", oper.userCheckHandler);
+        wssConnector.subscribe("/user/queue/answer/oper/message", oper.messagingResultHandler);
+        wssConnector.subscribe("/user/queue/answer/input/requests", oper.inputMessagesHandler);
     },
 
     messagingResultHandler: function(input){
@@ -67,11 +54,6 @@ oper = {
         }
     },
 
-    operCheck: function(){
-        console.log("oper user");
-        wssConnector.send("/method/oper/check","", {});
-    },
-
     buildDialogNode: function(account){
         dialogs.appendChild(buildNode("DIV", {id: account.sessionId, className: "pure-form"},
             [buildNode("DIV", {className: 'pure-form'}, "Вы подключены к клиенту " + account.login),
@@ -92,18 +74,6 @@ oper = {
         setCookie("wssConnector", wssConnector, input.sessionExp);
         if(input.account.connectedUsers) {
             for (var i = 0; i < Object.keys(input.account.connectedUsers).length; i++) {
-                oper.buildDialogNode(input, Object.keys(input.account.connectedUsers)[i]);
-            }
-        }
-    },
-
-    operCheckHandler: function(input){
-        input = JSON.parse(input.body);
-        if(input.account){
-            setCookie("wssConnector", wssConnector, input.sessionExp);
-            addClass(byId("regPage"), "hide");
-            rmClass(byId("dialogs"), "hide");
-            for(var i=0; i<Object.keys(input.account.connectedUsers).length; i++){
                 oper.buildDialogNode(input, Object.keys(input.account.connectedUsers)[i]);
             }
         }

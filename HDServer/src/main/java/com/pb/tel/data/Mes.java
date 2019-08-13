@@ -17,8 +17,18 @@ public class Mes implements Serializable {
         this.desc = desc;
     }
 
+    public Mes(String code){
+        this.code = code;
+    }
+
     public static Mes createErrorMes(String code, String desc){
         Mes result = new Mes(code, desc);
+        result.setState(MesState.err);
+        return result;
+    }
+
+    public static Mes createErrorMes(){
+        Mes result = new Mes();
         result.setState(MesState.err);
         return result;
     }

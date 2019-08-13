@@ -1,8 +1,8 @@
 package com.pb.tel.service.auth;
 
-import com.pb.tel.data.Operator;
 import com.pb.tel.data.UserAccount;
 import com.pb.tel.service.Reference;
+import com.pb.tel.service.exception.LogicException;
 import com.pb.tel.storage.Storage;
 import com.pb.tel.utils.MessageUtil;
 import com.pb.tel.utils.Utils;
@@ -44,18 +44,20 @@ public class SuccessHandlerImplementation extends SavedRequestAwareAuthenticatio
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        String storageKey = Utils.exrtactCookieValue(request, "storageKey");
-        UserAccount userAccount = (UserAccount)sessionStorage.removeValue(storageKey);
+        UserAccount userAccount = null;
+        try {
+            userAccount = Reference.getAccountFromContext();
+        } catch (LogicException e) {
+            log.log(Level.SEVERE,"*** *** *** ERROR WHILE GET ACCOUNT FROM CONTEXT *** *** ***", e);
+        }
         Collection<GrantedAuthority> agentAuthority = (Collection<GrantedAuthority>) userAccount.getUser().getAuthorities();
-        Authentication userAauthentication = Reference.authorizeUser((org.springframework.security.core.userdetails.UserDetails)authentication.getCredentials(), userAccount, Reference.getCombinetAuthorities(agentAuthority, userAccount.getAuthority()), authentication.getDetails());
+        Authentication userAauthentication = Reference.authorizeUser(userAccount.getUser(), userAccount, agentAuthority, authentication.getDetails());
         String autorizeUrl = userAccount.getAutorizeUrl();
         if(authentication.isAuthenticated()){
-            autorizeUrl = MessageUtil.getProperty("main.address") + "/startwork?name=" + ((Operator)(userAccount.getUser())).getLogin();
+            autorizeUrl = MessageUtil.getProperty("main.address") + "/startwork";
             String userAccessToken = createToken(userAccount, userAauthentication, agentAuthority);
             Utils.setCookie(response, Reference.sidParametrName, Reference.buildSid(userAccessToken, userAccount.getClientId()), null, null, true, userAccount.getMaxInSecondPossibleSessionExpire()+10);
 
-        }else{
-            sessionStorage.putValue(storageKey, userAccount, userAccount.getMaxPossibleSessionExpire());
         }
         getRedirectStrategy().sendRedirect(request, response, autorizeUrl);
     }

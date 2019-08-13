@@ -72,12 +72,10 @@ public class ResourceTokenClientIdProcessingFilter extends AbstractAuthenticatio
                         needsDetails.setDetails(authenticationDetailsSource.buildDetails(request));
                     }
                     log.fine("Start Authentication");
-                    log.info("Start Authentication");
 
                     Authentication authResult = authenticationManager.authenticate(authentication);
 
                     log.fine("Authentication success: " + authResult);
-                    log.info("Authentication success: " + authResult);
 
                     SecurityContextHolder.getContext().setAuthentication(authResult);
                 }

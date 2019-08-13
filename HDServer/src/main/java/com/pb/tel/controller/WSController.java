@@ -4,25 +4,22 @@ import com.pb.tel.data.ConnectedAccount;
 import com.pb.tel.data.Operator;
 import com.pb.tel.data.UserAccount;
 import com.pb.tel.data.enumerators.RequestType;
-import com.pb.tel.data.enumerators.Role;
 import com.pb.tel.data.enumerators.Status;
 import com.pb.tel.service.exception.LogicException;
 import com.pb.tel.service.handlers.AdminHandler;
-import com.pb.tel.service.handlers.UserHandler;
+import com.pb.tel.service.handlers.WSHandler;
 import com.pb.tel.service.websocket.WebSocketServer;
 import com.pb.tel.service.websocket.data.WebSocketRequest;
 import com.pb.tel.storage.Storage;
-import com.pb.tel.utils.Utils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.annotation.SendToUser;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 
 import javax.annotation.Resource;
-import java.util.List;
+import java.security.Principal;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,57 +31,23 @@ public class WSController {
 
     private static final Logger log = Logger.getLogger(WSController.class.getCanonicalName());
 
-    @Autowired
-    private Environment environment;
-
     @Resource
     private AdminHandler adminHandler;
 
     @Resource
-    private UserHandler userHandler;
-
-    @Resource(name="registredOpers")
-    private List<UserAccount> registredOpers;
+    private WSHandler wsHandler;
 
     @Resource(name="dataStorage")
     private Storage<String, UserAccount> accountStorage;
 
-    @MessageMapping("/user/enter")
-    @SendToUser("/queue/answer/user/enter")
-    public WebSocketRequest userEnter(SimpMessageHeaderAccessor sha, UserAccount userAccount) throws LogicException {
-        String sessionId = sha.getUser().getName();
-        log.info("start registration for user: " + sessionId);
-        UserAccount account = accountStorage.getValue(sessionId);
-        WebSocketRequest webSocketRequest = WebSocketRequest.getSuccessRequest();
-        if(account == null){
-            account = userAccount;
-            account.setSessionId(sessionId);
-            account.setStatus(Status.DISCONNECTED);
-            account.setRole(Role.USER);
 
-        }else if(account.getStatus() == Status.CONNECTED &&
-                account.getConnectedAccounts() != null &&
-                 !account.getConnectedAccounts().isEmpty() &&
-                 accountStorage.getValue(account.getConnectedOperSessionId()) != null &&
-                 accountStorage.getValue(account.getConnectedOperSessionId()).getStatus() == Status.ONLINE){
-            UserAccount operAccount = accountStorage.getValue(account.getConnectedOperSessionId());
-            webSocketRequest.setMessage("Вы подключены к оператору " + ((Operator)operAccount.getUser()).getLogin());
-        }
-        accountStorage.putValue(account.getSessionId(), account, Utils.getDateAfterSeconds(Integer.valueOf(environment.getProperty("session.expiry"))));
-        webSocketRequest.setUserAccount(account);
-        webSocketRequest.setSessionExp(System.currentTimeMillis() + Integer.valueOf(environment.getProperty("session.expiry")));
-        return webSocketRequest;
-    }
-
-    @MessageMapping("/user/check")
-    @SendToUser("/queue/answer/user/check")
-    public WebSocketRequest userCheck(SimpMessageHeaderAccessor sha) throws LogicException {
-        String sessionId = sha.getUser().getName();
-        UserAccount userAccount = accountStorage.getValue(sessionId);
-        accountStorage.putValue(userAccount.getSessionId(), userAccount, Utils.getDateAfterSeconds(Integer.valueOf(environment.getProperty("session.expiry"))));
-        WebSocketRequest webSocketRequest = WebSocketRequest.getSuccessRequest(userAccount);
-        webSocketRequest.setSessionExp(System.currentTimeMillis() + Integer.valueOf(environment.getProperty("session.expiry")));
-        return WebSocketRequest.getSuccessRequest(userAccount);
+    @MessageMapping("/oper/sayHellow")
+    @SendToUser("/queue/answer/user/message")
+    public void sayHellow(Principal principal) throws LogicException {
+        log.info("*** *** *** Hellow Im oper *** *** ***");
+        log.info("*** *** *** principal: " + principal);
+        Authentication freshAuthentication = wsHandler.checkAuthExpire(principal);
+        log.info("*** *** *** freshAuthentication: " + freshAuthentication);
     }
 
     @MessageMapping("/oper/call")
@@ -139,24 +102,6 @@ public class WSController {
         return response;
     }
 
-    @MessageMapping("/oper/enter")//<<<--- перед этим всем надо реализовать проверку логина/пароля при помощи OAuth2
-    @SendToUser("/queue/answer/oper/enter")
-    public WebSocketRequest operEnter(SimpMessageHeaderAccessor sha, UserAccount operAccount) throws LogicException {
-        String sessionId = sha.getUser().getName();
-        log.info("start registration for oper: " + sessionId);
-        UserAccount account = (UserAccount) accountStorage.getValue(sessionId);
-        WebSocketRequest webSocketRequest = WebSocketRequest.getSuccessRequest();
-        if(account == null){
-            account = operAccount;
-            account.setSessionId(sessionId);
-            account.setStatus(Status.ONLINE);
-        }
-        registredOpers.add((UserAccount) account);
-        accountStorage.putValue(account.getSessionId(), account, Utils.getDateAfterSeconds(Integer.valueOf(environment.getProperty("session.expiry"))));
-        webSocketRequest.setUserAccount(account);
-        webSocketRequest.setSessionExp(System.currentTimeMillis() + Integer.valueOf(environment.getProperty("session.expiry")));
-        return webSocketRequest;
-    }
 
     @MessageExceptionHandler(LogicException.class)
     @SendToUser("/queue/answer/errors")

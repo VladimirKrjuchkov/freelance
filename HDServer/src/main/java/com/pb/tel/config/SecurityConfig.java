@@ -92,7 +92,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
              and().
 			 addFilterBefore(usernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class).
              exceptionHandling().
-             and();
+			 authenticationEntryPoint(loginUrlAuthenticationEntryPoint()).
+			 and();
     		 if(useRedisSecurityContextRepository) {
 				 preparedHttp.securityContext().securityContextRepository(getRedisSecurityContextRepository());
 			 }
@@ -109,7 +110,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.and()
                 .antMatcher("/checked/**")
                 .authorizeRequests()
-				.anyRequest().authenticated()
+				.antMatchers("/checked/agent/**").hasRole("APP")
+				.anyRequest().hasAnyRole("ADMIN","USER","APP","H2H")
                 .and()
                 .addFilterBefore(resourceTokenClientIdProcessingFilter(), AbstractPreAuthenticatedProcessingFilter.class)
 				.securityContext().securityContextRepository(new NullSecurityContextRepository());
@@ -171,5 +173,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public ClientDetailsServiceInterface clientDetailsService(){
 		ClientDetailsServiceInterface clientDetailsService = new ClientDetailsService();
 		return clientDetailsService;
+	}
+
+	@Bean(name="loginUrlAuthenticationEntryPoint")
+	public LoginUrlAuthenticationEntryPoint loginUrlAuthenticationEntryPoint(){
+		LoginUrlAuthenticationEntryPoint loginUrlAuthenticationEntryPoint = new LoginUrlAuthenticationEntryPoint(entranceLink+"/chat.html", sidParametrName);
+		loginUrlAuthenticationEntryPoint.setForceHttps(true);
+		return loginUrlAuthenticationEntryPoint;
 	}
 }

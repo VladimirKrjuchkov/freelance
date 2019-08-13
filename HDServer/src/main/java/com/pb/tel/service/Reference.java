@@ -5,6 +5,7 @@ import com.pb.tel.service.exception.LogicException;
 import com.pb.tel.utils.MessageUtil;
 import com.pb.tel.utils.Utils;
 import org.springframework.core.env.Environment;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,7 +14,6 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.logging.Logger;
 
 /**
@@ -40,14 +40,6 @@ public class Reference {
         return authenticationToken;
     }
 
-    public static Collection<GrantedAuthority> getCombinetAuthorities(Collection<? extends GrantedAuthority> agentAuthority, Collection<? extends GrantedAuthority> userAuthority) {
-        if (agentAuthority == null || userAuthority == null)
-            return null;
-        HashSet<GrantedAuthority> authority = new HashSet<>(agentAuthority);
-        authority.addAll(userAuthority);
-        return authority;
-    }
-
     public static UserAccount getAccountFromContext() throws LogicException {
         log.info("@#@ SecurityContextHolder.getContext(): " + SecurityContextHolder.getContext());
         log.info("@#@ SecurityContextHolder.getContext().getAuthentication(): " + SecurityContextHolder.getContext().getAuthentication());
@@ -62,11 +54,11 @@ public class Reference {
             Authentication userAuthentication = oAuth2Authentication.getUserAuthentication();
             log.info("@#@ userAuthentication: " + userAuthentication);
             return getUserAccountFromCredentials(userAuthentication.getCredentials());
-        } else if (authentication instanceof PreAuthenticatedAuthenticationToken) {
-            PreAuthenticatedAuthenticationToken preAuthentication = (PreAuthenticatedAuthenticationToken) authentication;
+        } else if (authentication instanceof UsernamePasswordAuthenticationToken) {
+            UsernamePasswordAuthenticationToken preAuthentication = (UsernamePasswordAuthenticationToken) authentication;
             return getUserAccountFromCredentials(preAuthentication.getCredentials());
         } else
-            throw Utils.getLogicException("auth.AUTH08");
+            return null;
     }
 
     private static UserAccount getUserAccountFromCredentials(Object credentials ) throws LogicException{

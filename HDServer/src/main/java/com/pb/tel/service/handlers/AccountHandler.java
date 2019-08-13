@@ -2,15 +2,11 @@ package com.pb.tel.service.handlers;
 
 import com.pb.tel.data.UserAccount;
 import com.pb.tel.service.auth.ClientDetailsServiceInterface;
-import com.pb.tel.storage.Storage;
-import com.pb.tel.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
-import java.util.UUID;
 import java.util.logging.Logger;
 
 /**
@@ -28,18 +24,7 @@ public class AccountHandler {
     @Autowired
     private Environment environment;
 
-    @Autowired
-    private Storage sessionStorage;
-
-    public void startEntrance(HttpServletResponse httpServletResponse){
-        UserAccount userAccount = generateUserAccount();
-        String storageKey = UUID.randomUUID().toString();
-        userAccount.setStorageKey(storageKey);
-        sessionStorage.putValue(storageKey, userAccount, userAccount.getMaxPossibleSessionExpire());
-        Utils.setCookie(httpServletResponse, "storageKey", storageKey, null, null, false, userAccount.getMaxInSecondPossibleSessionExpire());
-    }
-
-    private UserAccount generateUserAccount(){
+    public UserAccount generateUserAccount(){
         UserAccount userAccount = new UserAccount();
         userAccount.setClientId(clientDetailsService.getAdminClientDetails().getClientId());
         userAccount.setMaxPossibleSessionExpire(new Date(System.currentTimeMillis() + Long.valueOf(environment.getProperty("storage.key.validity.millis"))));
