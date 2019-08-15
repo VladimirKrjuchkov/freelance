@@ -1,5 +1,11 @@
 var wssConnector;
 addEvent(window, "load", function () {
+    if(getCookie("config")) {
+        user.buildUserInfoNode(getCookie("config"));
+
+    }else{
+        alert("Не обнаружено настроек пользователя, используем стандартный сценарий")
+    }
     // wssConnector = getCookie("wssConnector");
     // if(!wssConnector) {
     //     wssConnector = StompOverSock.getInstance(true);

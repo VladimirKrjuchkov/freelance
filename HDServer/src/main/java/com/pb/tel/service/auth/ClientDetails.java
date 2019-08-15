@@ -31,6 +31,8 @@ public class ClientDetails extends BaseClientDetails{
 
     private String agentCert;
 
+    private String config;
+
     public ClientDetails(){}
 
     public ClientDetails(String name, String clientId){
@@ -46,6 +48,7 @@ public class ClientDetails extends BaseClientDetails{
         this.ip = Arrays.asList(agentDetails.getIp()==null ? new String[]{""} : agentDetails.getIp().split(","));
         this.allowRoleControl = agentDetails.isAllowRoleControl();
         this.agentCert = agentDetails.getAgentCert();
+        this.config = agentDetails.getConfig();
         this.setClientSecret(agentDetails.getClientSecret());
         setAccessTokenValiditySeconds(agentDetails.getAccessTokenValiditySeconds());
         setRefreshTokenValiditySeconds(agentDetails.getRefreshTokenValiditySeconds());
@@ -87,6 +90,14 @@ public class ClientDetails extends BaseClientDetails{
         return agentCert;
     }
 
+    public String getConfig() {
+        return config;
+    }
+
+    public void setConfig(String config) {
+        this.config = config;
+    }
+
     @Override
     public String toString() {
         return "ClientDetails{" +
@@ -96,6 +107,7 @@ public class ClientDetails extends BaseClientDetails{
                 ", allowRoleControl=" + allowRoleControl +
                 ", agentDetails=" + agentDetails +
                 ", agentCert='" + agentCert + '\'' +
+                ", config='" + config + '\'' +
                 '}';
     }
 }

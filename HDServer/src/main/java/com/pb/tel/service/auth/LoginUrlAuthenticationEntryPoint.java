@@ -1,5 +1,6 @@
 package com.pb.tel.service.auth;
 
+import com.pb.tel.dao.AgentDaoImpl;
 import com.pb.tel.data.Mes;
 import com.pb.tel.data.Roles;
 import com.pb.tel.data.UserAccount;
@@ -53,6 +54,10 @@ public class LoginUrlAuthenticationEntryPoint extends org.springframework.securi
     @Autowired
     private TokenStoreExtended tokenStore;
 
+
+    @Autowired
+    private AgentDaoImpl agentDaoImpl;
+
     private TokenClientIdExtractor tokenClientIdExtractor;
 
     public LoginUrlAuthenticationEntryPoint(String loginFormUrl, String sidParametrName) {
@@ -93,6 +98,9 @@ public class LoginUrlAuthenticationEntryPoint extends org.springframework.securi
 
             log.info("clientDetail:"+clientDetails);
             userAccount = accountHandler.generateUserAccount();
+            agentDaoImpl.getAllAgentDetails();
+            Utils.setCookie(response, "config", clientDetails.getConfig(),  null, null, false, userAccount.getMaxInSecondPossibleSessionExpire()+10);
+
             return new Object[]{superUrlString, userAccount, clientDetails};
         }
         catch (LogicException e) {
