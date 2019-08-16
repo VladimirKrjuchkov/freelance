@@ -2,22 +2,18 @@ package com.pb.tel.service.auth;
 
 import com.pb.tel.dao.AgentDaoImpl;
 import com.pb.tel.data.Mes;
-import com.pb.tel.data.Roles;
 import com.pb.tel.data.UserAccount;
 import com.pb.tel.data.enumerators.AuthType;
-import com.pb.tel.service.Reference;
-import com.pb.tel.service.exception.LogicException;
 import com.pb.tel.service.handlers.AccountHandler;
-import com.pb.tel.utils.MessageUtil;
 import com.pb.tel.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.util.RedirectUrlBuilder;
 import org.springframework.security.web.util.UrlUtils;
-import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.RequestDispatcher;
@@ -26,7 +22,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -54,6 +49,8 @@ public class LoginUrlAuthenticationEntryPoint extends org.springframework.securi
     @Autowired
     private TokenStoreExtended tokenStore;
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     @Autowired
     private AgentDaoImpl agentDaoImpl;
@@ -67,53 +64,69 @@ public class LoginUrlAuthenticationEntryPoint extends org.springframework.securi
 
 
     protected Object[] determineUrl(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException){
-        boolean h2HLogin = false;
-        ClientDetails clientDetails = null;
-        String superUrlString = super.determineUrlToUseForThisRequest(request, response, authException);
-        log.info("superUrlString: "+superUrlString);
         String clientId = request.getParameter(CLIENT_ID);
-        UserAccount userAccount;
-        try{
-            if (!StringUtils.hasText(clientId) )
-                throw Utils.getLogicException("auth.AUTH07", CLIENT_ID);
-
-            Authentication auth = tokenClientIdExtractor.extract(request);
-            if(auth!=null) {// Если пользователь уже авторизован и поступил запрос на авторизацию под другим агентом, то убиваем предидущую авторизацию и заходим по новым агентом
-                if(clientId.equals(auth.getCredentials()))
-                    return new Object[]{superUrlString, null, null};
-                else {
-                    tokenStore.removeAccessToken((String)auth.getPrincipal());
-                    Utils.setCookie(response, Reference.sidParametrName, "", null, null, true, 0);
-                }
-            }
-
-            clientDetails = (ClientDetails)clientDetailsService.loadClientByClientId(clientId);
-
-            if(Boolean.valueOf(request.getParameter(AGENT_CHECK)) && Roles.convertAuthorityToRoles(clientDetails.getAuthorities()).contains(Roles.ROLE_H2H))
-                h2HLogin = true;
-
-            log.info("h2HLogin: "+h2HLogin);
-            if(!h2HLogin && (request.getParameterValues(REDIRECT_URL) == null || request.getParameterValues(REDIRECT_URL).length != 1))
-                throw Utils.getLogicException("auth.AUTH07", REDIRECT_URL);
-
-            log.info("clientDetail:"+clientDetails);
-            userAccount = accountHandler.generateUserAccount();
-            agentDaoImpl.getAllAgentDetails();
-            Utils.setCookie(response, "config", clientDetails.getConfig(),  null, null, false, userAccount.getMaxInSecondPossibleSessionExpire()+10);
-
-            return new Object[]{superUrlString, userAccount, clientDetails};
-        }
-        catch (LogicException e) {
-            log.log(Level.WARNING, "", e);
-            superUrlString = MessageUtil.getProperty("entrancelink"+"/error.html");
-            userAccount = exceptionHandler(request, e.getCode(), e.getText());
-        }
-        catch (Exception e) {
-            log.log(Level.SEVERE, "", e);
-            superUrlString = MessageUtil.getProperty("entrancelink"+"/error.html");
-            userAccount = exceptionHandler(request, "auth.AUTH22", MessageUtil.getMessage("auth.AUTH22"));
-        }
+        UserAccount userAccount = accountHandler.generateUserAccount();
+        String superUrlString = super.determineUrlToUseForThisRequest(request, response, authException);
+        log.info("superUrlString = " + superUrlString);
+        ClientDetails clientDetails = (ClientDetails)clientDetailsService.loadClientByClientId(clientId);
+        userAccount.setAgent(clientDetails);
+        UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(clientId, userAccount, clientDetails.getAuthorities());
+        authenticationManager.authenticate(authRequest);
+        Utils.setCookie(response, "config", clientDetails.getConfig(),  null, null, false, userAccount.getMaxInSecondPossibleSessionExpire()+10);
         return new Object[]{superUrlString, userAccount, clientDetails};
+
+
+
+
+
+
+//        boolean h2HLogin = false;
+//        ClientDetails clientDetails = null;
+//        String superUrlString = super.determineUrlToUseForThisRequest(request, response, authException);
+//        log.info("superUrlString: "+superUrlString);
+//        String clientId = request.getParameter(CLIENT_ID);
+//        UserAccount userAccount;
+//        try{
+//            if (!StringUtils.hasText(clientId) )
+//                throw Utils.getLogicException("auth.AUTH07", CLIENT_ID);
+//
+//            Authentication auth = tokenClientIdExtractor.extract(request);
+//            if(auth!=null) {// Если пользователь уже авторизован и поступил запрос на авторизацию под другим агентом, то убиваем предидущую авторизацию и заходим по новым агентом
+//                if(clientId.equals(auth.getCredentials()))
+//                    return new Object[]{superUrlString, null, null};
+//                else {
+//                    tokenStore.removeAccessToken((String)auth.getPrincipal());
+//                    Utils.setCookie(response, Reference.sidParametrName, "", null, null, true, 0);
+//                }
+//            }
+//
+            clientDetails = (ClientDetails)clientDetailsService.loadClientByClientId(clientId);
+//
+//            if(Boolean.valueOf(request.getParameter(AGENT_CHECK)) && Roles.convertAuthorityToRoles(clientDetails.getAuthorities()).contains(Roles.ROLE_H2H))
+//                h2HLogin = true;
+//
+//            log.info("h2HLogin: "+h2HLogin);
+//            if(!h2HLogin && (request.getParameterValues(REDIRECT_URL) == null || request.getParameterValues(REDIRECT_URL).length != 1))
+//                throw Utils.getLogicException("auth.AUTH07", REDIRECT_URL);
+//
+//            log.info("clientDetail:"+clientDetails);
+//            userAccount = accountHandler.generateUserAccount();
+//            agentDaoImpl.getAllAgentDetails();
+//            Utils.setCookie(response, "config", clientDetails.getConfig(),  null, null, false, userAccount.getMaxInSecondPossibleSessionExpire()+10);
+
+//            return new Object[]{superUrlString, userAccount, clientDetails};
+//        }
+//        catch (LogicException e) {
+//            log.log(Level.WARNING, "", e);
+//            superUrlString = MessageUtil.getProperty("entrancelink"+"/error.html");
+//            userAccount = exceptionHandler(request, e.getCode(), e.getText());
+//        }
+//        catch (Exception e) {
+//            log.log(Level.SEVERE, "", e);
+//            superUrlString = MessageUtil.getProperty("entrancelink"+"/error.html");
+//            userAccount = exceptionHandler(request, "auth.AUTH22", MessageUtil.getMessage("auth.AUTH22"));
+//        }
+//        return new Object[]{superUrlString, userAccount, clientDetails};
     }
 
     private UserAccount exceptionHandler(HttpServletRequest request, String code, String desc){

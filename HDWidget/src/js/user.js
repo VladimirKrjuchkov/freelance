@@ -38,5 +38,8 @@ user = {
             regPage.appendChild(buildNode("DIV", {className: 'title'}, "Отчество:"));
             regPage.appendChild(buildNode("INPUT", {className: 'middle_name', type: 'text', placeholder: "Введите ваше отчество"}));
         }
+        regPage.appendChild(buildNode("BR")),
+        regPage.appendChild(buildNode("BR")),
+        regPage.appendChild(buildNode("BUTTON", {className: 'pure-u-1 pure-button card-0 primary', type: 'submit'}, "Начать чат"));
     }
 }

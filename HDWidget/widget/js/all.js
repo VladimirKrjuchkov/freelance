@@ -4324,6 +4324,10 @@ user = {
                 placeholder: "Введите ваше отчество"
             }));
         }
+        regPage.appendChild(buildNode("BR")), regPage.appendChild(buildNode("BR")), regPage.appendChild(buildNode("BUTTON", {
+            className: "pure-u-1 pure-button card-0 primary",
+            type: "submit"
+        }, "Начать чат"));
     }
 };
 

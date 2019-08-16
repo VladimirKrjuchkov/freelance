@@ -1,8 +1,10 @@
 package com.pb.tel.service.auth;
 
+import com.pb.tel.data.Roles;
 import com.pb.tel.data.UserAccount;
 import com.pb.tel.service.handlers.AccountHandler;
 import com.pb.tel.utils.MessageUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,28 +25,40 @@ public class UserNamePasswordAuthenticationProvider extends AbstractAuthenticati
     @Resource
     private AccountHandler accountHandler;
 
+    @Autowired
+    private ClientDetailsServiceInterface clientDetailsService;
+
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         log.info("Start authenticate in UserNamePasswordAuthenticationProvider");
+        boolean agentAuth = false;
         Object details = authentication.getDetails();
         log.info("details: "+details);
         String login = (String)authentication.getPrincipal();
-        String password = (String)authentication.getCredentials();
-        UserDetails user;
-        UserAccount userAccount;
+        String password = null;
+        UserAccount userAccount = null;
+        if(Roles.convertAuthorityToRoles(authentication.getAuthorities()).contains(Roles.ROLE_APP)){
+            userAccount = (UserAccount)authentication.getCredentials();
+            agentAuth = true;
+        }else{
+            password = (String)authentication.getCredentials();
+        }
+        UserDetails user = null;
         log.info("login: "+login);
         log.info("password: "+password);
-        user = userDetailsService.loadUserByUsername(login);
-        userAccount = accountHandler.generateUserAccount();
-        userAccount.setUser(user);
+        if(!agentAuth){
+            userAccount = accountHandler.generateUserAccount();
+            user = userDetailsService.loadUserByUsername(login);
+            userAccount.setUser(user);
+            String password256Hash = password;
+            if(!user.isEnabled()) {
+                throw new BadCredentialsException(MessageUtil.getMessage("auth.AUTH03", login));
+            }
+            if(!password256Hash.equals(user.getPassword())) {
+                throw new BadCredentialsException(MessageUtil.getMessage("auth.AUTH02"));
+            }
+        }
 //      String password256Hash = Utils.getSh256(password + Reference.passwordSalt); <<<--- после рефакторинга надо будет хешить пароль
-        String password256Hash = password;
-        if(!user.isEnabled()) {
-            throw new BadCredentialsException(MessageUtil.getMessage("auth.AUTH03", login));
-        }
 //      if(!password256Hash.equals(user.getPassword()) && !Utils.getSh512(password + Reference.passwordSalt).equals(user.getPassword())) <<<--- после рефакторинга надо будет хешить пароль
-        if(!password256Hash.equals(user.getPassword())) {
-            throw new BadCredentialsException(MessageUtil.getMessage("auth.AUTH02"));
-        }
         log.info("authentication: "+authentication);
         log.info("authentication: "+authentication.getPrincipal());
         log.info("authentication: "+authentication.getCredentials());

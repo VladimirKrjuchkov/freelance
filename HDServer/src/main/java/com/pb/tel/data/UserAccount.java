@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.pb.tel.data.enumerators.AuthType;
 import com.pb.tel.data.enumerators.Role;
 import com.pb.tel.data.enumerators.Status;
+import com.pb.tel.service.auth.ClientDetails;
 import com.pb.tel.service.exception.LogicException;
 import com.pb.tel.utils.Utils;
 import org.springframework.security.core.GrantedAuthority;
@@ -91,6 +92,8 @@ public class UserAccount implements Serializable {
     private String refreshToken;
 
     private UserDetails user;
+
+    private ClientDetails agent;
 
     @JsonIgnore
     private OAuth2AccessToken oAuth2AccessToken;
@@ -292,6 +295,14 @@ public class UserAccount implements Serializable {
 
     public void setUser(UserDetails user) {
         this.user = user;
+    }
+
+    public ClientDetails getAgent() {
+        return agent;
+    }
+
+    public void setAgent(ClientDetails agent) {
+        this.agent = agent;
     }
 
     public String getStorageKey() {

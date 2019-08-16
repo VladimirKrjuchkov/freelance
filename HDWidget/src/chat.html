@@ -22,11 +22,9 @@
 <div id="canvas" class="loginMode">
     <div id="header" class="pure-u card-0 pure-form">
     </div>
-    <div id="regPage" class="pure-form">
-        <!--<div class="title">Введите ваше имя:</div>-->
-        <!--<input class="login" type="text" autofocus="" placeholder="Имя"/>-->
-        <!--<button class="pure-u-1 pure-button card-0 primary" onclick="user.enter()">Войти в чат</button>-->
-    </div>
+    <form action="/api/login" id="formReg" method="POST">
+        <div id="regPage" class="pure-form"></div>
+    </form>
     <div id="firstPage" class="pure-form  hide">
         <div class="title" id="user-name"></div>
         <div class="title">Чат:</div>
