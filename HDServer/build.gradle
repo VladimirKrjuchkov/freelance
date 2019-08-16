@@ -9,7 +9,7 @@ dependencies {
     compile "org.hibernate:hibernate-validator:5.4.1.Final", withoutLog
     compile "org.hibernate:hibernate-ehcache:5.3.6.Final", withoutLog
 
-    compile "javax:javaee-web-api:8.0", withoutLog
+//    compile "javax:javaee-web-api:8.0", withoutLog
 
     compile "org.springframework:spring-orm", withoutLog
     compile "org.springframework:spring-oxm", withoutLog
