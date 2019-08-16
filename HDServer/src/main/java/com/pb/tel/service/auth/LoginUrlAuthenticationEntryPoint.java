@@ -100,7 +100,7 @@ public class LoginUrlAuthenticationEntryPoint extends org.springframework.securi
 //                }
 //            }
 //
-            clientDetails = (ClientDetails)clientDetailsService.loadClientByClientId(clientId);
+//            clientDetails = (ClientDetails)clientDetailsService.loadClientByClientId(clientId);
 //
 //            if(Boolean.valueOf(request.getParameter(AGENT_CHECK)) && Roles.convertAuthorityToRoles(clientDetails.getAuthorities()).contains(Roles.ROLE_H2H))
 //                h2HLogin = true;
