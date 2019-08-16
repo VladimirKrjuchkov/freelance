@@ -84,6 +84,7 @@
           <element id="library" level="project" name="Gradle: commons-codec:commons-codec:1.11" />
           <element id="library" level="project" name="Gradle: org.javassist:javassist:3.23.1-GA" />
           <element id="library" level="project" name="Gradle: net.bytebuddy:byte-buddy:1.8.17" />
+          <element id="file-copy" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/javax/javaee-web-api/8.0/dd21587dd7515f8ddad285cf019a6acb18d6e3ba/javaee-web-api-8.0.jar" />
         </element>
       </element>
     </root>
